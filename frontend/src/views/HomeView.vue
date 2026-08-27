@@ -160,14 +160,14 @@
           <div class="flex-1 pt-12 text-center">
             <div class="mb-8 flex flex-wrap items-center justify-center gap-4 text-black">
               <span class="rounded-full border-2 border-black px-6 py-2 text-2xl font-medium md:text-3xl">
-                AIFlow 中转
+                {{ t('home.heroLabel') }}
               </span>
               <span class="hero-title-animated text-5xl font-bold tracking-tight md:text-7xl">
-                畅连多种 AI 模型
+                {{ t('home.heroTitle') }}
               </span>
               <p class="mt-4 w-full text-center text-base font-normal leading-relaxed text-gray-700 md:text-xl">
-                <span class="block">一个账号，一条线路，轻松接入 Claude Code、Codex 和 Gemini CLI</span>
-                <span class="block">低价、稳定、计费透明</span>
+                <span class="block">{{ t('home.heroDescriptionLine1') }}</span>
+                <span class="block">{{ t('home.heroDescriptionLine2') }}</span>
               </p>
             </div>
 

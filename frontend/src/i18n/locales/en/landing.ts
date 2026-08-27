@@ -14,6 +14,10 @@ export default {
     login: 'Login',
     getStarted: 'Get Started',
     goToDashboard: 'Go to Dashboard',
+    heroLabel: 'AIFlow Gateway',
+    heroTitle: 'Connect Multiple AI Models',
+    heroDescriptionLine1: 'One account, one gateway for Claude Code, Codex, and Gemini CLI',
+    heroDescriptionLine2: 'Affordable, stable, and transparent pricing',
     // User-focused value proposition
     heroSubtitle: 'One Key, All AI Models',
     heroDescription: 'No need to manage multiple subscriptions. Access Claude, GPT, Gemini and more with a single API key',
