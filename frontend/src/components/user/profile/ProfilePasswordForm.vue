@@ -75,6 +75,7 @@ import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAppStore } from '@/stores/app'
 import { userAPI } from '@/api'
+import { isValidPassword } from '@/utils/passwordPolicy'
 
 const { t } = useI18n()
 const appStore = useAppStore()
@@ -97,7 +98,7 @@ const handleChangePassword = async () => {
     return
   }
 
-  if (form.value.new_password.length < 8) {
+  if (!isValidPassword(form.value.new_password)) {
     appStore.showError(t('profile.passwordTooShort'))
     return
   }

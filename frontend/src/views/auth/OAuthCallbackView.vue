@@ -153,6 +153,7 @@ import { useClipboard } from '@/composables/useClipboard'
 import { useAppStore, useAuthStore } from '@/stores'
 import { apiClient } from '@/api/client'
 import { buildApiUrl } from '@/api/url'
+import { isValidPassword } from '@/utils/passwordPolicy'
 import {
   exchangePendingOAuthCompletion,
   persistOAuthTokenContext,
@@ -213,7 +214,7 @@ const registrationHint = computed(() =>
 )
 const canSubmitRegistration = computed(() => {
   if (!registrationEmail.value.trim()) return false
-  if (password.value.length < 6) return false
+  if (!isValidPassword(password.value)) return false
   if (password.value !== confirmPassword.value) return false
   if (invitationRequired.value && !invitationCode.value.trim()) return false
   return true
@@ -329,7 +330,7 @@ async function handleSubmitRegistration() {
     registrationError.value = t('auth.emailRequired')
     return
   }
-  if (password.value.length < 6) {
+  if (!isValidPassword(password.value)) {
     registrationError.value = t('auth.passwordMinLength')
     return
   }

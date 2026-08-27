@@ -234,11 +234,11 @@ export default {
     setPasswordLabel: 'Set Password',
     passwordPlaceholder: 'Enter your password',
     createPasswordPlaceholder: 'Create a strong password',
-    passwordHint: 'At least 6 characters',
+    passwordHint: 'At least 8 characters, including a letter and a number',
     emailRequired: 'Email is required',
     invalidEmail: 'Please enter a valid email address',
     passwordRequired: 'Password is required',
-    passwordMinLength: 'Password must be at least 6 characters',
+    passwordMinLength: 'Password must be at least 8 characters and include a letter and a number',
     loginFailed: 'Login failed. Please check your credentials and try again.',
     errors: {
       USER_NOT_ACTIVE: 'Account has been disabled.',
