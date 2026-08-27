@@ -208,6 +208,7 @@ import {
   unbindAuthIdentity,
 } from '@/api/user'
 import Icon from '@/components/icons/Icon.vue'
+import { isValidPassword } from '@/utils/passwordPolicy'
 import { useAppStore, useAuthStore } from '@/stores'
 import type { User, UserAuthBindingStatus, UserAuthProvider } from '@/types'
 
@@ -604,7 +605,7 @@ function validateEmailBindingForm(requireCode: boolean): boolean {
     appStore.showError(t('auth.passwordRequired'))
     return false
   }
-  if (requireCode && !emailBound.value && emailBindingForm.password.length < 6) {
+  if (requireCode && !emailBound.value && !isValidPassword(emailBindingForm.password)) {
     appStore.showError(t('auth.passwordMinLength'))
     return false
   }

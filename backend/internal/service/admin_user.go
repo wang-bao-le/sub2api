@@ -118,6 +118,9 @@ func normalizeUserRole(role, fallback string) (string, error) {
 }
 
 func (s *adminServiceImpl) CreateUser(ctx context.Context, input *CreateUserInput) (*User, error) {
+	if err := ValidatePassword(input.Password); err != nil {
+		return nil, err
+	}
 	balance := 0.0
 	if input.Balance != nil {
 		balance = *input.Balance
@@ -227,6 +230,9 @@ func (s *adminServiceImpl) UpdateUser(ctx context.Context, id int64, input *Upda
 		fields.Email = true
 	}
 	if input.Password != "" {
+		if err := ValidatePassword(input.Password); err != nil {
+			return nil, err
+		}
 		if err := user.SetPassword(input.Password); err != nil {
 			return nil, err
 		}

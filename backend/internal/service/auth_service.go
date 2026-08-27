@@ -161,6 +161,9 @@ func (s *AuthService) Register(ctx context.Context, email, password string) (str
 
 // RegisterWithVerification 用户注册（支持邮件验证、优惠码、邀请码和邀请返利码），返回token和用户。
 func (s *AuthService) RegisterWithVerification(ctx context.Context, email, password, verifyCode, promoCode, invitationCode, affiliateCode string) (string, *User, error) {
+	if err := ValidatePassword(password); err != nil {
+		return "", nil, err
+	}
 	// 检查是否开放注册（默认关闭：settingService 未配置时不允许注册）
 	if s.settingService == nil || !s.settingService.IsRegistrationEnabled(ctx) {
 		return "", nil, ErrRegDisabled
@@ -1613,6 +1616,9 @@ func (s *AuthService) RequestPasswordResetAsync(ctx context.Context, email, fron
 // ResetPassword 重置密码
 // Security: Increments TokenVersion to invalidate all existing JWT tokens
 func (s *AuthService) ResetPassword(ctx context.Context, email, token, newPassword string) error {
+	if err := ValidatePassword(newPassword); err != nil {
+		return err
+	}
 	// Check if password reset is enabled
 	if !s.IsPasswordResetEnabled(ctx) {
 		return infraerrors.Forbidden("PASSWORD_RESET_DISABLED", "password reset is not enabled")

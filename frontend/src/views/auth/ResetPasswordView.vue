@@ -119,6 +119,9 @@
               <Icon v-else name="eye" size="md" />
             </button>
           </div>
+          <p v-if="errors.password" class="input-error-text">
+            {{ errors.password }}
+          </p>
         </div>
 
         <!-- Confirm Password Input -->
@@ -150,6 +153,9 @@
               <Icon v-else name="eye" size="md" />
             </button>
           </div>
+          <p v-if="errors.confirmPassword" class="input-error-text">
+            {{ errors.confirmPassword }}
+          </p>
         </div>
 
         <!-- Submit Button -->
@@ -207,6 +213,7 @@ import { AuthLayout } from '@/components/layout'
 import Icon from '@/components/icons/Icon.vue'
 import { useAppStore } from '@/stores'
 import { resetPassword } from '@/api/auth'
+import { isValidPassword } from '@/utils/passwordPolicy'
 
 const { t } = useI18n()
 
@@ -274,7 +281,7 @@ function validateForm(): boolean {
   if (!formData.password) {
     errors.password = t('auth.passwordRequired')
     isValid = false
-  } else if (formData.password.length < 6) {
+  } else if (!isValidPassword(formData.password)) {
     errors.password = t('auth.passwordMinLength')
     isValid = false
   }

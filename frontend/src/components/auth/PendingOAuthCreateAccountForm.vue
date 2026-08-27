@@ -80,7 +80,7 @@
       :data-testid="`${testIdPrefix}-create-account-submit`"
       type="button"
       class="btn btn-primary w-full"
-      :disabled="isSubmitting || !email.trim() || password.length < 6 || (invitationCodeEnabled && !invitationCode.trim()) || (turnstileEnabled && !turnstileToken)"
+      :disabled="isSubmitting || !email.trim() || !isValidPassword(password) || (invitationCodeEnabled && !invitationCode.trim()) || (turnstileEnabled && !turnstileToken)"
       @click="handleSubmit"
     >
       {{ isSubmitting ? t('common.processing') : t('auth.createAccount') }}
@@ -102,6 +102,7 @@ import { useI18n } from 'vue-i18n'
 import TurnstileWidget from '@/components/CaptchaChallenge.vue'
 import { getPublicSettings, sendPendingOAuthVerifyCode } from '@/api/auth'
 import { useAppStore } from '@/stores'
+import { isValidPassword } from '@/utils/passwordPolicy'
 
 export type PendingOAuthCreateAccountPayload = {
   email: string
@@ -302,7 +303,7 @@ async function handleSendCode() {
 
 async function handleSubmit() {
   const trimmedEmail = email.value.trim()
-  if (!trimmedEmail || password.value.length < 6) {
+  if (!trimmedEmail || !isValidPassword(password.value)) {
     return
   }
 

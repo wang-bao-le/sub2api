@@ -85,6 +85,9 @@
           <p class="input-hint">
             {{ t('auth.passwordHint') }}
           </p>
+          <p v-if="errors.password" class="input-error-text">
+            {{ errors.password }}
+          </p>
         </div>
 
         <!-- Confirm Password Input -->
@@ -389,6 +392,7 @@ import {
   validateInvitationCode
 } from '@/api/auth'
 import { buildAuthErrorMessage } from '@/utils/authError'
+import { isValidPassword } from '@/utils/passwordPolicy'
 import { extractApiErrorCode, extractI18nErrorMessage } from '@/utils/apiError'
 import {
   formatRegistrationEmailSuffixWhitelistForMessage,
@@ -956,7 +960,7 @@ function validateForm(): boolean {
   if (!formData.password) {
     errors.password = t('auth.passwordRequired')
     isValid = false
-  } else if (formData.password.length < 6) {
+  } else if (!isValidPassword(formData.password)) {
     errors.password = t('auth.passwordMinLength')
     isValid = false
   }
