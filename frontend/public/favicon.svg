@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none" style="background:#000000">
-  <rect x="0" y="0" width="512" height="512" fill="#000000"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none" style="background:#181818">
+  <rect x="0" y="0" width="512" height="512" fill="#181818"/>
   <g fill="#FFFFFF">
     <!-- Reference-inspired layout: 5 / 5 / 5 / 4 / 3, with fixed centers -->
     <rect x="-29" y="-29" width="58" height="58" rx="18" transform="translate(120 140)"/>
