@@ -918,7 +918,7 @@ onBeforeUnmount(() => {
   right: 1rem;
   left: 1rem;
   height: 1px;
-  background: #2b313a;
+  background: #c8c8c8;
 }
 
 .sidebar-brand {
