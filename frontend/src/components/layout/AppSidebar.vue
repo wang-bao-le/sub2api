@@ -154,6 +154,9 @@
       </template>
     </nav>
 
+    <!-- Bottom spacer -->
+    <div class="sidebar-footer mt-auto p-3"></div>
+
   </aside>
 
   <!-- Mobile Overlay -->
@@ -900,6 +903,20 @@ onBeforeUnmount(() => {
   gap: 0;
   padding-left: 0.25rem;
   padding-right: 0.25rem;
+}
+
+.sidebar-footer {
+  position: relative;
+}
+
+.sidebar-footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 1rem;
+  left: 1rem;
+  height: 1px;
+  background: #c8c8c8;
 }
 
 .sidebar-collapse-button {
