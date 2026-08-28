@@ -179,7 +179,7 @@
       </button>
 
       <transition name="dropdown">
-        <div v-if="userDropdownOpen" class="dropdown bottom-full right-3 mb-2 w-56 origin-bottom-right">
+        <div v-if="userDropdownOpen" class="dropdown bottom-full right-3 mb-2 w-[186px] origin-bottom-right">
           <div class="border-b border-gray-100 px-4 py-3 dark:border-dark-700">
             <div class="text-sm font-medium text-gray-900 dark:text-white">{{ displayName }}</div>
             <div class="text-xs text-gray-500 dark:text-dark-400">{{ user.email }}</div>
