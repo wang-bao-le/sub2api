@@ -572,6 +572,7 @@
 
   .sidebar-header::before {
     top: 0;
+    background: rgba(0, 0, 0, 0.9);
   }
 
   .sidebar-header::after {
