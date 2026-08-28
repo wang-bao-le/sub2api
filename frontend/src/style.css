@@ -539,21 +539,22 @@
   /* ============ 侧边栏 ============ */
   .sidebar {
     @apply fixed inset-y-0 left-0 z-40;
-    @apply w-64 bg-white dark:bg-dark-900;
+    @apply w-64;
     @apply border-r border-gray-200 dark:border-dark-800;
     @apply flex flex-col;
     @apply transition-transform duration-300;
+    background:
+      linear-gradient(135deg, rgba(55, 65, 81, 0.34), rgba(0, 0, 0, 0.92) 52%, rgba(31, 41, 55, 0.28)),
+      rgba(0, 0, 0, 0.9);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
     transition-property: width, transform;
   }
 
   .sidebar-header {
     @apply h-16 px-6;
     @apply flex items-center gap-3;
-    background:
-      linear-gradient(135deg, rgba(55, 65, 81, 0.34), rgba(0, 0, 0, 0.92) 52%, rgba(31, 41, 55, 0.28)),
-      rgba(0, 0, 0, 0.9);
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
+    background: transparent;
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.06),
       inset 0 -1px 0 rgba(0, 0, 0, 0.35);
