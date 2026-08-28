@@ -226,13 +226,19 @@
         <div class="providers-marquee mb-16" aria-label="Supported AI models">
           <div class="providers-track">
             <div
-              v-for="provider in providerItems"
-              :key="provider.id"
-              class="provider-item flex shrink-0 items-center gap-3 rounded-xl border border-gray-200/70 bg-white/70 px-5 py-3 backdrop-blur-sm dark:border-dark-700/70 dark:bg-dark-800/70"
-              :aria-hidden="provider.duplicate"
+              v-for="group in 3"
+              :key="group"
+              class="providers-group"
+              :aria-hidden="group > 1"
             >
-              <img :src="provider.logo" :alt="provider.duplicate ? '' : `${provider.name} logo`" class="h-8 w-8 object-contain" loading="lazy" />
-              <span class="text-sm font-medium text-gray-700 dark:text-dark-200">{{ provider.name }}</span>
+              <div
+                v-for="provider in supportedProviders"
+                :key="provider.id"
+                class="provider-item flex shrink-0 items-center gap-3 rounded-xl border border-gray-200/70 bg-white/70 px-5 py-3 backdrop-blur-sm dark:border-dark-700/70 dark:bg-dark-800/70"
+              >
+                <img :src="provider.logo" :alt="group === 1 ? `${provider.name} logo` : ''" class="h-8 w-8 object-contain" loading="lazy" />
+                <span class="text-sm font-medium text-gray-700 dark:text-dark-200">{{ provider.name }}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -302,11 +308,6 @@ const supportedProviders = [
   },
   { id: 'kimi', name: 'Kimi', logo: '/provider-logos/kimi.ico' },
 ]
-const providerItems = [
-  ...supportedProviders.map((provider) => ({ ...provider, duplicate: false })),
-  ...supportedProviders.map((provider) => ({ ...provider, id: `${provider.id}-duplicate`, duplicate: true })),
-]
-
 // Check if homeContent is a URL (for iframe display)
 const isHomeContentUrl = computed(() => {
   const content = homeContent.value.trim()
@@ -365,8 +366,13 @@ onMounted(() => {
 .providers-track {
   display: flex;
   width: max-content;
-  gap: 3.5rem;
   animation: providers-marquee 38s linear infinite;
+}
+
+.providers-group {
+  display: flex;
+  gap: 3.5rem;
+  padding-right: 3.5rem;
 }
 
 .providers-marquee:hover .providers-track {
@@ -379,7 +385,7 @@ onMounted(() => {
   }
 
   to {
-    transform: translateX(-50%);
+    transform: translateX(-33.333333%);
   }
 }
 
