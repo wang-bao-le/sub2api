@@ -318,8 +318,8 @@ const showOnboardingButton = computed(() => !authStore.isSimpleMode && user.valu
 
 const userInitials = computed(() => {
   if (!user.value) return ''
-  if (user.value.username) return user.value.username.substring(0, 2).toUpperCase()
-  return user.value.email?.split('@')[0]?.substring(0, 2).toUpperCase() || ''
+  if (user.value.username) return user.value.username.substring(0, 1).toUpperCase()
+  return user.value.email?.split('@')[0]?.substring(0, 1).toUpperCase() || ''
 })
 
 const displayName = computed(() => {
