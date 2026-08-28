@@ -16,7 +16,7 @@ export default {
     goToDashboard: '进入控制台',
     heroLabel: 'AIFlow 中转',
     heroTitle: '畅连多种 AI 模型',
-    heroDescriptionLine1: '一个账号，一条线路，轻松接入 Claude Code、Codex 和 Gemini CLI',
+    heroDescriptionLine1: '一个账号，一条线路，轻松接入 Codex、DeepSeek 和 Kimi',
     heroDescriptionLine2: '低价、稳定、计费透明',
     // 新增：面向用户的价值主张
     heroSubtitle: '一个密钥，畅用多个 AI 模型',
