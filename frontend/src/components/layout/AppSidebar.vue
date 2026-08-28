@@ -154,8 +154,78 @@
       </template>
     </nav>
 
-    <!-- Bottom spacer -->
-    <div class="sidebar-footer mt-auto p-3"></div>
+    <!-- User menu -->
+    <div v-if="user" ref="userDropdownRef" class="sidebar-footer mt-auto p-3">
+      <button
+        @click="toggleUserDropdown"
+        class="sidebar-user-button"
+        :class="{ 'sidebar-user-button-collapsed': sidebarCollapsed }"
+        :aria-label="t('common.userMenu')"
+      >
+        <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 text-sm font-medium text-white shadow-sm">
+          <img v-if="avatarUrl" :src="avatarUrl" :alt="displayName" class="h-full w-full object-cover">
+          <span v-else>{{ userInitials }}</span>
+        </div>
+        <div class="sidebar-user-details" :class="{ 'sidebar-user-details-collapsed': sidebarCollapsed }">
+          <div class="truncate text-sm font-medium text-white">{{ displayName }}</div>
+          <div class="text-xs text-gray-400">{{ t('admin.users.roles.' + user.role) }}</div>
+        </div>
+        <Icon
+          name="chevronDown"
+          size="sm"
+          class="sidebar-user-chevron"
+          :class="{ 'sidebar-user-chevron-collapsed': sidebarCollapsed }"
+        />
+      </button>
+
+      <transition name="dropdown">
+        <div v-if="userDropdownOpen" class="dropdown bottom-full right-3 mb-2 w-56 origin-bottom-right">
+          <div class="border-b border-gray-100 px-4 py-3 dark:border-dark-700">
+            <div class="text-sm font-medium text-gray-900 dark:text-white">{{ displayName }}</div>
+            <div class="text-xs text-gray-500 dark:text-dark-400">{{ user.email }}</div>
+          </div>
+
+          <div class="py-1">
+            <router-link to="/profile" @click="closeUserDropdown" class="dropdown-item">
+              <Icon name="user" size="sm" />
+              {{ t('nav.profile') }}
+            </router-link>
+            <router-link to="/keys" @click="closeUserDropdown" class="dropdown-item">
+              <Icon name="key" size="sm" />
+              {{ t('nav.apiKeys') }}
+            </router-link>
+          </div>
+
+          <div v-if="contactInfo" class="border-t border-gray-100 px-4 py-2.5 dark:border-dark-700">
+            <div class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+              <svg class="h-3.5 w-3.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
+              </svg>
+              <span>{{ t('common.contactSupport') }}:</span>
+              <span class="font-medium text-gray-700 dark:text-gray-300">{{ contactInfo }}</span>
+            </div>
+          </div>
+
+          <div v-if="showOnboardingButton" class="border-t border-gray-100 py-1 dark:border-dark-700">
+            <button @click="handleReplayGuide" class="dropdown-item w-full">
+              <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 14a1 1 0 110 2 1 1 0 010-2zm1.07-7.75c0-.6-.49-1.25-1.32-1.25-.7 0-1.22.4-1.43 1.02a1 1 0 11-1.9-.62A3.41 3.41 0 0111.8 5c2.02 0 3.25 1.4 3.25 2.9 0 2-1.83 2.55-2.43 3.12-.43.4-.47.75-.47 1.23a1 1 0 01-2 0c0-1 .16-1.82 1.1-2.7.69-.64 1.82-1.05 1.82-2.06z" />
+              </svg>
+              {{ $t('onboarding.restartTour') }}
+            </button>
+          </div>
+
+          <div class="border-t border-gray-100 py-1 dark:border-dark-700">
+            <button @click="handleLogout" class="dropdown-item w-full text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20">
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+              </svg>
+              {{ t('nav.logout') }}
+            </button>
+          </div>
+        </div>
+      </transition>
+    </div>
 
   </aside>
 
@@ -239,6 +309,23 @@ const expandedGroups = ref<Set<string>>(new Set())
 const siteName = computed(() => appStore.siteName || 'Sub2API')
 const siteLogo = computed(() => sanitizeUrl(appStore.siteLogo || '', { allowRelative: true, allowDataUrl: true }))
 const settingsLoaded = computed(() => appStore.publicSettingsLoaded)
+const user = computed(() => authStore.user)
+const userDropdownOpen = ref(false)
+const userDropdownRef = ref<HTMLElement | null>(null)
+const contactInfo = computed(() => appStore.contactInfo)
+const avatarUrl = computed(() => user.value?.avatar_url?.trim() || '')
+const showOnboardingButton = computed(() => !authStore.isSimpleMode && user.value?.role === 'admin')
+
+const userInitials = computed(() => {
+  if (!user.value) return ''
+  if (user.value.username) return user.value.username.substring(0, 2).toUpperCase()
+  return user.value.email?.split('@')[0]?.substring(0, 2).toUpperCase() || ''
+})
+
+const displayName = computed(() => {
+  if (!user.value) return ''
+  return user.value.username || user.value.email?.split('@')[0] || ''
+})
 
 // SVG Icon Components
 const DashboardIcon = {
@@ -793,6 +880,35 @@ function toggleSidebar() {
   appStore.toggleSidebar()
 }
 
+function toggleUserDropdown() {
+  userDropdownOpen.value = !userDropdownOpen.value
+}
+
+function closeUserDropdown() {
+  userDropdownOpen.value = false
+}
+
+async function handleLogout() {
+  closeUserDropdown()
+  try {
+    await authStore.logout()
+  } catch (error) {
+    console.error('Logout error:', error)
+  }
+  await router.push('/login')
+}
+
+function handleReplayGuide() {
+  closeUserDropdown()
+  onboardingStore.replay()
+}
+
+function handleUserMenuClickOutside(event: MouseEvent) {
+  if (userDropdownRef.value && !userDropdownRef.value.contains(event.target as Node)) {
+    closeUserDropdown()
+  }
+}
+
 function closeMobile() {
   appStore.setMobileOpen(false)
 }
@@ -872,6 +988,7 @@ watch(
 )
 
 onMounted(() => {
+  document.addEventListener('click', handleUserMenuClickOutside)
   void refreshBatchImageAccess()
   if (isAdmin.value) {
     adminSettingsStore.fetch()
@@ -887,6 +1004,7 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+  document.removeEventListener('click', handleUserMenuClickOutside)
   if (sidebarNavRef.value) {
     appStore.sidebarScrollTop = sidebarNavRef.value.scrollTop
   }
@@ -917,6 +1035,47 @@ onBeforeUnmount(() => {
   left: 1rem;
   height: 1px;
   background: #c8c8c8;
+}
+
+.sidebar-user-button {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 0.75rem;
+  padding: 0.375rem;
+  text-align: left;
+  transition: background-color 0.2s;
+}
+
+.sidebar-user-button:hover {
+  background: #22272e;
+}
+
+.sidebar-user-button-collapsed {
+  justify-content: center;
+  gap: 0;
+  padding: 0.375rem;
+}
+
+.sidebar-user-details {
+  min-width: 0;
+  flex: 1 1 auto;
+  white-space: nowrap;
+  transition: opacity 0.16s ease, transform 0.16s ease;
+}
+
+.sidebar-user-details-collapsed,
+.sidebar-user-chevron-collapsed {
+  width: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateX(-4px);
+}
+
+.sidebar-user-chevron {
+  flex-shrink: 0;
+  color: #9ca3af;
 }
 
 .sidebar-collapse-button {
@@ -957,6 +1116,17 @@ onBeforeUnmount(() => {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.dropdown-enter-active,
+.dropdown-leave-active {
+  transition: all 0.2s ease;
+}
+
+.dropdown-enter-from,
+.dropdown-leave-to {
+  opacity: 0;
+  transform: scale(0.95) translateY(4px);
 }
 
 .sidebar-link-collapsed {
