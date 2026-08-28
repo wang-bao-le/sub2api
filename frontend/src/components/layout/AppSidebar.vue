@@ -150,13 +150,11 @@
       <!-- Collapse Button -->
       <button
         @click="toggleSidebar"
-        class="sidebar-link w-full"
-        :class="{ 'sidebar-link-collapsed': sidebarCollapsed }"
+        class="sidebar-link sidebar-collapse-button"
         :title="sidebarCollapsed ? t('nav.expand') : t('nav.collapse')"
       >
         <ChevronDoubleLeftIcon v-if="!sidebarCollapsed" class="h-5 w-5 flex-shrink-0" />
         <ChevronDoubleRightIcon v-else class="h-5 w-5 flex-shrink-0" />
-        <span class="sidebar-label" :class="{ 'sidebar-label-collapsed': sidebarCollapsed }" :aria-hidden="sidebarCollapsed ? 'true' : 'false'">{{ t('nav.collapse') }}</span>
       </button>
     </div>
   </aside>
@@ -919,6 +917,14 @@ onBeforeUnmount(() => {
   left: 1rem;
   height: 1px;
   background: #c8c8c8;
+}
+
+.sidebar-collapse-button {
+  width: 2.5rem;
+  height: 2.5rem;
+  justify-content: center;
+  gap: 0;
+  padding: 0;
 }
 
 .sidebar-brand {
