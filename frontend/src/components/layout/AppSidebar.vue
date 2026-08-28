@@ -146,7 +146,7 @@
     </nav>
 
     <!-- Bottom Section -->
-    <div class="mt-auto border-t border-gray-100 p-3 dark:border-dark-800">
+    <div class="sidebar-footer mt-auto p-3">
       <!-- Collapse Button -->
       <button
         @click="toggleSidebar"
@@ -905,6 +905,20 @@ onBeforeUnmount(() => {
   gap: 0;
   padding-left: 1.125rem;
   padding-right: 1.125rem;
+}
+
+.sidebar-footer {
+  position: relative;
+}
+
+.sidebar-footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 1rem;
+  left: 1rem;
+  height: 1px;
+  background: #2b313a;
 }
 
 .sidebar-brand {
