@@ -1,5 +1,5 @@
 <template>
-  <AuthLayout compact>
+  <AuthLayout compact :embedded="modal">
     <div class="space-y-5">
       <!-- Title -->
       <div class="text-center">
@@ -290,6 +290,7 @@ import { extractI18nErrorMessage } from '@/utils/apiError'
 import { clearAllAffiliateReferralCodes } from '@/utils/oauthAffiliate'
 
 const { t } = useI18n()
+const { modal = false } = defineProps<{ modal?: boolean }>()
 const LOGIN_AGREEMENT_STORAGE_KEY = 'sub2api_login_agreement_consent'
 
 // ==================== Router & Stores ====================

@@ -51,6 +51,7 @@
           </router-link>
           <router-link
             :to="isAuthenticated ? dashboardPath : '/login'"
+            @click="handleLoginClick"
             class="inline-flex min-h-10 shrink-0 items-center justify-center rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-200"
           >
             {{ isAuthenticated ? t('home.dashboard') : t('home.login') }}
@@ -70,6 +71,7 @@
         <p class="mt-4 whitespace-pre-wrap [overflow-wrap:anywhere] text-base text-gray-600 dark:text-dark-300">{{ siteSubtitle }}</p>
         <router-link
           :to="isAuthenticated ? dashboardPath : '/login'"
+          @click="handleLoginClick"
           class="mt-8 inline-flex min-h-10 items-center justify-center rounded-lg bg-primary-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-700"
         >
           {{ isAuthenticated ? t('home.goToDashboard') : t('home.login') }}
@@ -141,6 +143,7 @@
           <router-link
             v-else
             to="/login"
+            @click="handleLoginClick"
             class="group inline-flex items-center justify-center rounded-full border border-gray-900 bg-gray-50 px-5 py-1.5 text-sm font-semibold text-gray-900 transition-colors hover:bg-gray-900 hover:text-white dark:border-gray-200 dark:bg-dark-900 dark:text-gray-100 dark:hover:bg-gray-100 dark:hover:text-gray-900"
           >
             <span class="font-semibold text-gray-900 transition-colors group-hover:text-white dark:text-gray-100 dark:group-hover:text-gray-900">
@@ -175,6 +178,7 @@
             <div>
               <router-link
                 :to="isAuthenticated ? dashboardPath : '/login'"
+                @click="handleLoginClick"
                 class="btn bg-black px-8 py-3 text-base text-white shadow-lg shadow-black/20 hover:bg-gray-800 hover:shadow-black/30"
               >
                 {{ isAuthenticated ? t('home.goToDashboard') : t('home.getStarted') }}
@@ -278,6 +282,7 @@ import AnnouncementBell from '@/components/common/AnnouncementBell.vue'
 import Icon from '@/components/icons/Icon.vue'
 import { sanitizeUrl } from '@/utils/url'
 import { FeatureFlags, isFeatureFlagEnabled } from '@/utils/featureFlags'
+import { requestLoginModal } from '@/utils/loginModal'
 
 const { t } = useI18n()
 
@@ -324,6 +329,13 @@ const showModelPlazaEntry = computed(
 )
 const isAdmin = computed(() => authStore.isAdmin)
 const dashboardPath = computed(() => isAdmin.value ? '/admin/dashboard' : '/dashboard')
+
+function handleLoginClick(event: MouseEvent) {
+  if (!isAuthenticated.value) {
+    event.preventDefault()
+    requestLoginModal()
+  }
+}
 // Current year for footer
 const currentYear = computed(() => new Date().getFullYear())
 

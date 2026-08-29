@@ -406,6 +406,18 @@
     @apply flex flex-col;
   }
 
+  .login-modal-overlay {
+    @apply z-[60] bg-gray-950/55 p-3 backdrop-blur-[2px] sm:p-6;
+  }
+
+  .login-modal-content {
+    @apply relative max-h-[calc(100dvh-1.5rem)] max-w-md overflow-y-auto rounded-2xl border-0 bg-transparent shadow-2xl sm:max-h-[calc(100dvh-3rem)];
+  }
+
+  .login-modal-close {
+    @apply absolute right-3 top-3 z-10 rounded-lg p-2 text-white/80 transition-colors hover:bg-white/15 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80;
+  }
+
   .modal-header {
     @apply border-b border-gray-200 px-4 py-3 dark:border-dark-700;
     @apply sm:px-6 sm:py-4;

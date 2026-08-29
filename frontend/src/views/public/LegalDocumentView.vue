@@ -18,6 +18,7 @@
         </RouterLink>
         <RouterLink
           to="/login"
+          @click="handleLoginClick"
           class="inline-flex flex-shrink-0 items-center justify-center rounded-lg bg-primary-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-primary-600/20 transition hover:bg-primary-700"
         >
           {{ t('home.login') }}
@@ -100,6 +101,7 @@ import { getLocale } from '@/i18n'
 import { sanitizeUrl } from '@/utils/url'
 import { useAppStore } from '@/stores/app'
 import type { LoginAgreementDocument } from '@/types'
+import { requestLoginModal } from '@/utils/loginModal'
 import zhAdminCompliance from '../../../../docs/legal/admin-compliance.zh.md?raw'
 import enAdminCompliance from '../../../../docs/legal/admin-compliance.en.md?raw'
 
@@ -111,6 +113,11 @@ const appStore = useAppStore()
 const settings = computed(() => appStore.cachedPublicSettings)
 const loading = ref(!settings.value)
 const loadError = ref(false)
+
+function handleLoginClick(event: MouseEvent) {
+  event.preventDefault()
+  requestLoginModal()
+}
 
 marked.setOptions({
   breaks: true,
