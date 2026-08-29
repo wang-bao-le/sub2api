@@ -426,7 +426,7 @@ import {
   validatePromoCode,
   validateInvitationCode
 } from '@/api/auth'
-import { buildAuthErrorMessage } from '@/utils/authError'
+import { buildLocalizedAuthErrorMessage } from '@/utils/authError'
 import { isValidPassword } from '@/utils/passwordPolicy'
 import { extractApiErrorCode, extractI18nErrorMessage } from '@/utils/apiError'
 import {
@@ -1135,7 +1135,7 @@ function buildRegistrationErrorMessage(error: unknown, fallback: string): string
   if (extractApiErrorCode(error) === 'EMAIL_DOMAIN_REGISTRATION_LIMIT') {
     return t('auth.emailDomainRegistrationLimit')
   }
-  return buildAuthErrorMessage(error, { fallback })
+  return buildLocalizedAuthErrorMessage(error, t, fallback)
 }
 </script>
 

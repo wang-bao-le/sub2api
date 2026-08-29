@@ -1,3 +1,5 @@
+import { extractI18nErrorMessage } from '@/utils/apiError'
+
 interface APIErrorLike {
   message?: string
   response?: {
@@ -22,4 +24,17 @@ export function buildAuthErrorMessage(
   const { fallback } = options
   const message = extractErrorMessage(error)
   return message || fallback
+}
+
+export function buildLocalizedAuthErrorMessage(
+  error: unknown,
+  t: (key: string, params?: Record<string, unknown>) => string,
+  fallback: string,
+): string {
+  return extractI18nErrorMessage(
+    error,
+    t,
+    'auth.errors',
+    buildAuthErrorMessage(error, { fallback }),
+  )
 }

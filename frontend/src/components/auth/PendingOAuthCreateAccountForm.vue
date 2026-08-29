@@ -103,6 +103,7 @@ import TurnstileWidget from '@/components/CaptchaChallenge.vue'
 import { getPublicSettings, sendPendingOAuthVerifyCode } from '@/api/auth'
 import { useAppStore } from '@/stores'
 import { isValidPassword } from '@/utils/passwordPolicy'
+import { buildLocalizedAuthErrorMessage } from '@/utils/authError'
 
 export type PendingOAuthCreateAccountPayload = {
   email: string
@@ -223,8 +224,7 @@ function startCountdown(seconds: number) {
 }
 
 function getRequestErrorMessage(error: unknown, fallback: string): string {
-  const err = error as { message?: string; response?: { data?: { detail?: string; message?: string } } }
-  return err.response?.data?.detail || err.response?.data?.message || err.message || fallback
+  return buildLocalizedAuthErrorMessage(error, t, fallback)
 }
 
 function resetTurnstile() {

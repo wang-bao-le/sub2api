@@ -261,6 +261,7 @@ import { useAppStore } from '@/stores'
 import { resetPassword } from '@/api/auth'
 import { isValidPassword } from '@/utils/passwordPolicy'
 import { requestAuthModal, type AuthModalOptions, type AuthModalView } from '@/utils/loginModal'
+import { extractI18nErrorMessage } from '@/utils/apiError'
 
 const { t } = useI18n()
 const { modal = false, options } = defineProps<{ modal?: boolean; options?: AuthModalOptions }>()
@@ -379,12 +380,8 @@ async function handleSubmit(): Promise<void> {
     } else if (err.response?.data?.code === 'INVALID_VERIFY_CODE' || err.response?.data?.code === 'VERIFY_CODE_MAX_ATTEMPTS') {
       errors.verifyCode = t('auth.invalidCode')
       errorMessage.value = t('auth.invalidCode')
-    } else if (err.response?.data?.detail) {
-      errorMessage.value = err.response.data.detail
-    } else if (err.message) {
-      errorMessage.value = err.message
     } else {
-      errorMessage.value = t('auth.resetPasswordFailed')
+      errorMessage.value = extractI18nErrorMessage(error, t, 'auth.errors', t('auth.resetPasswordFailed'))
     }
 
   } finally {
