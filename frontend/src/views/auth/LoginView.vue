@@ -73,10 +73,11 @@
               :disabled="authActionDisabled"
               :aria-label="showPassword ? t('auth.hidePassword') : t('auth.showPassword')"
               :aria-pressed="showPassword"
+              aria-controls="password"
               class="absolute inset-y-0 right-0 flex min-w-11 items-center justify-center text-gray-400 transition-colors hover:text-gray-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-black/40 dark:hover:text-dark-300 dark:focus-visible:ring-white/50"
             >
-              <Icon v-if="showPassword" name="eyeOff" size="md" />
-              <Icon v-else name="eye" size="md" />
+              <Icon v-if="showPassword" name="eyeOff" size="md" aria-hidden="true" />
+              <Icon v-else name="eye" size="md" aria-hidden="true" />
             </button>
           </div>
           <p v-if="errors.password" id="login-password-error" class="input-error-text" role="alert">

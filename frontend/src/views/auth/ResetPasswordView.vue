@@ -117,10 +117,11 @@
               @click="showPassword = !showPassword"
               :aria-label="showPassword ? t('auth.hidePassword') : t('auth.showPassword')"
               :aria-pressed="showPassword"
-              class="absolute inset-y-0 right-0 flex min-w-11 items-center justify-center pr-3.5 text-gray-400 transition-colors hover:text-gray-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 dark:hover:text-dark-300"
+              aria-controls="password"
+              class="absolute inset-y-0 right-0 flex min-w-11 items-center justify-center pr-3.5 text-gray-400 transition-colors hover:text-gray-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/40 dark:hover:text-dark-300 dark:focus-visible:ring-white/50"
             >
-              <Icon v-if="showPassword" name="eyeOff" size="md" />
-              <Icon v-else name="eye" size="md" />
+              <Icon v-if="showPassword" name="eyeOff" size="md" aria-hidden="true" />
+              <Icon v-else name="eye" size="md" aria-hidden="true" />
             </button>
           </div>
           <p v-if="errors.password" id="reset-password-error" class="input-error-text" role="alert">
@@ -155,10 +156,11 @@
               @click="showConfirmPassword = !showConfirmPassword"
               :aria-label="showConfirmPassword ? t('auth.hidePassword') : t('auth.showPassword')"
               :aria-pressed="showConfirmPassword"
-              class="absolute inset-y-0 right-0 flex min-w-11 items-center justify-center pr-3.5 text-gray-400 transition-colors hover:text-gray-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 dark:hover:text-dark-300"
+              aria-controls="confirmPassword"
+              class="absolute inset-y-0 right-0 flex min-w-11 items-center justify-center pr-3.5 text-gray-400 transition-colors hover:text-gray-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/40 dark:hover:text-dark-300 dark:focus-visible:ring-white/50"
             >
-              <Icon v-if="showConfirmPassword" name="eyeOff" size="md" />
-              <Icon v-else name="eye" size="md" />
+              <Icon v-if="showConfirmPassword" name="eyeOff" size="md" aria-hidden="true" />
+              <Icon v-else name="eye" size="md" aria-hidden="true" />
             </button>
           </div>
           <p v-if="errors.confirmPassword" id="reset-confirm-password-error" class="input-error-text" role="alert">

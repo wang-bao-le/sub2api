@@ -118,6 +118,31 @@ describe('RegisterView invitation layout', () => {
     expect(wrapper.get('#invitation_code').exists()).toBe(true)
   })
 
+  it('exposes accessible password visibility toggles for both password fields', async () => {
+    const wrapper = mountRegister()
+    await flushPromises()
+
+    const passwordToggle = wrapper.get('button[aria-controls="password"]')
+    const confirmPasswordToggle = wrapper.get('button[aria-controls="confirm_password"]')
+
+    expect(passwordToggle.attributes('aria-label')).toBe('auth.showPassword')
+    expect(passwordToggle.attributes('aria-pressed')).toBe('false')
+    expect(passwordToggle.attributes('aria-controls')).toBe('password')
+    expect(confirmPasswordToggle.attributes('aria-label')).toBe('auth.showPassword')
+    expect(confirmPasswordToggle.attributes('aria-pressed')).toBe('false')
+    expect(confirmPasswordToggle.attributes('aria-controls')).toBe('confirm_password')
+
+    await passwordToggle.trigger('click')
+    await confirmPasswordToggle.trigger('click')
+
+    expect(wrapper.get('#password').attributes('type')).toBe('text')
+    expect(wrapper.get('#confirm_password').attributes('type')).toBe('text')
+    expect(passwordToggle.attributes('aria-label')).toBe('auth.hidePassword')
+    expect(passwordToggle.attributes('aria-pressed')).toBe('true')
+    expect(confirmPasswordToggle.attributes('aria-label')).toBe('auth.hidePassword')
+    expect(confirmPasswordToggle.attributes('aria-pressed')).toBe('true')
+  })
+
   it('submits a non-whitelist email domain so the backend can enforce its registration quota', async () => {
     getPublicSettingsMock.mockResolvedValueOnce({
       ...publicSettings,
