@@ -15,8 +15,8 @@
           <div :class="embedded ? 'flex items-center gap-3' : 'flex items-center gap-3 lg:block'">
             <div
               :class="embedded
-                ? 'inline-flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-black'
-                : 'inline-flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-black lg:mb-8 lg:h-16 lg:w-16 lg:rounded-2xl'"
+                ? 'inline-flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-transparent'
+                : 'inline-flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-transparent lg:mb-8 lg:h-16 lg:w-16 lg:rounded-2xl'"
             >
               <img src="/favicon1.svg" alt="Logo" class="h-full w-full object-contain" />
             </div>
