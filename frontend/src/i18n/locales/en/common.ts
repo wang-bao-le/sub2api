@@ -239,9 +239,15 @@ export default {
     emailRequired: 'Email is required',
     invalidEmail: 'Please enter a valid email address',
     passwordRequired: 'Password is required',
+    showPassword: 'Show password',
+    hidePassword: 'Hide password',
     passwordMinLength: 'Password must be at least 8 characters and include a letter and a number',
     loginFailed: 'Login failed. Please check your credentials and try again.',
+    loginRateLimited: 'Too many login attempts. Please try again later.',
+    loginNetworkError: 'The login service is temporarily unreachable. Check your connection and try again.',
+    loginRequestFailed: 'The login request failed. Please try again later.',
     errors: {
+      INVALID_CREDENTIALS: 'The email or password is incorrect. Check your details and try again.',
       USER_NOT_ACTIVE: 'Account has been disabled.',
     },
     registrationFailed: 'Registration failed. Please try again.',
@@ -408,6 +414,7 @@ export default {
       callbackHint: 'Copy the code and state back to the admin authorization flow when needed.',
       invalidCallbackTitle: 'Invalid sign-in callback',
       invalidCallbackHint: 'This page does not contain a valid authorization result. Return to the login page and start quick sign-in again.',
+      callbackFailed: 'Quick sign-in could not be completed. Return to the login page and try again.',
       code: 'Code',
       state: 'State',
       fullUrl: 'Full URL'

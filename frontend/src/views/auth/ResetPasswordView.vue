@@ -109,17 +109,21 @@
               class="input pl-11 pr-11"
               :class="{ 'input-error': errors.password }"
               :placeholder="t('auth.newPasswordPlaceholder')"
+              :aria-invalid="Boolean(errors.password)"
+              :aria-describedby="errors.password ? 'reset-password-error' : undefined"
             />
             <button
               type="button"
               @click="showPassword = !showPassword"
-              class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-gray-400 transition-colors hover:text-gray-600 dark:hover:text-dark-300"
+              :aria-label="showPassword ? t('auth.hidePassword') : t('auth.showPassword')"
+              :aria-pressed="showPassword"
+              class="absolute inset-y-0 right-0 flex min-w-11 items-center justify-center pr-3.5 text-gray-400 transition-colors hover:text-gray-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 dark:hover:text-dark-300"
             >
               <Icon v-if="showPassword" name="eyeOff" size="md" />
               <Icon v-else name="eye" size="md" />
             </button>
           </div>
-          <p v-if="errors.password" class="input-error-text">
+          <p v-if="errors.password" id="reset-password-error" class="input-error-text" role="alert">
             {{ errors.password }}
           </p>
         </div>
@@ -143,19 +147,28 @@
               class="input pl-11 pr-11"
               :class="{ 'input-error': errors.confirmPassword }"
               :placeholder="t('auth.confirmPasswordPlaceholder')"
+              :aria-invalid="Boolean(errors.confirmPassword)"
+              :aria-describedby="errors.confirmPassword ? 'reset-confirm-password-error' : undefined"
             />
             <button
               type="button"
               @click="showConfirmPassword = !showConfirmPassword"
-              class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-gray-400 transition-colors hover:text-gray-600 dark:hover:text-dark-300"
+              :aria-label="showConfirmPassword ? t('auth.hidePassword') : t('auth.showPassword')"
+              :aria-pressed="showConfirmPassword"
+              class="absolute inset-y-0 right-0 flex min-w-11 items-center justify-center pr-3.5 text-gray-400 transition-colors hover:text-gray-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 dark:hover:text-dark-300"
             >
               <Icon v-if="showConfirmPassword" name="eyeOff" size="md" />
               <Icon v-else name="eye" size="md" />
             </button>
           </div>
-          <p v-if="errors.confirmPassword" class="input-error-text">
+          <p v-if="errors.confirmPassword" id="reset-confirm-password-error" class="input-error-text" role="alert">
             {{ errors.confirmPassword }}
           </p>
+        </div>
+
+        <div v-if="errorMessage" class="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300" role="alert" aria-live="polite">
+          <Icon name="exclamationCircle" size="md" class="mt-0.5 shrink-0" aria-hidden="true" />
+          <p>{{ errorMessage }}</p>
         </div>
 
         <!-- Submit Button -->

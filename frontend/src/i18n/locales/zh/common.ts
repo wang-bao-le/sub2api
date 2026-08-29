@@ -239,9 +239,15 @@ export default {
     emailRequired: '请输入邮箱',
     invalidEmail: '请输入有效的邮箱地址',
     passwordRequired: '请输入密码',
+    showPassword: '显示密码',
+    hidePassword: '隐藏密码',
     passwordMinLength: '密码至少需要 8 个字符，且必须包含字母和数字',
     loginFailed: '登录失败，请检查您的凭据后重试。',
+    loginRateLimited: '登录尝试过于频繁，请稍后再试。',
+    loginNetworkError: '暂时无法连接登录服务，请检查网络后重试。',
+    loginRequestFailed: '登录请求失败，请稍后重试。',
     errors: {
+      INVALID_CREDENTIALS: '邮箱或密码不正确，请检查后重试。',
       USER_NOT_ACTIVE: '账号已被禁用',
     },
     registrationFailed: '注册失败，请重试。',
@@ -406,6 +412,7 @@ export default {
       callbackHint: '按需将授权码和状态值复制回后台授权流程。',
       invalidCallbackTitle: '无效的登录回调',
       invalidCallbackHint: '当前页面缺少有效的授权结果，请返回登录页重新发起快捷登录。',
+      callbackFailed: '快捷登录未完成，请返回登录页重试。',
       code: '授权码',
       state: '状态',
       fullUrl: '完整URL'

@@ -86,6 +86,9 @@
         <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
           {{ t('auth.oauth.invalidCallbackHint') }}
         </p>
+        <p v-if="callbackError" class="mt-3 text-sm text-red-600 dark:text-red-400" role="alert" aria-live="polite">
+          {{ callbackError }}
+        </p>
         <button class="btn btn-primary mt-6" type="button" @click="router.replace('/login')">
           {{ t('auth.backToLogin') }}
         </button>
@@ -183,6 +186,7 @@ const registrationError = ref('')
 const pendingProvider = ref<'github' | 'google'>('github')
 const redirectTo = ref('/dashboard')
 const invalidCallback = ref(false)
+const callbackError = ref('')
 const EMAIL_OAUTH_PENDING_PROVIDER_KEY = 'email_oauth_pending_provider'
 
 type EmailOAuthPendingCompletion = Partial<OAuthTokenResponse> & {
@@ -311,11 +315,11 @@ async function resumePendingEmailOAuth() {
       return
     }
 
-    appStore.showError(completion.error || t('auth.loginFailed'))
+    callbackError.value = t('auth.loginRequestFailed')
+    appStore.showError(callbackError.value)
   } catch (e: unknown) {
-    const err = e as { message?: string; response?: { data?: { message?: string } } }
-    const message = err.response?.data?.message || err.message || t('auth.loginFailed')
-    appStore.showError(message)
+    callbackError.value = t('auth.loginRequestFailed')
+    appStore.showError(callbackError.value)
     invalidCallback.value = true
   } finally {
     if (!needsRegistrationCompletion.value) {
@@ -368,11 +372,10 @@ onMounted(async () => {
   const params = parseFragmentParams()
   const tokenResponse = readTokenResponse(params)
   const fragmentError = params.get('error') || ''
-  const fragmentErrorDescription =
-    params.get('error_description') || params.get('error_message') || ''
-
   if (fragmentError) {
-    appStore.showError(fragmentErrorDescription || fragmentError)
+    callbackError.value = t('auth.oauth.callbackFailed')
+    appStore.showError(callbackError.value)
+    invalidCallback.value = true
     return
   }
   if (!tokenResponse) {
@@ -391,8 +394,9 @@ onMounted(async () => {
   try {
     await finalizeTokenResponse(tokenResponse, params.get('redirect') || '/dashboard')
   } catch (error: unknown) {
-    const message = (error as { message?: string })?.message || t('auth.loginFailed')
-    appStore.showError(message)
+    callbackError.value = t('auth.loginRequestFailed')
+    appStore.showError(callbackError.value)
+    invalidCallback.value = true
     isProcessing.value = false
   }
 })

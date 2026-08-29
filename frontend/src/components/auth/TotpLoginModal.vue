@@ -58,6 +58,9 @@
             <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-500"></div>
             {{ t('common.verifying') }}
           </div>
+          <p v-if="errorMessage" class="mt-3 text-center text-sm text-red-600 dark:text-red-400" role="alert" aria-live="polite">
+            {{ errorMessage }}
+          </p>
         </div>
 
         <!-- Cancel button only -->
@@ -93,6 +96,7 @@ const { t } = useI18n()
 const appStore = useAppStore()
 
 const verifying = ref(false)
+const errorMessage = ref('')
 const code = ref<string[]>(['', '', '', '', '', ''])
 const inputRefs = ref<(HTMLInputElement | null)[]>([])
 const hiddenOtpInputRef = ref<HTMLInputElement | null>(null)
@@ -110,6 +114,7 @@ watch(
 defineExpose({
   setVerifying: (value: boolean) => { verifying.value = value },
   setError: (message: string) => {
+    errorMessage.value = message
     if (message) {
       appStore.showError(message)
     }
@@ -133,6 +138,7 @@ const setInputRef = (el: any, index: number) => {
 }
 
 const handleCodeInput = (event: Event, index: number) => {
+  errorMessage.value = ''
   const input = event.target as HTMLInputElement
   const value = input.value.replace(/[^0-9]/g, '')
   code.value[index] = value
@@ -146,6 +152,7 @@ const handleCodeInput = (event: Event, index: number) => {
 
 // Handle autofill from password managers via the hidden autocomplete="one-time-code" input
 const handleHiddenOtpInput = (event: Event) => {
+  errorMessage.value = ''
   const input = event.target as HTMLInputElement
   const digits = input.value.replace(/[^0-9]/g, '').slice(0, 6).split('')
 
@@ -178,6 +185,7 @@ const handleKeydown = (event: KeyboardEvent, index: number) => {
 }
 
 const handlePaste = (event: ClipboardEvent) => {
+  errorMessage.value = ''
   event.preventDefault()
   const pastedData = event.clipboardData?.getData('text') || ''
   const digits = pastedData.replace(/[^0-9]/g, '').slice(0, 6).split('')
