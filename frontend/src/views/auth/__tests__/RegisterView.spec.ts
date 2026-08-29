@@ -1,6 +1,6 @@
 import { flushPromises, mount } from '@vue/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import RegisterView from '@/views/auth/RegisterView.vue'
+import RegisterView from '@/components/auth/RegisterFormModal.vue'
 
 const { getPublicSettingsMock, registerMock, showErrorMock } = vi.hoisted(() => ({
   getPublicSettingsMock: vi.fn(),

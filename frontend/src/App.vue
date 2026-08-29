@@ -8,21 +8,35 @@ import { resolveRouteDocumentTitle } from '@/router/title'
 import AnnouncementPopup from '@/components/common/AnnouncementPopup.vue'
 import { useAppStore, useAuthStore, useSubscriptionStore, useAnnouncementStore, useAdminComplianceStore, useAdminSettingsStore } from '@/stores'
 import { getSetupStatus } from '@/api/setup'
-import LoginModal from '@/components/auth/LoginModal.vue'
-import { LOGIN_MODAL_EVENT } from '@/utils/loginModal'
+import AuthModal from '@/components/auth/AuthModal.vue'
+import { AUTH_MODAL_EVENT, consumeAuthModalRequest, type AuthModalOptions, type AuthModalView } from '@/utils/loginModal'
 
-const showLoginModal = ref(false)
+const showAuthModal = ref(false)
+const authModalView = ref<AuthModalView>('login')
+const authModalOptions = ref<AuthModalOptions>({})
 
-function openLoginModal() {
-  if (!authStore.isAuthenticated) showLoginModal.value = true
+function openAuthModal(event: Event) {
+  const detail = (event as CustomEvent<{ view?: AuthModalView } & AuthModalOptions>).detail || {}
+  if (authStore.isAuthenticated && (detail.view || 'login') === 'login') return
+  authModalView.value = detail.view || 'login'
+  if (detail.redirect !== undefined || detail.token !== undefined || detail.email !== undefined || detail.query !== undefined || !showAuthModal.value) {
+    authModalOptions.value = {
+      redirect: detail.redirect,
+      token: detail.token,
+      email: detail.email,
+      query: detail.query,
+    }
+  }
+  showAuthModal.value = true
 }
 
-function closeLoginModal() {
-  showLoginModal.value = false
+function closeAuthModal() {
+  showAuthModal.value = false
+  authModalOptions.value = {}
 }
 
 watch(() => route.fullPath, () => {
-  if (showLoginModal.value) closeLoginModal()
+  if (showAuthModal.value) closeAuthModal()
 })
 
 const router = useRouter()
@@ -116,12 +130,18 @@ router.afterEach(() => {
 onBeforeUnmount(() => {
   document.removeEventListener('visibilitychange', onVisibilityChange)
   window.removeEventListener('admin-compliance-required', onAdminComplianceRequired)
-  window.removeEventListener(LOGIN_MODAL_EVENT, openLoginModal)
+  window.removeEventListener(AUTH_MODAL_EVENT, openAuthModal)
 })
 
 onMounted(async () => {
   window.addEventListener('admin-compliance-required', onAdminComplianceRequired)
-  window.addEventListener(LOGIN_MODAL_EVENT, openLoginModal)
+  window.addEventListener(AUTH_MODAL_EVENT, openAuthModal)
+  const pendingRequest = consumeAuthModalRequest()
+  if (pendingRequest) {
+    openAuthModal(new CustomEvent(AUTH_MODAL_EVENT, {
+      detail: { view: pendingRequest.view, ...pendingRequest.options },
+    }))
+  }
 
   // Check if setup is needed
   try {
@@ -148,5 +168,10 @@ onMounted(async () => {
   <Toast />
   <AnnouncementPopup />
   <AdminComplianceDialog />
-  <LoginModal :show="showLoginModal" @close="closeLoginModal" />
+  <AuthModal
+    :show="showAuthModal"
+    :initial-view="authModalView"
+    :options="authModalOptions"
+    @close="closeAuthModal"
+  />
 </template>

@@ -1,7 +1,7 @@
 import { defineComponent, h } from 'vue'
 import { flushPromises, mount } from '@vue/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import LoginView from '@/views/auth/LoginView.vue'
+import LoginView from '@/components/auth/LoginFormModal.vue'
 
 const loginMock = vi.fn()
 const loginWithPasskeyMock = vi.fn()
@@ -142,7 +142,7 @@ describe('Tencent captcha action gate', () => {
     expect(loginMock).toHaveBeenCalledWith(expect.objectContaining({
       tencent_captcha_ticket: 'ticket-1',
       tencent_captcha_randstr: '@rand-1'
-    }))
+    }), expect.any(String))
   })
 
   it('does not call login when Tencent captcha is closed', async () => {

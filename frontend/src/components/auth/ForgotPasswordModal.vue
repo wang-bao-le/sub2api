@@ -1,5 +1,5 @@
 <template>
-  <AuthLayout>
+  <AuthLayout compact :embedded="modal">
     <div class="space-y-5">
       <!-- Title -->
       <div class="text-center">
@@ -30,13 +30,14 @@
         </div>
 
         <div class="text-center">
-          <router-link
-            to="/login"
+          <a
+            href="/login"
+            @click="handleAuthLink($event, 'login')"
             class="inline-flex items-center gap-2 font-medium text-black transition-colors hover:text-gray-700 dark:text-gray-300 dark:hover:text-white"
           >
             <Icon name="arrowLeft" size="sm" />
             {{ t('auth.backToLogin') }}
-          </router-link>
+          </a>
         </div>
       </div>
 
@@ -131,12 +132,13 @@
     <template #footer>
       <p class="text-gray-500 dark:text-dark-400">
         {{ t('auth.rememberedPassword') }}
-        <router-link
-          to="/login"
+        <a
+          href="/login"
+          @click="handleAuthLink($event, 'login')"
           class="font-medium text-black transition-colors hover:text-gray-700 dark:text-gray-300 dark:hover:text-white"
         >
           {{ t('auth.signIn') }}
-        </router-link>
+        </a>
       </p>
     </template>
   </AuthLayout>
@@ -150,8 +152,16 @@ import Icon from '@/components/icons/Icon.vue'
 import TurnstileWidget from '@/components/CaptchaChallenge.vue'
 import { useAppStore } from '@/stores'
 import { getPublicSettings, forgotPassword } from '@/api/auth'
+import { requestAuthModal, type AuthModalOptions, type AuthModalView } from '@/utils/loginModal'
 
 const { t } = useI18n()
+const { modal = false } = defineProps<{ modal?: boolean; options?: AuthModalOptions }>()
+
+function handleAuthLink(event: MouseEvent, view: AuthModalView): void {
+  if (!modal) return
+  event.preventDefault()
+  requestAuthModal(view)
+}
 
 // ==================== Stores ====================
 

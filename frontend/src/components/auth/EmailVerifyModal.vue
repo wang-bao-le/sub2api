@@ -1,5 +1,5 @@
 <template>
-  <AuthLayout>
+  <AuthLayout compact :embedded="modal">
     <div class="space-y-5">
       <!-- Title -->
       <div class="text-center">
@@ -216,8 +216,10 @@ import {
   loadAffiliateReferralCode,
   oauthAffiliatePayload
 } from '@/utils/oauthAffiliate'
+import { requestAuthModal, type AuthModalOptions } from '@/utils/loginModal'
 
 const { t, locale } = useI18n()
+const { modal = false } = defineProps<{ modal?: boolean; options?: AuthModalOptions }>()
 
 // ==================== Router & Stores ====================
 
@@ -760,7 +762,8 @@ function handleBack(): void {
   sessionStorage.removeItem('register_data')
 
   // Go back to registration
-  router.push('/register')
+  if (modal) requestAuthModal('register')
+  else router.push('/register')
 }
 
 function buildEmailSuffixNotAllowedMessage(): string {

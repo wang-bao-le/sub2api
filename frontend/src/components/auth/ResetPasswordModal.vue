@@ -1,5 +1,5 @@
 <template>
-  <AuthLayout>
+  <AuthLayout compact :embedded="modal">
     <div class="space-y-5">
       <!-- Title -->
       <div class="text-center">
@@ -30,12 +30,13 @@
         </div>
 
         <div class="text-center">
-          <router-link
-            to="/forgot-password"
+          <a
+            href="/forgot-password"
+            @click="handleAuthLink($event, 'forgot-password')"
             class="inline-flex items-center gap-2 font-medium text-primary-600 transition-colors hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300"
           >
             {{ t('auth.requestNewResetLink') }}
-          </router-link>
+          </a>
         </div>
       </div>
 
@@ -58,13 +59,14 @@
         </div>
 
         <div class="text-center">
-          <router-link
-            to="/login"
+          <a
+            href="/login"
+            @click="handleAuthLink($event, 'login')"
             class="btn btn-primary inline-flex items-center gap-2"
           >
             <Icon name="login" size="md" />
             {{ t('auth.signIn') }}
-          </router-link>
+          </a>
         </div>
       </div>
 
@@ -209,12 +211,13 @@
     <template #footer>
       <p class="text-gray-500 dark:text-dark-400">
         {{ t('auth.rememberedPassword') }}
-        <router-link
-          to="/login"
+        <a
+          href="/login"
+          @click="handleAuthLink($event, 'login')"
           class="font-medium text-primary-600 transition-colors hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300"
         >
           {{ t('auth.signIn') }}
-        </router-link>
+        </a>
       </p>
     </template>
   </AuthLayout>
@@ -229,8 +232,16 @@ import Icon from '@/components/icons/Icon.vue'
 import { useAppStore } from '@/stores'
 import { resetPassword } from '@/api/auth'
 import { isValidPassword } from '@/utils/passwordPolicy'
+import { requestAuthModal, type AuthModalOptions, type AuthModalView } from '@/utils/loginModal'
 
 const { t } = useI18n()
+const { modal = false, options } = defineProps<{ modal?: boolean; options?: AuthModalOptions }>()
+
+function handleAuthLink(event: MouseEvent, view: AuthModalView): void {
+  if (!modal) return
+  event.preventDefault()
+  requestAuthModal(view)
+}
 
 // ==================== Router & Stores ====================
 
@@ -266,8 +277,8 @@ const isInvalidLink = computed(() => !email.value || !token.value)
 
 onMounted(() => {
   // Get email and token from URL query parameters
-  email.value = (route.query.email as string) || ''
-  token.value = (route.query.token as string) || ''
+  email.value = options?.email || (route.query.email as string) || ''
+  token.value = options?.token || (route.query.token as string) || ''
 
 })
 

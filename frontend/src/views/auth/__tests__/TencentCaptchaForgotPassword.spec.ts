@@ -1,7 +1,7 @@
 import { defineComponent, h } from 'vue'
 import { flushPromises, mount } from '@vue/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import ForgotPasswordView from '@/views/auth/ForgotPasswordView.vue'
+import ForgotPasswordView from '@/components/auth/ForgotPasswordModal.vue'
 
 const getPublicSettingsMock = vi.fn()
 const forgotPasswordMock = vi.fn()

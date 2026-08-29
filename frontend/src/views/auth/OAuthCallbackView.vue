@@ -89,7 +89,7 @@
         <p v-if="callbackError" class="mt-3 text-sm text-red-600 dark:text-red-400" role="alert" aria-live="polite">
           {{ callbackError }}
         </p>
-        <button class="btn btn-primary mt-6" type="button" @click="router.replace('/login')">
+        <button class="btn btn-primary mt-6" type="button" @click="requestLoginModal()">
           {{ t('auth.backToLogin') }}
         </button>
       </div>
@@ -152,6 +152,7 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
+import { requestLoginModal } from '@/utils/loginModal'
 import { useClipboard } from '@/composables/useClipboard'
 import { useAppStore, useAuthStore } from '@/stores'
 import { apiClient } from '@/api/client'

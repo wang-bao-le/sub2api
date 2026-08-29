@@ -13,6 +13,7 @@ import { useRoutePrefetch } from '@/composables/useRoutePrefetch'
 import { getSetupStatus } from '@/api/setup'
 import { resolveCompletedSetupRedirectPath } from './setupRedirect'
 import { resolveRouteDocumentTitle } from './title'
+import { requestAuthModal } from '@/utils/loginModal'
 
 /**
  * Route definitions with lazy loading
@@ -42,7 +43,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/login',
     name: 'Login',
-    component: () => import('@/views/auth/LoginView.vue'),
+    component: () => import('@/components/auth/AuthRouteEntry.vue'),
     meta: {
       requiresAuth: false,
       title: 'Login',
@@ -52,7 +53,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/register',
     name: 'Register',
-    component: () => import('@/views/auth/RegisterView.vue'),
+    component: () => import('@/components/auth/AuthRouteEntry.vue'),
     meta: {
       requiresAuth: false,
       title: 'Register',
@@ -62,7 +63,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/email-verify',
     name: 'EmailVerify',
-    component: () => import('@/views/auth/EmailVerifyView.vue'),
+    component: () => import('@/components/auth/AuthRouteEntry.vue'),
     meta: {
       requiresAuth: false,
       title: 'Verify Email'
@@ -141,7 +142,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/forgot-password',
     name: 'ForgotPassword',
-    component: () => import('@/views/auth/ForgotPasswordView.vue'),
+    component: () => import('@/components/auth/AuthRouteEntry.vue'),
     meta: {
       requiresAuth: false,
       title: 'Forgot Password',
@@ -151,7 +152,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/reset-password',
     name: 'ResetPassword',
-    component: () => import('@/views/auth/ResetPasswordView.vue'),
+    component: () => import('@/components/auth/AuthRouteEntry.vue'),
     meta: {
       requiresAuth: false,
       title: 'Reset Password'
@@ -851,7 +852,8 @@ router.beforeEach(async (to, _from, next) => {
         return
       }
       if (plazaSettings?.model_plaza_require_auth === true && !authStore.isAuthenticated) {
-        next({ path: '/login', query: { redirect: to.fullPath } })
+        requestAuthModal('login', { redirect: to.fullPath })
+        next(false)
         return
       }
       // Backend mode:登录的非管理员也不可见(匿名由下方公共拦截处理,广场不在白名单)
@@ -875,10 +877,8 @@ router.beforeEach(async (to, _from, next) => {
   // Route requires authentication
   if (!authStore.isAuthenticated) {
     // Not authenticated, redirect to login
-    next({
-      path: '/login',
-      query: { redirect: to.fullPath } // Save intended destination
-    })
+    requestAuthModal('login', { redirect: to.fullPath })
+    next(false)
     return
   }
 

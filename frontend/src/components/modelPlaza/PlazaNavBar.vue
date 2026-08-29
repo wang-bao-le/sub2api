@@ -29,14 +29,14 @@
       >
         {{ t('modelPlaza.nav.backToDashboard') }}
       </RouterLink>
-      <RouterLink
+      <button
         v-else
-        :to="{ path: '/login', query: { redirect: '/model-plaza' } }"
+        type="button"
         @click="handleLoginClick"
         class="inline-flex flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-r from-primary-500 to-primary-600 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-primary-500/25 transition-all duration-200 hover:from-primary-600 hover:to-primary-700 hover:shadow-lg hover:shadow-primary-500/30 active:scale-[0.98] dark:shadow-primary-500/20"
       >
         {{ t('modelPlaza.nav.login') }}
-      </RouterLink>
+      </button>
     </div>
   </header>
 </template>
@@ -61,10 +61,7 @@ const siteLogo = computed(() =>
 const isAuthenticated = computed(() => authStore.isAuthenticated)
 const backTarget = computed(() => (authStore.isAdmin ? '/admin/dashboard' : '/dashboard'))
 
-function handleLoginClick(event: MouseEvent) {
-  if (!isAuthenticated.value) {
-    event.preventDefault()
-    requestLoginModal()
-  }
+function handleLoginClick() {
+  requestLoginModal({ redirect: '/model-plaza' })
 }
 </script>

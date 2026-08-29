@@ -16,19 +16,19 @@
             <span class="h-5 w-28 animate-pulse rounded bg-gray-200 dark:bg-dark-700" aria-hidden="true"></span>
           </template>
         </RouterLink>
-        <RouterLink
-          to="/login"
+        <button
+          type="button"
           @click="handleLoginClick"
           class="inline-flex flex-shrink-0 items-center justify-center rounded-lg bg-primary-600 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-primary-600/20 transition hover:bg-primary-700"
         >
           {{ t('home.login') }}
-        </RouterLink>
+        </button>
       </div>
     </header>
 
     <main class="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:py-10">
       <div v-if="loading" class="flex min-h-[320px] items-center justify-center">
-        <div class="h-8 w-8 animate-spin rounded-full border-b-2 border-primary-600"></div>
+        <div class="h-8 w-8 animate-spin rounded-full border-2 border-primary-600 border-t-transparent"></div>
       </div>
 
       <section
@@ -114,8 +114,7 @@ const settings = computed(() => appStore.cachedPublicSettings)
 const loading = ref(!settings.value)
 const loadError = ref(false)
 
-function handleLoginClick(event: MouseEvent) {
-  event.preventDefault()
+function handleLoginClick() {
   requestLoginModal()
 }
 
@@ -233,7 +232,7 @@ onMounted(async () => {
 }
 
 .legal-document-content :deep(blockquote) {
-  @apply my-5 border-l-4 border-gray-300 pl-4 text-gray-600 dark:border-dark-600 dark:text-dark-300;
+  @apply my-5 border-l-2 border-gray-300 pl-4 text-gray-600 dark:border-dark-600 dark:text-dark-300;
 }
 
 .legal-document-content :deep(code) {

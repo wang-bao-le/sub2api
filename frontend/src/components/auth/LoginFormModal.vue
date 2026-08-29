@@ -92,13 +92,14 @@
               />
               {{ t('auth.rememberMe') }}
             </label>
-            <router-link
+            <a
               v-if="passwordResetEnabled && !backendModeEnabled"
-              to="/forgot-password"
+              href="/forgot-password"
+              @click="handleAuthLink($event, 'forgot-password')"
               class="text-sm font-medium text-gray-900 transition-colors hover:text-gray-600 dark:text-gray-200 dark:hover:text-white"
             >
               {{ t('auth.forgotPassword') }}
-            </router-link>
+            </a>
           </div>
         </div>
 
@@ -237,12 +238,13 @@
     <template v-if="!backendModeEnabled" #footer>
       <p class="text-gray-500 dark:text-dark-400">
         {{ t('auth.dontHaveAccount') }}
-        <router-link
-          to="/register"
+        <a
+          href="/register"
+          @click="handleAuthLink($event, 'register')"
           class="font-medium text-black transition-colors hover:text-gray-700 dark:text-gray-300 dark:hover:text-white"
         >
           {{ t('auth.freeSignUp') }}
-        </router-link>
+        </a>
       </p>
     </template>
   </AuthLayout>
@@ -288,9 +290,16 @@ import type {
 } from '@/types'
 import { extractI18nErrorMessage } from '@/utils/apiError'
 import { clearAllAffiliateReferralCodes } from '@/utils/oauthAffiliate'
+import { requestAuthModal, type AuthModalView } from '@/utils/loginModal'
 
 const { t } = useI18n()
-const { modal = false } = defineProps<{ modal?: boolean }>()
+const { modal = false, options } = defineProps<{ modal?: boolean; options?: { redirect?: string } }>()
+
+function handleAuthLink(event: MouseEvent, view: AuthModalView): void {
+  if (!modal) return
+  event.preventDefault()
+  requestAuthModal(view)
+}
 const LOGIN_AGREEMENT_STORAGE_KEY = 'sub2api_login_agreement_consent'
 
 // ==================== Router & Stores ====================
@@ -641,7 +650,7 @@ async function handleLogin(): Promise<void> {
     appStore.showSuccess(t('auth.loginSuccess'))
 
     // Redirect to dashboard or intended route
-    const redirectTo = (router.currentRoute.value.query.redirect as string) || '/dashboard'
+    const redirectTo = options?.redirect || (router.currentRoute.value.query.redirect as string) || '/dashboard'
     await router.push(redirectTo)
   } catch (error: unknown) {
     const errorCode = typeof error === 'object' && error !== null
@@ -699,7 +708,7 @@ async function handlePasskeyLogin(): Promise<void> {
     await authStore.loginWithPasskey(proof)
     clearAllAffiliateReferralCodes()
     appStore.showSuccess(t('auth.loginSuccess'))
-    const redirectTo = (router.currentRoute.value.query.redirect as string) || '/dashboard'
+    const redirectTo = options?.redirect || (router.currentRoute.value.query.redirect as string) || '/dashboard'
     await router.push(redirectTo)
   } catch (error: unknown) {
     const fallback = error instanceof DOMException && error.name === 'NotAllowedError'
@@ -770,7 +779,7 @@ async function handle2FAVerify(code: string): Promise<void> {
     appStore.showSuccess(t('auth.loginSuccess'))
 
     // Redirect to dashboard or intended route
-    const redirectTo = (router.currentRoute.value.query.redirect as string) || '/dashboard'
+    const redirectTo = options?.redirect || (router.currentRoute.value.query.redirect as string) || '/dashboard'
     await router.push(redirectTo)
   } catch (error: unknown) {
     const err = error as { message?: string; response?: { data?: { message?: string } } }

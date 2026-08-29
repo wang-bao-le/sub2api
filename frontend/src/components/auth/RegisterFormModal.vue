@@ -1,5 +1,5 @@
 <template>
-  <AuthLayout compact>
+  <AuthLayout compact :embedded="modal">
     <div class="space-y-5">
       <!-- Title -->
       <div class="text-center">
@@ -392,12 +392,13 @@
     <template #footer>
       <p class="text-gray-500 dark:text-dark-400">
         {{ t('auth.alreadyHaveAccount') }}
-        <router-link
-          to="/login"
+        <a
+          href="/login"
+          @click="handleAuthLink($event, 'login')"
           class="font-medium text-black transition-colors hover:text-gray-700 dark:text-gray-300 dark:hover:text-white"
         >
           {{ t('auth.signIn') }}
-        </router-link>
+        </a>
       </p>
     </template>
   </AuthLayout>
@@ -439,8 +440,16 @@ import {
   resolveAffiliateReferralCode
 } from '@/utils/oauthAffiliate'
 import type { LoginAgreementDocument } from '@/types'
+import { requestAuthModal, type AuthModalOptions, type AuthModalView } from '@/utils/loginModal'
 
 const { t, locale } = useI18n()
+const { modal = false, options } = defineProps<{ modal?: boolean; options?: AuthModalOptions }>()
+
+function handleAuthLink(event: MouseEvent, view: AuthModalView): void {
+  if (!modal) return
+  event.preventDefault()
+  requestAuthModal(view)
+}
 const LOGIN_AGREEMENT_STORAGE_KEY = 'sub2api_login_agreement_consent'
 
 // ==================== Router & Stores ====================
@@ -566,7 +575,7 @@ const registrationActionDisabled = computed(
 )
 
 function syncAffiliateReferralCode(): string {
-  const code = resolveAffiliateReferralCode(route.query.aff, route.query.aff_code)
+  const code = resolveAffiliateReferralCode(options?.query?.aff || route.query.aff, options?.query?.aff_code || route.query.aff_code)
   if (code) {
     formData.aff_code = code
   }
@@ -609,7 +618,7 @@ onMounted(async () => {
 
     // Read promo code from URL parameter only if promo code is enabled
     if (promoCodeEnabled.value) {
-      const promoParam = route.query.promo as string
+      const promoParam = options?.query?.promo || (route.query.promo as string)
       if (promoParam) {
         formData.promo_code = promoParam
         // Validate the promo code from URL
@@ -627,7 +636,7 @@ onMounted(async () => {
 })
 
 watch(
-  () => [route.query.aff, route.query.aff_code],
+  () => [options?.query?.aff, options?.query?.aff_code, route.query.aff, route.query.aff_code],
   () => {
     syncAffiliateReferralCode()
   }
@@ -1086,7 +1095,8 @@ async function handleRegister(): Promise<void> {
       )
 
       // Navigate to email verification page
-      await router.push('/email-verify')
+      if (modal) requestAuthModal('email-verify')
+      else await router.push('/email-verify')
       return
     }
 
