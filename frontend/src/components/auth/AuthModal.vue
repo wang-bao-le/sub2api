@@ -24,6 +24,7 @@
             :key="activeView"
             modal
             :options="options"
+            @success="handleSuccess"
           />
         </div>
       </div>
@@ -67,6 +68,10 @@ const activeComponent = computed(() => componentMap[activeView.value])
 
 function close() {
   emit('close')
+}
+
+function handleSuccess() {
+  close()
 }
 
 function handleAuthRequest(event: Event) {

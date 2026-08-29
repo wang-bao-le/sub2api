@@ -294,6 +294,7 @@ import { requestAuthModal, type AuthModalView } from '@/utils/loginModal'
 
 const { t } = useI18n()
 const { modal = false, options } = defineProps<{ modal?: boolean; options?: { redirect?: string } }>()
+const emit = defineEmits<{ success: [] }>()
 
 function handleAuthLink(event: MouseEvent, view: AuthModalView): void {
   if (!modal) return
@@ -648,6 +649,7 @@ async function handleLogin(): Promise<void> {
     // Show success toast
     clearAllAffiliateReferralCodes()
     appStore.showSuccess(t('auth.loginSuccess'))
+    emit('success')
 
     // Redirect to dashboard or intended route
     const redirectTo = options?.redirect || (router.currentRoute.value.query.redirect as string) || '/dashboard'
@@ -708,6 +710,7 @@ async function handlePasskeyLogin(): Promise<void> {
     await authStore.loginWithPasskey(proof)
     clearAllAffiliateReferralCodes()
     appStore.showSuccess(t('auth.loginSuccess'))
+    emit('success')
     const redirectTo = options?.redirect || (router.currentRoute.value.query.redirect as string) || '/dashboard'
     await router.push(redirectTo)
   } catch (error: unknown) {
@@ -777,6 +780,7 @@ async function handle2FAVerify(code: string): Promise<void> {
     show2FAModal.value = false
     clearAllAffiliateReferralCodes()
     appStore.showSuccess(t('auth.loginSuccess'))
+    emit('success')
 
     // Redirect to dashboard or intended route
     const redirectTo = options?.redirect || (router.currentRoute.value.query.redirect as string) || '/dashboard'
