@@ -4,6 +4,7 @@
       <div
         v-if="show"
         class="modal-overlay login-modal-overlay"
+        id="auth-modal"
         role="dialog"
         aria-modal="true"
         aria-labelledby="auth-modal-title"

@@ -54,7 +54,10 @@
             :to="isAuthenticated ? dashboardPath : undefined"
             type="button"
             @click="handleLoginClick"
-            class="inline-flex min-h-10 shrink-0 items-center justify-center rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-200"
+            data-auth-entry
+            :aria-haspopup="isAuthenticated ? undefined : 'dialog'"
+            aria-controls="auth-modal"
+            class="home-auth-entry inline-flex min-h-10 shrink-0 items-center justify-center rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-200"
           >
             {{ isAuthenticated ? t('home.dashboard') : t('home.login') }}
           </component>
@@ -76,7 +79,10 @@
           :to="isAuthenticated ? dashboardPath : undefined"
           type="button"
           @click="handleLoginClick"
-          class="mt-8 inline-flex min-h-10 items-center justify-center rounded-lg bg-primary-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-700"
+          data-auth-entry
+          :aria-haspopup="isAuthenticated ? undefined : 'dialog'"
+          aria-controls="auth-modal"
+          class="home-auth-entry mt-8 inline-flex min-h-10 items-center justify-center rounded-lg bg-primary-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-700"
         >
           {{ isAuthenticated ? t('home.goToDashboard') : t('home.login') }}
         </component>
@@ -148,7 +154,10 @@
             v-else
             type="button"
             @click="handleLoginClick"
-            class="group inline-flex items-center justify-center rounded-full border border-gray-900 bg-gray-50 px-5 py-1.5 text-sm font-semibold text-gray-900 transition-colors hover:bg-gray-900 hover:text-white dark:border-gray-200 dark:bg-dark-900 dark:text-gray-100 dark:hover:bg-gray-100 dark:hover:text-gray-900"
+            data-auth-entry
+            aria-haspopup="dialog"
+            aria-controls="auth-modal"
+            class="home-auth-entry group inline-flex items-center justify-center rounded-full border border-gray-900 bg-gray-50 px-5 py-1.5 text-sm font-semibold text-gray-900 transition-colors hover:bg-gray-900 hover:text-white dark:border-gray-200 dark:bg-dark-900 dark:text-gray-100 dark:hover:bg-gray-100 dark:hover:text-gray-900"
           >
             <span class="font-semibold text-gray-900 transition-colors group-hover:text-white dark:text-gray-100 dark:group-hover:text-gray-900">
               {{ t('home.login') }}
@@ -185,7 +194,10 @@
             :to="isAuthenticated ? dashboardPath : undefined"
             type="button"
             @click="handleLoginClick"
-                class="btn bg-black px-8 py-3 text-base text-white shadow-lg shadow-black/20 hover:bg-gray-800 hover:shadow-black/30"
+                data-auth-entry
+                :aria-haspopup="isAuthenticated ? undefined : 'dialog'"
+                aria-controls="auth-modal"
+                class="home-auth-entry btn bg-black px-8 py-3 text-base text-white shadow-lg shadow-black/20 hover:bg-gray-800 hover:shadow-black/30"
               >
                 {{ isAuthenticated ? t('home.goToDashboard') : t('home.getStarted') }}
                 <Icon name="arrowRight" size="md" class="ml-2" :stroke-width="2" />
@@ -357,6 +369,10 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.home-auth-entry {
+  @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-black/60 focus-visible:ring-offset-2 dark:focus-visible:ring-white/70 dark:focus-visible:ring-offset-dark-950;
+}
+
 .hero-title-animated {
   color: transparent;
   background: linear-gradient(

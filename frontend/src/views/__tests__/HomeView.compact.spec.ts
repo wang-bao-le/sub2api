@@ -20,6 +20,10 @@ const { appStore, authStore } = vi.hoisted(() => ({
   },
 }))
 
+const { requestLoginModal } = vi.hoisted(() => ({
+  requestLoginModal: vi.fn(),
+}))
+
 vi.mock('@/stores', () => ({
   useAppStore: () => appStore,
   useAuthStore: () => authStore,
@@ -27,6 +31,10 @@ vi.mock('@/stores', () => ({
 
 vi.mock('@/stores/app', () => ({
   useAppStore: () => appStore,
+}))
+
+vi.mock('@/utils/loginModal', () => ({
+  requestLoginModal,
 }))
 
 vi.mock('vue-i18n', async (importOriginal) => {
@@ -73,6 +81,7 @@ describe('HomeView compact mode', () => {
     authStore.user = null
     authStore.checkAuth.mockClear()
     appStore.fetchPublicSettings.mockClear()
+    requestLoginModal.mockClear()
     localStorage.clear()
     vi.spyOn(window, 'matchMedia').mockReturnValue({ matches: false } as MediaQueryList)
   })
@@ -113,7 +122,12 @@ describe('HomeView compact mode', () => {
 
   it('opens the login modal for unauthenticated visitors', () => {
     const wrapper = mountHome({ compact_home_enabled: true })
-    expect(wrapper.get('[data-testid="compact-home"] button').text()).toContain('home.login')
+    const entries = wrapper.findAll('[data-auth-entry]')
+
+    expect(entries).toHaveLength(2)
+    expect(entries.every((entry) => entry.attributes('aria-haspopup') === 'dialog')).toBe(true)
+    entries.forEach((entry) => entry.trigger('click'))
+    expect(requestLoginModal).toHaveBeenCalledTimes(2)
   })
 
   it('links authenticated users to their dashboard', () => {
