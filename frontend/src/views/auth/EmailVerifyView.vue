@@ -188,7 +188,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onMounted, onUnmounted, watch } from 'vue'
+import { computed, ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { AuthLayout } from '@/components/layout'
@@ -315,21 +315,12 @@ const errors = ref({
   turnstile: ''
 })
 
-const validationToastMessage = computed(
-  () => errors.value.code || errors.value.turnstile || ''
-)
 const pendingOAuthCreateTurnstileRequired = computed(
   () => isPendingOAuthFlow() && turnstileEnabled.value
 )
 const pendingOAuthCreateCaptchaEnabled = computed(
   () => isPendingOAuthFlow() && captchaEnabled.value
 )
-
-watch(validationToastMessage, (value, previousValue) => {
-  if (value && value !== previousValue) {
-    appStore.showError(value)
-  }
-})
 
 // ==================== Lifecycle ====================
 
@@ -545,7 +536,6 @@ async function sendCode(): Promise<void> {
   try {
     if (!shouldBypassRegistrationEmailPolicy() && !isRegistrationEmailSuffixAllowed(email.value, registrationEmailSuffixWhitelist.value)) {
       errorMessage.value = buildEmailSuffixNotAllowedMessage()
-      appStore.showError(errorMessage.value)
       return
     }
 
@@ -594,7 +584,6 @@ async function sendCode(): Promise<void> {
   } catch (error: unknown) {
     errorMessage.value = buildRegistrationErrorMessage(error, t('auth.sendCodeFailed'))
 
-    appStore.showError(errorMessage.value)
   } finally {
     if (captchaProofUsed) {
       clearStoredCaptchaProof()
@@ -672,7 +661,6 @@ async function handleVerify(): Promise<void> {
 
   if (!shouldBypassRegistrationEmailPolicy() && !isRegistrationEmailSuffixAllowed(email.value, registrationEmailSuffixWhitelist.value)) {
     errorMessage.value = buildEmailSuffixNotAllowedMessage()
-    appStore.showError(errorMessage.value)
     return
   }
 
@@ -757,7 +745,6 @@ async function handleVerify(): Promise<void> {
   } catch (error: unknown) {
     errorMessage.value = buildRegistrationErrorMessage(error, t('auth.verifyFailed'))
 
-    appStore.showError(errorMessage.value)
   } finally {
     initialTurnstileToken.value = ''
     initialTencentCaptchaRandstr.value = ''

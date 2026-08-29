@@ -34,7 +34,7 @@ describe('TotpLoginModal', () => {
     ;(wrapper.vm as unknown as { setError: (message: string) => void }).setError('Invalid code')
     await wrapper.vm.$nextTick()
 
-    expect(showErrorMock).toHaveBeenCalledWith('Invalid code')
+    expect(showErrorMock).not.toHaveBeenCalled()
     expect(wrapper.text()).toContain('Invalid code')
     expect(wrapper.find('[role="alert"]').text()).toContain('Invalid code')
   })

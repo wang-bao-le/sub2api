@@ -258,7 +258,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, reactive, onMounted, watch } from 'vue'
+import { computed, ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { AuthLayout } from '@/components/layout'
@@ -374,10 +374,6 @@ const errors = reactive({
 const emailInputRef = ref<HTMLInputElement | null>(null)
 const passwordInputRef = ref<HTMLInputElement | null>(null)
 
-const validationToastMessage = computed(
-  () => errors.email || errors.password || errors.turnstile || ''
-)
-
 const agreementGateActive = computed(
   () =>
     loginAgreementEnabled.value &&
@@ -403,12 +399,6 @@ const showOAuthLogin = computed(
       githubOAuthEnabled.value ||
       googleOAuthEnabled.value)
 )
-
-watch(validationToastMessage, (value, previousValue) => {
-  if (value && value !== previousValue) {
-    appStore.showError(value)
-  }
-})
 
 // ==================== Lifecycle ====================
 
@@ -673,8 +663,6 @@ async function handleLogin(): Promise<void> {
       errorMessage.value = extractI18nErrorMessage(error, t, 'auth.errors', t('auth.loginRequestFailed'))
     }
 
-    // Also show error toast
-    appStore.showError(errorMessage.value)
   } finally {
     if (captchaEnabled.value) {
       resetCaptchaProof()
@@ -716,7 +704,6 @@ async function handlePasskeyLogin(): Promise<void> {
       ? t('auth.passkeyCancelled')
       : t('auth.passkeyFailed')
     errorMessage.value = extractI18nErrorMessage(error, t, 'auth.errors', fallback)
-    appStore.showError(errorMessage.value)
   } finally {
     if (actionCaptchaEnabled.value) {
       resetCaptchaProof()
@@ -755,7 +742,6 @@ async function handleOAuthStart(request: OAuthLoginStart): Promise<void> {
       'auth.errors',
       t('auth.turnstileFailed')
     )
-    appStore.showError(errorMessage.value)
   } finally {
     resetCaptchaProof()
     isLoading.value = false

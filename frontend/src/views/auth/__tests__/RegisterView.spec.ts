@@ -160,7 +160,8 @@ describe('RegisterView invitation layout', () => {
     await wrapper.get('form').trigger('submit.prevent')
     await flushPromises()
 
-    expect(showErrorMock).toHaveBeenCalledWith(
+    expect(showErrorMock).not.toHaveBeenCalled()
+    expect(wrapper.text()).toContain(
       '该邮箱域名无法注册新账户。请使用主流邮箱注册；如需使用企业邮箱，请联系客服添加域名白名单。'
     )
   })
@@ -182,8 +183,8 @@ describe('RegisterView invitation layout', () => {
     await flushPromises()
 
     expect(registerMock).not.toHaveBeenCalled()
-    // 校验失败通过 validationToastMessage watcher 弹 toast
-    expect(showErrorMock).toHaveBeenCalledWith('auth.emailSuffixNotAllowedWithAllowed')
+    expect(showErrorMock).not.toHaveBeenCalled()
+    expect(wrapper.find('#register-email-error').exists()).toBe(true)
     expect(wrapper.get('#email').classes()).toContain('input-error')
   })
 
@@ -223,7 +224,8 @@ describe('RegisterView invitation layout', () => {
     await flushPromises()
 
     expect(registerMock).not.toHaveBeenCalled()
-    expect(showErrorMock).toHaveBeenCalledWith('auth.passwordsDoNotMatch')
+    expect(showErrorMock).not.toHaveBeenCalled()
+    expect(wrapper.find('#register-confirm-password-error').exists()).toBe(true)
     expect(wrapper.get('#confirm_password').classes()).toContain('input-error')
   })
 
@@ -241,7 +243,8 @@ describe('RegisterView invitation layout', () => {
     await flushPromises()
 
     expect(registerMock).not.toHaveBeenCalled()
-    expect(showErrorMock).toHaveBeenCalledWith('auth.confirmPasswordRequired')
+    expect(showErrorMock).not.toHaveBeenCalled()
+    expect(wrapper.find('#register-confirm-password-error').exists()).toBe(true)
     expect(wrapper.get('#confirm_password').classes()).toContain('input-error')
   })
 })

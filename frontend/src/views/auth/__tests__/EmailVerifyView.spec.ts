@@ -211,7 +211,7 @@ describe('EmailVerifyView', () => {
       })
     )
 
-    mount(EmailVerifyView, {
+    const wrapper = mount(EmailVerifyView, {
       global: {
         stubs: {
           AuthLayout: { template: '<div><slot /><slot name="footer" /></div>' },
@@ -290,7 +290,7 @@ describe('EmailVerifyView', () => {
       })
     )
 
-    mount(EmailVerifyView, {
+    const wrapper = mount(EmailVerifyView, {
       global: {
         stubs: {
           AuthLayout: { template: '<div><slot /><slot name="footer" /></div>' },
@@ -365,7 +365,7 @@ describe('EmailVerifyView', () => {
       })
     )
 
-    mount(EmailVerifyView, {
+    const wrapper = mount(EmailVerifyView, {
       global: {
         stubs: {
           AuthLayout: { template: '<div><slot /><slot name="footer" /></div>' },
@@ -378,7 +378,8 @@ describe('EmailVerifyView', () => {
 
     await flushPromises()
 
-    expect(showErrorMock).toHaveBeenLastCalledWith(
+    expect(showErrorMock).not.toHaveBeenCalled()
+    expect(wrapper.text()).toContain(
       '该邮箱域名无法注册新账户。请使用主流邮箱注册；如需使用企业邮箱，请联系客服添加域名白名单。'
     )
   })
@@ -420,7 +421,8 @@ describe('EmailVerifyView', () => {
     await flushPromises()
 
     expect(registerMock).toHaveBeenCalled()
-    expect(showErrorMock).toHaveBeenLastCalledWith(
+    expect(showErrorMock).not.toHaveBeenCalled()
+    expect(wrapper.text()).toContain(
       '该邮箱域名无法注册新账户。请使用主流邮箱注册；如需使用企业邮箱，请联系客服添加域名白名单。'
     )
   })
@@ -441,7 +443,7 @@ describe('EmailVerifyView', () => {
       })
     )
 
-    mount(EmailVerifyView, {
+    const wrapper = mount(EmailVerifyView, {
       global: {
         stubs: {
           AuthLayout: { template: '<div><slot /><slot name="footer" /></div>' },
@@ -455,7 +457,8 @@ describe('EmailVerifyView', () => {
     await flushPromises()
 
     expect(sendVerifyCodeMock).not.toHaveBeenCalled()
-    expect(showErrorMock).toHaveBeenCalledWith('auth.emailSuffixNotAllowedWithAllowed')
+    expect(showErrorMock).not.toHaveBeenCalled()
+    expect(wrapper.find('[role="alert"]').exists()).toBe(true)
   })
 
   it('uses the pending oauth verify-code endpoint when auth store only carries the pending provider', async () => {

@@ -219,7 +219,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted, watch } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { AuthLayout } from '@/components/layout'
@@ -257,16 +257,6 @@ const errors = reactive({
   confirmPassword: ''
 })
 
-const validationToastMessage = computed(
-  () => errors.password || errors.confirmPassword || ''
-)
-
-watch(validationToastMessage, (value, previousValue) => {
-  if (value && value !== previousValue) {
-    appStore.showError(value)
-  }
-})
-
 // Check if the reset link is valid (has email and token)
 const isInvalidLink = computed(() => !email.value || !token.value)
 
@@ -277,9 +267,6 @@ onMounted(() => {
   email.value = (route.query.email as string) || ''
   token.value = (route.query.token as string) || ''
 
-  if (!email.value || !token.value) {
-    appStore.showError(t('auth.invalidResetLink'))
-  }
 })
 
 // ==================== Validation ====================
@@ -345,7 +332,6 @@ async function handleSubmit(): Promise<void> {
       errorMessage.value = t('auth.resetPasswordFailed')
     }
 
-    appStore.showError(errorMessage.value)
   } finally {
     isLoading.value = false
   }

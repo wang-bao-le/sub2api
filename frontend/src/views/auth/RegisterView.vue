@@ -546,17 +546,6 @@ const errors = reactive({
   invitation_code: ''
 })
 
-const validationToastMessage = computed(() =>
-  errors.email ||
-  errors.password ||
-  errors.confirmPassword ||
-  (invitationValidation.invalid ? invitationValidation.message : '') ||
-  errors.invitation_code ||
-  (promoValidation.invalid ? promoValidation.message : '') ||
-  errors.turnstile ||
-  ''
-)
-
 const showOAuthLogin = computed(
   () =>
     linuxdoOAuthEnabled.value ||
@@ -573,12 +562,6 @@ const agreementGateActive = computed(
 const registrationActionDisabled = computed(
   () => isLoading.value || !settingsLoaded.value || agreementGateActive.value
 )
-
-watch(validationToastMessage, (value, previousValue) => {
-  if (value && value !== previousValue) {
-    appStore.showError(value)
-  }
-})
 
 function syncAffiliateReferralCode(): string {
   const code = resolveAffiliateReferralCode(route.query.aff, route.query.aff_code)
@@ -924,7 +907,6 @@ async function handleOAuthStart(request: OAuthLoginStart): Promise<void> {
       'auth.errors',
       t('auth.turnstileFailed')
     )
-    appStore.showError(errorMessage.value)
   } finally {
     resetCaptchaProof()
     isLoading.value = false
@@ -1129,8 +1111,6 @@ async function handleRegister(): Promise<void> {
     // Handle registration error
     errorMessage.value = buildRegistrationErrorMessage(error, t('auth.registrationFailed'))
 
-    // Also show error toast
-    appStore.showError(errorMessage.value)
   } finally {
     if (captchaEnabled.value) {
       resetCaptchaProof()

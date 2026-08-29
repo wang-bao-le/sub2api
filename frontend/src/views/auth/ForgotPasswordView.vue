@@ -143,7 +143,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, reactive, onMounted, watch } from 'vue'
+import { computed, ref, reactive, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { AuthLayout } from '@/components/layout'
 import Icon from '@/components/icons/Icon.vue'
@@ -202,14 +202,6 @@ const formData = reactive({
 const errors = reactive({
   email: '',
   turnstile: ''
-})
-
-const validationToastMessage = computed(() => errors.email || errors.turnstile || '')
-
-watch(validationToastMessage, (value, previousValue) => {
-  if (value && value !== previousValue) {
-    appStore.showError(value)
-  }
 })
 
 // ==================== Lifecycle ====================
@@ -332,7 +324,6 @@ async function handleSubmit(): Promise<void> {
       errorMessage.value = t('auth.sendResetLinkFailed')
     }
 
-    appStore.showError(errorMessage.value)
   } finally {
     if (captchaEnabled.value) {
       resetCaptchaProof()

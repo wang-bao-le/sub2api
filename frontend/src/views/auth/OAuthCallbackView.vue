@@ -316,10 +316,8 @@ async function resumePendingEmailOAuth() {
     }
 
     callbackError.value = t('auth.loginRequestFailed')
-    appStore.showError(callbackError.value)
   } catch (e: unknown) {
     callbackError.value = t('auth.loginRequestFailed')
-    appStore.showError(callbackError.value)
     invalidCallback.value = true
   } finally {
     if (!needsRegistrationCompletion.value) {
@@ -374,7 +372,6 @@ onMounted(async () => {
   const fragmentError = params.get('error') || ''
   if (fragmentError) {
     callbackError.value = t('auth.oauth.callbackFailed')
-    appStore.showError(callbackError.value)
     invalidCallback.value = true
     return
   }
@@ -395,7 +392,6 @@ onMounted(async () => {
     await finalizeTokenResponse(tokenResponse, params.get('redirect') || '/dashboard')
   } catch (error: unknown) {
     callbackError.value = t('auth.loginRequestFailed')
-    appStore.showError(callbackError.value)
     invalidCallback.value = true
     isProcessing.value = false
   }
@@ -405,7 +401,8 @@ watch(
   error,
   (message) => {
     if (message) {
-      appStore.showError(message)
+      callbackError.value = t('auth.oauth.callbackFailed')
+      invalidCallback.value = true
     }
   },
   { immediate: true }

@@ -113,16 +113,17 @@ describe('OAuthCallbackView', () => {
     expect(wrapper.find('input[value="oauth-state"]').exists()).toBe(true)
   })
 
-  it('sends callback errors to toast instead of rendering inline red text', () => {
+  it('renders callback errors inline without relying on a toast', async () => {
     routeState.query = {
       error: 'oauth failed',
     }
 
     const wrapper = mount(OAuthCallbackView)
+    await wrapper.vm.$nextTick()
 
-    expect(showErrorMock).toHaveBeenCalledWith('oauth failed')
-    expect(wrapper.text()).not.toContain('oauth failed')
-    expect(wrapper.find('.bg-red-50').exists()).toBe(false)
+    expect(showErrorMock).not.toHaveBeenCalled()
+    expect(wrapper.text()).toContain('auth.oauth.callbackFailed')
+    expect(wrapper.find('[role="alert"]').exists()).toBe(true)
   })
 
   it('does not render manual copy fields for direct email oauth callback visits', async () => {
