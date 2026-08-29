@@ -111,8 +111,9 @@ describe('HomeView compact mode', () => {
     expect(wrapper.find('.terminal-container').exists()).toBe(true)
   })
 
-  it('links unauthenticated visitors to login', () => {
-    expect(compactDestination(mountHome({ compact_home_enabled: true }))).toBe('/login')
+  it('opens the login modal for unauthenticated visitors', () => {
+    const wrapper = mountHome({ compact_home_enabled: true })
+    expect(wrapper.get('[data-testid="compact-home"] button').text()).toContain('home.login')
   })
 
   it('links authenticated users to their dashboard', () => {
