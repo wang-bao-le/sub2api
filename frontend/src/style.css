@@ -179,6 +179,11 @@
     @apply mt-1 text-xs text-red-500;
   }
 
+  .auth-error-alert {
+    @apply flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs leading-5 text-red-700;
+    @apply dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300;
+  }
+
   /* Hide number input spinner buttons for cleaner UI */
   input[type='number']::-webkit-inner-spin-button,
   input[type='number']::-webkit-outer-spin-button {

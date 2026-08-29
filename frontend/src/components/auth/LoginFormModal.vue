@@ -105,7 +105,7 @@
 
         <div
           v-if="errorMessage"
-          class="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/30 dark:text-red-300"
+          class="auth-error-alert"
           role="alert"
           aria-live="polite"
         >

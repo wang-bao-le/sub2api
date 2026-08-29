@@ -91,7 +91,7 @@
           <p v-if="errors.turnstile" class="input-error-text" role="alert">{{ errors.turnstile }}</p>
         </div>
 
-        <div v-if="errorMessage" class="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300" role="alert" aria-live="polite">
+        <div v-if="errorMessage" class="auth-error-alert" role="alert" aria-live="polite">
           <Icon name="exclamationCircle" size="md" class="mt-0.5 shrink-0" aria-hidden="true" />
           <p>{{ errorMessage }}</p>
         </div>
