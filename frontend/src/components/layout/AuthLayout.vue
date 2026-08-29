@@ -30,10 +30,9 @@
           :class="compact ? 'p-5' : 'p-8'"
         >
           <slot />
-        </div>
-
-        <div class="mt-4 text-center text-sm">
-          <slot name="footer" />
+          <div class="mt-4 text-center text-sm">
+            <slot name="footer" />
+          </div>
         </div>
 
         <div class="mt-5 text-center text-xs text-gray-400 dark:text-dark-500">
