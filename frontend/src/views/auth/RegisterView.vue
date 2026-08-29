@@ -48,7 +48,14 @@
               class="input border-gray-300 pl-11 transition-none focus:border-black focus:ring-4 focus:ring-gray-300/30 dark:border-dark-600 dark:focus:border-white dark:focus:ring-gray-300/20"
               :class="{ 'input-error': errors.email }"
               :placeholder="t('auth.emailPlaceholder')"
+              :aria-invalid="Boolean(errors.email)"
+              :aria-describedby="errors.email ? 'register-email-error' : undefined"
+              @input="errors.email = ''; errorMessage = ''"
             />
+          </div>
+          <div v-if="errors.email" id="register-email-error" class="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300" role="alert">
+            <Icon name="exclamationCircle" size="md" class="mt-0.5 shrink-0" aria-hidden="true" />
+            <p>{{ errors.email }}</p>
           </div>
         </div>
 
@@ -71,12 +78,16 @@
               class="input border-gray-300 pl-11 pr-11 transition-none focus:border-black focus:ring-4 focus:ring-gray-300/30 dark:border-dark-600 dark:focus:border-white dark:focus:ring-gray-300/20"
               :class="{ 'input-error': errors.password }"
               :placeholder="t('auth.createPasswordPlaceholder')"
+              :aria-invalid="Boolean(errors.password)"
+              :aria-describedby="errors.password ? 'register-password-error' : undefined"
             />
             <button
               type="button"
               :disabled="registrationActionDisabled"
               @click="showPassword = !showPassword"
-              class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-gray-400 transition-colors hover:text-gray-600 dark:hover:text-dark-300"
+              :aria-label="showPassword ? t('auth.hidePassword') : t('auth.showPassword')"
+              :aria-pressed="showPassword"
+              class="absolute inset-y-0 right-0 flex min-w-11 items-center justify-center pr-3.5 text-gray-400 transition-colors hover:text-gray-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 dark:hover:text-dark-300"
             >
               <Icon v-if="showPassword" name="eyeOff" size="md" />
               <Icon v-else name="eye" size="md" />
@@ -85,9 +96,10 @@
           <p class="input-hint">
             {{ t('auth.passwordHint') }}
           </p>
-          <p v-if="errors.password" class="input-error-text">
-            {{ errors.password }}
-          </p>
+          <div v-if="errors.password" id="register-password-error" class="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300" role="alert">
+            <Icon name="exclamationCircle" size="md" class="mt-0.5 shrink-0" aria-hidden="true" />
+            <p>{{ errors.password }}</p>
+          </div>
         </div>
 
         <!-- Confirm Password Input -->
@@ -109,20 +121,25 @@
               class="input border-gray-300 pl-11 pr-11 transition-none focus:border-black focus:ring-4 focus:ring-gray-300/30 dark:border-dark-600 dark:focus:border-white dark:focus:ring-gray-300/20"
               :class="{ 'input-error': errors.confirmPassword }"
               :placeholder="t('auth.confirmPasswordPlaceholder')"
+              :aria-invalid="Boolean(errors.confirmPassword)"
+              :aria-describedby="errors.confirmPassword ? 'register-confirm-password-error' : undefined"
             />
             <button
               type="button"
               :disabled="registrationActionDisabled"
               @click="showConfirmPassword = !showConfirmPassword"
-              class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-gray-400 transition-colors hover:text-gray-600 dark:hover:text-dark-300"
+              :aria-label="showConfirmPassword ? t('auth.hidePassword') : t('auth.showPassword')"
+              :aria-pressed="showConfirmPassword"
+              class="absolute inset-y-0 right-0 flex min-w-11 items-center justify-center pr-3.5 text-gray-400 transition-colors hover:text-gray-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 dark:hover:text-dark-300"
             >
               <Icon v-if="showConfirmPassword" name="eyeOff" size="md" />
               <Icon v-else name="eye" size="md" />
             </button>
           </div>
-          <p v-if="errors.confirmPassword" class="input-error-text">
-            {{ errors.confirmPassword }}
-          </p>
+          <div v-if="errors.confirmPassword" id="register-confirm-password-error" class="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300" role="alert">
+            <Icon name="exclamationCircle" size="md" class="mt-0.5 shrink-0" aria-hidden="true" />
+            <p>{{ errors.confirmPassword }}</p>
+          </div>
         </div>
 
         <!-- Invitation Code Input (Required when enabled) -->
@@ -145,6 +162,8 @@
                 'border-red-500 focus:border-red-500 focus:ring-red-500': invitationValidation.invalid || errors.invitation_code
               }"
               :placeholder="t('auth.invitationCodePlaceholder')"
+              :aria-invalid="Boolean(errors.invitation_code)"
+              :aria-describedby="errors.invitation_code ? 'register-invitation-error' : undefined"
               @input="handleInvitationCodeInput"
             />
             <!-- Validation indicator -->
@@ -170,6 +189,10 @@
               </span>
             </div>
           </transition>
+          <div v-if="errors.invitation_code" id="register-invitation-error" class="mt-2 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300" role="alert">
+            <Icon name="exclamationCircle" size="md" class="mt-0.5 shrink-0" aria-hidden="true" />
+            <p>{{ errors.invitation_code }}</p>
+          </div>
         </div>
 
         <!-- Affiliate Invitation Code Input (Optional) -->
@@ -258,6 +281,10 @@
             @expire="onTurnstileExpire"
             @error="onTurnstileError"
           />
+          <div v-if="errors.turnstile" class="mt-2 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300" role="alert">
+            <Icon name="exclamationCircle" size="md" class="mt-0.5 shrink-0" aria-hidden="true" />
+            <p>{{ errors.turnstile }}</p>
+          </div>
         </div>
 
         <LoginAgreementPrompt
@@ -271,6 +298,11 @@
           @reject="rejectLoginAgreement"
           @open="showAgreementModal = true"
         />
+
+        <div v-if="errorMessage" class="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300" role="alert" aria-live="polite">
+          <Icon name="exclamationCircle" size="md" class="mt-0.5 shrink-0" aria-hidden="true" />
+          <p>{{ errorMessage }}</p>
+        </div>
 
         <!-- Submit Button -->
         <button
@@ -350,8 +382,8 @@
           :aff-code="formData.aff_code"
           :show-divider="false"
           @start="handleOAuthStart"
-        />
-      </div>
+          />
+        </div>
     </div>
 
     <!-- Footer -->

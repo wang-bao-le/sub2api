@@ -23,7 +23,7 @@ describe('TotpLoginModal', () => {
     showErrorMock.mockReset()
   })
 
-  it('sends verification errors to toast and does not render inline red text', async () => {
+  it('shows verification errors inline and keeps the toast as auxiliary feedback', async () => {
     const wrapper = mount(TotpLoginModal, {
       props: {
         tempToken: 'temp-token',
@@ -35,7 +35,7 @@ describe('TotpLoginModal', () => {
     await wrapper.vm.$nextTick()
 
     expect(showErrorMock).toHaveBeenCalledWith('Invalid code')
-    expect(wrapper.text()).not.toContain('Invalid code')
-    expect(wrapper.find('.bg-red-50').exists()).toBe(false)
+    expect(wrapper.text()).toContain('Invalid code')
+    expect(wrapper.find('[role="alert"]').text()).toContain('Invalid code')
   })
 })

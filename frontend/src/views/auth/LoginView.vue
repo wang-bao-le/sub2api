@@ -22,6 +22,7 @@
               <Icon name="mail" size="md" class="text-gray-400 dark:text-dark-500" />
             </div>
             <input
+              ref="emailInputRef"
               id="email"
               v-model="formData.email"
               type="email"
@@ -29,11 +30,17 @@
               autofocus
               autocomplete="email"
               :disabled="authActionDisabled"
+              :aria-invalid="Boolean(errors.email)"
+              :aria-describedby="errors.email ? 'login-email-error' : undefined"
+              @input="errors.email = ''; errorMessage = ''"
               class="input border-gray-300 pl-11 transition-none focus:border-black focus:ring-4 focus:ring-gray-300/30 dark:border-dark-600 dark:focus:border-white dark:focus:ring-gray-300/20"
               :class="{ 'input-error': errors.email }"
               :placeholder="t('auth.emailPlaceholder')"
             />
           </div>
+          <p v-if="errors.email" id="login-email-error" class="input-error-text" role="alert">
+            {{ errors.email }}
+          </p>
         </div>
 
         <!-- Password Input -->
@@ -46,12 +53,16 @@
               <Icon name="lock" size="md" class="text-gray-400 dark:text-dark-500" />
             </div>
             <input
+              ref="passwordInputRef"
               id="password"
               v-model="formData.password"
               :type="showPassword ? 'text' : 'password'"
               required
               autocomplete="current-password"
               :disabled="authActionDisabled"
+              :aria-invalid="Boolean(errors.password)"
+              :aria-describedby="errors.password ? 'login-password-error' : undefined"
+              @input="errors.password = ''; errorMessage = ''"
               class="input border-gray-300 pl-11 pr-11 transition-none focus:border-black focus:ring-4 focus:ring-gray-300/30 dark:border-dark-600 dark:focus:border-white dark:focus:ring-gray-300/20"
               :class="{ 'input-error': errors.password }"
               :placeholder="t('auth.passwordPlaceholder')"
@@ -60,12 +71,17 @@
               type="button"
               @click="showPassword = !showPassword"
               :disabled="authActionDisabled"
-              class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-gray-400 transition-colors hover:text-gray-600 dark:hover:text-dark-300"
+              :aria-label="showPassword ? t('auth.hidePassword') : t('auth.showPassword')"
+              :aria-pressed="showPassword"
+              class="absolute inset-y-0 right-0 flex min-w-11 items-center justify-center text-gray-400 transition-colors hover:text-gray-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-black/40 dark:hover:text-dark-300 dark:focus-visible:ring-white/50"
             >
               <Icon v-if="showPassword" name="eyeOff" size="md" />
               <Icon v-else name="eye" size="md" />
             </button>
           </div>
+          <p v-if="errors.password" id="login-password-error" class="input-error-text" role="alert">
+            {{ errors.password }}
+          </p>
           <div class="mt-3 flex items-center justify-between">
             <label class="flex items-center gap-2 text-sm text-gray-600 dark:text-dark-300">
               <input
@@ -85,6 +101,16 @@
           </div>
         </div>
 
+        <div
+          v-if="errorMessage"
+          class="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/30 dark:text-red-300"
+          role="alert"
+          aria-live="polite"
+        >
+          <Icon name="exclamationCircle" size="md" class="mt-0.5 shrink-0" aria-hidden="true" />
+          <p>{{ errorMessage }}</p>
+        </div>
+
         <!-- Turnstile Widget -->
         <div v-if="captchaEnabled">
           <TurnstileWidget
@@ -102,6 +128,9 @@
             @expire="onTurnstileExpire"
             @error="onTurnstileError"
           />
+          <p v-if="errors.turnstile" class="input-error-text" role="alert">
+            {{ errors.turnstile }}
+          </p>
         </div>
 
         <!-- Submit Button -->
@@ -342,6 +371,8 @@ const errors = reactive({
   password: '',
   turnstile: ''
 })
+const emailInputRef = ref<HTMLInputElement | null>(null)
+const passwordInputRef = ref<HTMLInputElement | null>(null)
 
 const validationToastMessage = computed(
   () => errors.email || errors.password || errors.turnstile || ''
@@ -564,6 +595,14 @@ function validateForm(): boolean {
   return isValid
 }
 
+function focusFirstError(): void {
+  if (errors.email) {
+    emailInputRef.value?.focus()
+  } else if (errors.password) {
+    passwordInputRef.value?.focus()
+  }
+}
+
 // ==================== Form Handlers ====================
 
 async function handleLogin(): Promise<void> {
@@ -572,6 +611,7 @@ async function handleLogin(): Promise<void> {
 
   // Validate form
   if (!validateForm()) {
+    focusFirstError()
     return
   }
 
@@ -612,7 +652,26 @@ async function handleLogin(): Promise<void> {
     const redirectTo = (router.currentRoute.value.query.redirect as string) || '/dashboard'
     await router.push(redirectTo)
   } catch (error: unknown) {
-    errorMessage.value = extractI18nErrorMessage(error, t, 'auth.errors', t('auth.loginFailed'))
+    const errorCode = typeof error === 'object' && error !== null
+      ? String((error as { reason?: string; code?: string | number }).reason ?? (error as { code?: string | number }).code ?? '')
+      : ''
+    const errorStatus = typeof error === 'object' && error !== null
+      ? Number((error as { status?: number }).status ?? 0)
+      : 0
+    const rawMessage = error instanceof Error ? error.message : ''
+    const isNetworkError = errorCode === 'ERR_NETWORK' || rawMessage === 'Network Error'
+
+    if (errorCode === 'USER_NOT_ACTIVE') {
+      errorMessage.value = t('auth.errors.USER_NOT_ACTIVE')
+    } else if (errorCode === 'INVALID_CREDENTIALS' || errorCode === 'INVALID_USER' || errorStatus === 401) {
+      errorMessage.value = t('auth.errors.INVALID_CREDENTIALS')
+    } else if (errorStatus === 429) {
+      errorMessage.value = t('auth.loginRateLimited')
+    } else if (isNetworkError) {
+      errorMessage.value = t('auth.loginNetworkError')
+    } else {
+      errorMessage.value = extractI18nErrorMessage(error, t, 'auth.errors', t('auth.loginRequestFailed'))
+    }
 
     // Also show error toast
     appStore.showError(errorMessage.value)

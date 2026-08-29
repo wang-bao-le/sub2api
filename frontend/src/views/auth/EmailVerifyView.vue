@@ -47,7 +47,11 @@
             class="input border-gray-300 py-3 text-center font-mono text-xl tracking-[0.5em] transition-none focus:border-black focus:ring-4 focus:ring-gray-300/30 dark:border-dark-600 dark:focus:border-white dark:focus:ring-gray-300/20"
             :class="{ 'input-error': errors.code }"
             placeholder="000000"
+            :aria-invalid="Boolean(errors.code)"
+            :aria-describedby="errors.code ? 'verify-code-error' : undefined"
+            @input="errors.code = ''; errorMessage = ''"
           />
+          <p v-if="errors.code" id="verify-code-error" class="input-error-text text-center" role="alert">{{ errors.code }}</p>
           <p class="input-hint text-center">{{ t('auth.verificationCodeHint') }}</p>
         </div>
 
@@ -84,6 +88,12 @@
             @expire="onTurnstileExpire"
             @error="onTurnstileError"
           />
+          <p v-if="errors.turnstile" class="input-error-text" role="alert">{{ errors.turnstile }}</p>
+        </div>
+
+        <div v-if="errorMessage" class="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300" role="alert" aria-live="polite">
+          <Icon name="exclamationCircle" size="md" class="mt-0.5 shrink-0" aria-hidden="true" />
+          <p>{{ errorMessage }}</p>
         </div>
 
         <div v-if="pendingOAuthCreateCaptchaEnabled" class="space-y-2">
