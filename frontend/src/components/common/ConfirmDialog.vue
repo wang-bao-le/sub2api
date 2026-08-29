@@ -10,15 +10,17 @@
         <button
           @click="handleCancel"
           type="button"
-          class="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:border-dark-600 dark:bg-dark-700 dark:text-gray-200 dark:hover:bg-dark-600 dark:focus:ring-offset-dark-800"
+          :disabled="cancelDisabled"
+          class="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-dark-600 dark:bg-dark-700 dark:text-gray-200 dark:hover:bg-dark-600 dark:focus:ring-offset-dark-800"
         >
           {{ cancelText }}
         </button>
         <button
           @click="handleConfirm"
           type="button"
+          :disabled="confirmDisabled"
           :class="[
-            'rounded-md px-4 py-2 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-dark-800',
+            'rounded-md px-4 py-2 text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:focus:ring-offset-dark-800',
             danger
               ? 'bg-red-600 hover:bg-red-700 focus:ring-red-500'
               : 'bg-primary-600 hover:bg-primary-700 focus:ring-primary-500'
@@ -45,6 +47,8 @@ interface Props {
   confirmText?: string
   cancelText?: string
   danger?: boolean
+  confirmDisabled?: boolean
+  cancelDisabled?: boolean
 }
 
 interface Emits {
@@ -58,6 +62,8 @@ const props = withDefaults(defineProps<Props>(), {
 
 const confirmText = computed(() => props.confirmText || t('common.confirm'))
 const cancelText = computed(() => props.cancelText || t('common.cancel'))
+const confirmDisabled = computed(() => props.confirmDisabled === true)
+const cancelDisabled = computed(() => props.cancelDisabled === true)
 
 const emit = defineEmits<Emits>()
 

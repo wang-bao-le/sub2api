@@ -94,6 +94,18 @@
       </div>
     </template>
   </BaseDialog>
+
+  <ConfirmDialog
+    :show="showLogoutConfirm"
+    :title="t('common.logoutConfirmTitle')"
+    :message="t('common.logoutConfirmMessage')"
+    :confirm-text="logoutLoading ? t('common.loggingOut') : t('common.logoutConfirm')"
+    :confirm-disabled="logoutLoading"
+    :cancel-disabled="logoutLoading"
+    :danger="true"
+    @confirm="confirmLogout"
+    @cancel="showLogoutConfirm = false"
+  />
 </template>
 
 <script setup lang="ts">
@@ -107,6 +119,7 @@ import Icon from '@/components/icons/Icon.vue'
 import { useAdminComplianceStore, useAppStore, useAuthStore } from '@/stores'
 import { getLocale } from '@/i18n'
 import { markExplicitLogout } from '@/utils/loginModal'
+import ConfirmDialog from '@/components/common/ConfirmDialog.vue'
 import zhDocument from '../../../../docs/legal/admin-compliance.zh.md?raw'
 import enDocument from '../../../../docs/legal/admin-compliance.en.md?raw'
 
@@ -116,6 +129,8 @@ const authStore = useAuthStore()
 const appStore = useAppStore()
 const typedPhrase = ref('')
 const attemptedSubmit = ref(false)
+const showLogoutConfirm = ref(false)
+const logoutLoading = ref(false)
 
 marked.setOptions({
   breaks: true,
@@ -179,9 +194,20 @@ async function submit(): Promise<void> {
 }
 
 async function logout(): Promise<void> {
+  showLogoutConfirm.value = true
+}
+
+async function confirmLogout(): Promise<void> {
+  if (logoutLoading.value) return
+  logoutLoading.value = true
   markExplicitLogout()
-  await authStore.logout()
-  window.location.href = '/home'
+  try {
+    await authStore.logout()
+    window.location.href = '/home'
+  } finally {
+    showLogoutConfirm.value = false
+    logoutLoading.value = false
+  }
 }
 </script>
 

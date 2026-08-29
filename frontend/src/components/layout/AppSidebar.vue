@@ -243,6 +243,18 @@
       @click="closeMobile"
     ></div>
   </transition>
+
+  <ConfirmDialog
+    :show="showLogoutConfirm"
+    :title="t('common.logoutConfirmTitle')"
+    :message="t('common.logoutConfirmMessage')"
+    :confirm-text="logoutLoading ? t('common.loggingOut') : t('common.logoutConfirm')"
+    :confirm-disabled="logoutLoading"
+    :cancel-disabled="logoutLoading"
+    :danger="true"
+    @confirm="confirmLogout"
+    @cancel="showLogoutConfirm = false"
+  />
 </template>
 
 <script setup lang="ts">
@@ -256,6 +268,7 @@ import { sanitizeUrl } from '@/utils/url'
 import { FeatureFlags, makeSidebarFlag } from '@/utils/featureFlags'
 import { useBatchImageAccess } from '@/composables/useBatchImageAccess'
 import { markExplicitLogout } from '@/utils/loginModal'
+import ConfirmDialog from '@/components/common/ConfirmDialog.vue'
 
 interface NavItem {
   path: string
@@ -319,6 +332,8 @@ const settingsLoaded = computed(() => appStore.publicSettingsLoaded)
 const user = computed(() => authStore.user)
 const userDropdownOpen = ref(false)
 const userDropdownRef = ref<HTMLElement | null>(null)
+const showLogoutConfirm = ref(false)
+const logoutLoading = ref(false)
 const contactInfo = computed(() => appStore.contactInfo)
 const avatarUrl = computed(() => user.value?.avatar_url?.trim() || '')
 const showOnboardingButton = computed(() => !authStore.isSimpleMode && user.value?.role === 'admin')
@@ -897,13 +912,24 @@ function closeUserDropdown() {
 
 async function handleLogout() {
   closeUserDropdown()
+  showLogoutConfirm.value = true
+}
+
+async function confirmLogout() {
+  if (logoutLoading.value) return
+  logoutLoading.value = true
   markExplicitLogout()
   try {
     await authStore.logout()
   } catch (error) {
     console.error('Logout error:', error)
   }
-  await router.push('/home')
+  try {
+    await router.push('/home')
+  } finally {
+    showLogoutConfirm.value = false
+    logoutLoading.value = false
+  }
 }
 
 function handleReplayGuide() {
