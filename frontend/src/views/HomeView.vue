@@ -351,6 +351,9 @@ const dashboardPath = computed(() => isAdmin.value ? '/admin/dashboard' : '/dash
 function handleLoginClick(event: MouseEvent) {
   if (!isAuthenticated.value) {
     event.preventDefault()
+    if (event.currentTarget instanceof HTMLElement) {
+      event.currentTarget.blur()
+    }
     requestLoginModal()
   }
 }
