@@ -18,7 +18,7 @@
                 ? 'inline-flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-white/15 ring-1 ring-white/25'
                 : 'inline-flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-white/10 ring-1 ring-white/15 lg:mb-8 lg:h-16 lg:w-16 lg:rounded-2xl'"
             >
-              <img :src="siteLogo || '/logo.svg'" alt="Logo" class="h-full w-full object-contain" />
+              <img src="/favicon1.svg" alt="Logo" class="h-full w-full object-contain" />
             </div>
             <div>
               <h1 :class="embedded ? 'text-xl font-semibold tracking-tight text-white' : 'text-xl font-semibold tracking-tight text-white lg:text-5xl lg:font-bold'">
@@ -58,7 +58,6 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'
 import { useAppStore } from '@/stores'
-import { sanitizeUrl } from '@/utils/url'
 
 const props = withDefaults(defineProps<{ compact?: boolean; embedded?: boolean }>(), {
   compact: false
@@ -69,7 +68,6 @@ const embedded = computed(() => props.embedded === true)
 const appStore = useAppStore()
 
 const siteName = computed(() => appStore.cachedPublicSettings?.site_name || appStore.siteName || 'Sub2API')
-const siteLogo = computed(() => sanitizeUrl(appStore.siteLogo || '', { allowRelative: true, allowDataUrl: true }))
 const siteSubtitle = computed(() => appStore.cachedPublicSettings?.site_subtitle || 'Subscription to API Conversion Platform')
 const settingsLoaded = computed(() => appStore.publicSettingsLoaded)
 
