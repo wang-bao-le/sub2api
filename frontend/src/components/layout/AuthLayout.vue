@@ -35,7 +35,7 @@
     </aside>
 
     <!-- Authentication surface -->
-    <main :class="embedded ? 'relative flex min-w-0 flex-col items-center' : 'relative flex min-w-0 flex-col items-center justify-center px-4 py-8 sm:px-8 lg:px-12 lg:py-10'">
+    <main :class="embedded ? 'relative flex min-w-0 flex-col items-center bg-black dark:bg-black' : 'relative flex min-w-0 flex-col items-center justify-center px-4 py-8 sm:px-8 lg:px-12 lg:py-10'">
       <div class="relative z-10 w-full max-w-md">
         <div
           class="w-full rounded-2xl border border-gray-200 bg-white shadow-lg dark:border-dark-700 dark:bg-dark-800"
