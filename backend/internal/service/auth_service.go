@@ -95,6 +95,41 @@ type CaptchaProof struct {
 	TencentRandstr string
 }
 
+const passwordResetCodeCountdown = 60
+
+// RequestPasswordResetCodeAsync creates a password reset code and queues its email.
+// Unknown and inactive accounts intentionally return the same success result.
+func (s *AuthService) RequestPasswordResetCodeAsync(ctx context.Context, email string, locale ...string) (*SendVerifyCodeResult, error) {
+	if !s.IsPasswordResetEnabled(ctx) {
+		return nil, infraerrors.Forbidden("PASSWORD_RESET_DISABLED", "password reset is not enabled")
+	}
+	if s.emailService == nil || s.emailQueueService == nil {
+		return nil, ErrServiceUnavailable
+	}
+	normalizedEmail := strings.ToLower(strings.TrimSpace(email))
+	user, err := s.userRepo.GetByEmail(ctx, normalizedEmail)
+	if err != nil {
+		if errors.Is(err, ErrUserNotFound) {
+			return &SendVerifyCodeResult{Countdown: passwordResetCodeCountdown}, nil
+		}
+		return nil, ErrServiceUnavailable
+	}
+	if user == nil || !user.IsActive() {
+		return &SendVerifyCodeResult{Countdown: passwordResetCodeCountdown}, nil
+	}
+	code, err := s.emailService.CreatePasswordResetCode(ctx, normalizedEmail)
+	if err != nil {
+		return nil, err
+	}
+	siteName := "Sub2API"
+	if s.settingService != nil { siteName = s.settingService.GetSiteName(ctx) }
+	if err := s.emailQueueService.EnqueuePasswordResetCode(normalizedEmail, siteName, code, firstEmailLocale(locale)); err != nil {
+		_ = s.emailService.DeletePasswordResetCode(ctx, normalizedEmail)
+		return nil, ErrServiceUnavailable
+	}
+	return &SendVerifyCodeResult{Countdown: passwordResetCodeCountdown}, nil
+}
+
 type DefaultSubscriptionAssigner interface {
 	AssignOrExtendSubscription(ctx context.Context, input *AssignSubscriptionInput) (*UserSubscription, bool, error)
 }
@@ -1615,7 +1650,7 @@ func (s *AuthService) RequestPasswordResetAsync(ctx context.Context, email, fron
 
 // ResetPassword 重置密码
 // Security: Increments TokenVersion to invalidate all existing JWT tokens
-func (s *AuthService) ResetPassword(ctx context.Context, email, token, newPassword string) error {
+func (s *AuthService) ResetPassword(ctx context.Context, email, token, verifyCode, newPassword string) error {
 	if err := ValidatePassword(newPassword); err != nil {
 		return err
 	}
@@ -1628,9 +1663,15 @@ func (s *AuthService) ResetPassword(ctx context.Context, email, token, newPasswo
 		return ErrServiceUnavailable
 	}
 
-	// Verify and consume the reset token (one-time use)
-	if err := s.emailService.ConsumePasswordResetToken(ctx, email, token); err != nil {
-		return err
+	if strings.TrimSpace(verifyCode) != "" {
+		if err := s.emailService.VerifyPasswordResetCode(ctx, strings.ToLower(strings.TrimSpace(email)), strings.TrimSpace(verifyCode)); err != nil {
+			return err
+		}
+	} else if strings.TrimSpace(token) != "" {
+		// Verify and consume the legacy reset token (one-time use).
+		if err := s.emailService.ConsumePasswordResetToken(ctx, email, token); err != nil { return err }
+	} else {
+		return ErrInvalidResetToken
 	}
 
 	// Get user

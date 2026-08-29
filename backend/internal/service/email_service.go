@@ -58,6 +58,14 @@ type EmailCache interface {
 	GetNotifyCodeUserRate(ctx context.Context, userID int64) (int64, error)
 }
 
+// PasswordResetCodeCache stores password-reset codes separately from
+// registration verification codes.
+type PasswordResetCodeCache interface {
+	GetPasswordResetCode(ctx context.Context, email string) (*VerificationCodeData, error)
+	SetPasswordResetCode(ctx context.Context, email string, data *VerificationCodeData, ttl time.Duration) error
+	DeletePasswordResetCode(ctx context.Context, email string) error
+}
+
 // VerificationCodeData represents verification code data
 type VerificationCodeData struct {
 	Code      string
@@ -83,6 +91,96 @@ const (
 	// Password reset email cooldown (prevent email bombing)
 	passwordResetEmailCooldown = 30 * time.Second
 )
+
+func (s *EmailService) passwordResetCodeCache() (PasswordResetCodeCache, error) {
+	cache, ok := s.cache.(PasswordResetCodeCache)
+	if !ok {
+		return nil, ErrEmailNotConfigured
+	}
+	return cache, nil
+}
+
+// CreatePasswordResetCode creates and stores a password reset verification code.
+func (s *EmailService) CreatePasswordResetCode(ctx context.Context, email string) (string, error) {
+	cache, err := s.passwordResetCodeCache()
+	if err != nil {
+		return "", err
+	}
+	if existing, getErr := cache.GetPasswordResetCode(ctx, email); getErr == nil && existing != nil {
+		if time.Since(existing.CreatedAt) < verifyCodeCooldown {
+			return "", ErrVerifyCodeTooFrequent
+		}
+	}
+
+	code, err := s.GenerateVerifyCode()
+	if err != nil {
+		return "", fmt.Errorf("generate password reset code: %w", err)
+	}
+	now := time.Now()
+	data := &VerificationCodeData{Code: code, Attempts: 0, CreatedAt: now, ExpiresAt: now.Add(verifyCodeTTL)}
+	if err := cache.SetPasswordResetCode(ctx, email, data, verifyCodeTTL); err != nil {
+		return "", fmt.Errorf("save password reset code: %w", err)
+	}
+	return code, nil
+}
+
+func (s *EmailService) DeletePasswordResetCode(ctx context.Context, email string) error {
+	cache, err := s.passwordResetCodeCache()
+	if err != nil { return err }
+	return cache.DeletePasswordResetCode(ctx, email)
+}
+
+// SendPasswordResetCode sends a password reset verification code.
+func (s *EmailService) SendPasswordResetCode(ctx context.Context, email, siteName, code string, locale ...string) error {
+	if s.notificationEmailService != nil {
+		err := s.notificationEmailService.Send(ctx, NotificationEmailSendInput{
+			Event: NotificationEmailEventAuthVerifyCode, Locale: firstEmailLocale(locale),
+			RecipientEmail: email, RecipientName: emailRecipientName(email),
+			Variables: map[string]string{"verification_code": code, "expires_in_minutes": strconv.Itoa(int(verifyCodeTTL / time.Minute))},
+		})
+		if err == nil {
+			return nil
+		}
+		if !shouldFallbackNotificationEmail(err) {
+			return err
+		}
+		slog.Warn("failed to send templated password reset code email, falling back to legacy template", "recipient_hash", notificationEmailHash(email), "error", err)
+	}
+	return s.SendEmail(ctx, email, fmt.Sprintf("[%s] Password reset verification code", siteName), s.buildVerifyCodeEmailBody(code, siteName))
+}
+
+// VerifyPasswordResetCode verifies and consumes a password reset code.
+func (s *EmailService) VerifyPasswordResetCode(ctx context.Context, email, code string) error {
+	cache, err := s.passwordResetCodeCache()
+	if err != nil {
+		return err
+	}
+	data, err := cache.GetPasswordResetCode(ctx, email)
+	if err != nil || data == nil {
+		return ErrInvalidVerifyCode
+	}
+	if data.Attempts >= maxVerifyCodeAttempts {
+		return ErrVerifyCodeMaxAttempts
+	}
+	if subtle.ConstantTimeCompare([]byte(data.Code), []byte(code)) != 1 {
+		data.Attempts++
+		remaining := time.Until(data.ExpiresAt)
+		if remaining <= 0 {
+			return ErrInvalidVerifyCode
+		}
+		if setErr := cache.SetPasswordResetCode(ctx, email, data, remaining); setErr != nil {
+			slog.Error("failed to update password reset code attempts", "error", setErr)
+		}
+		if data.Attempts >= maxVerifyCodeAttempts {
+			return ErrVerifyCodeMaxAttempts
+		}
+		return ErrInvalidVerifyCode
+	}
+	if err := cache.DeletePasswordResetCode(ctx, email); err != nil {
+		slog.Error("failed to delete password reset code after success", "error", err)
+	}
+	return nil
+}
 
 // SMTPConfig SMTP配置
 type SMTPConfig struct {

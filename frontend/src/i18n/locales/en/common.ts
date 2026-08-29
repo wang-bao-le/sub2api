@@ -426,7 +426,12 @@ export default {
     // Forgot password
     forgotPassword: 'Forgot password?',
     forgotPasswordTitle: 'Reset Your Password',
-    forgotPasswordHint: 'Enter your email address and we will send you a link to reset your password.',
+    forgotPasswordHint: 'Enter your registration email and we will send a 6-digit code.',
+    sendResetCode: 'Send verification code',
+    sendingResetCode: 'Sending...',
+    sendResetCodeFailed: 'Failed to send verification code. Please try again.',
+    resetCodeSent: 'Verification code sent',
+    verificationCodePlaceholder: 'Enter the 6-digit code',
     sendResetLink: 'Send Reset Link',
     sendingResetLink: 'Sending...',
     sendResetLinkFailed: 'Failed to send reset link. Please try again.',
@@ -450,7 +455,7 @@ export default {
     passwordResetSuccessHint: 'Your password has been reset. You can now sign in with your new password.',
     invalidResetLink: 'Invalid Reset Link',
     invalidResetLinkHint: 'This password reset link is invalid or has expired. Please request a new one.',
-    requestNewResetLink: 'Request New Reset Link',
+    requestNewResetLink: 'Resend verification code',
     invalidOrExpiredToken: 'The password reset link is invalid or has expired. Please request a new one.'
   },
 

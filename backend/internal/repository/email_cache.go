@@ -13,6 +13,7 @@ import (
 
 const (
 	verifyCodeKeyPrefix          = "verify_code:"
+	passwordResetCodeKeyPrefix   = "password_reset_code:"
 	notifyVerifyKeyPrefix        = "notify_verify:"
 	passwordResetKeyPrefix       = "password_reset:"
 	passwordResetSentAtKeyPrefix = "password_reset_sent:"
@@ -75,6 +76,28 @@ func (c *emailCache) SetVerificationCode(ctx context.Context, email string, data
 func (c *emailCache) DeleteVerificationCode(ctx context.Context, email string) error {
 	key := verifyCodeKey(email)
 	return c.rdb.Del(ctx, key).Err()
+}
+
+func passwordResetCodeKey(email string) string {
+	return passwordResetCodeKeyPrefix + strings.ToLower(email)
+}
+
+func (c *emailCache) GetPasswordResetCode(ctx context.Context, email string) (*service.VerificationCodeData, error) {
+	val, err := c.rdb.Get(ctx, passwordResetCodeKey(email)).Result()
+	if err != nil { return nil, err }
+	var data service.VerificationCodeData
+	if err := json.Unmarshal([]byte(val), &data); err != nil { return nil, err }
+	return &data, nil
+}
+
+func (c *emailCache) SetPasswordResetCode(ctx context.Context, email string, data *service.VerificationCodeData, ttl time.Duration) error {
+	val, err := json.Marshal(data)
+	if err != nil { return err }
+	return c.rdb.Set(ctx, passwordResetCodeKey(email), val, ttl).Err()
+}
+
+func (c *emailCache) DeletePasswordResetCode(ctx context.Context, email string) error {
+	return c.rdb.Del(ctx, passwordResetCodeKey(email)).Err()
 }
 
 // Password reset token methods

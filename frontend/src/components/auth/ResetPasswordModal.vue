@@ -93,6 +93,34 @@
         </div>
 
         <!-- New Password Input -->
+        <div v-if="isCodeMode">
+          <label for="verifyCode" class="input-label">{{ t('auth.verificationCode') }}</label>
+          <input
+            id="verifyCode"
+            v-model="formData.verifyCode"
+            type="text"
+            inputmode="numeric"
+            maxlength="6"
+            autocomplete="one-time-code"
+            :disabled="isLoading"
+            class="input"
+            :class="{ 'input-error': errors.verifyCode }"
+            :placeholder="t('auth.verificationCodePlaceholder')"
+            :aria-invalid="Boolean(errors.verifyCode)"
+            :aria-describedby="errors.verifyCode ? 'reset-verify-code-error' : undefined"
+            @input="errors.verifyCode = ''; errorMessage = ''"
+          />
+          <p v-if="errors.verifyCode" id="reset-verify-code-error" class="input-error-text" role="alert">{{ errors.verifyCode }}</p>
+          <button
+            type="button"
+            class="mt-2 text-sm font-medium text-gray-700 dark:text-gray-300"
+            :disabled="resendCooldown > 0 || isResending"
+            @click="resendCode"
+          >
+            {{ resendCooldown > 0 ? t('auth.resendCountdown', { countdown: resendCooldown }) : t('auth.resendCode') }}
+          </button>
+        </div>
+
         <div>
           <label for="password" class="input-label">
             {{ t('auth.newPassword') }}
@@ -251,6 +279,8 @@ const appStore = useAppStore()
 // ==================== State ====================
 
 const isLoading = ref<boolean>(false)
+const isResending = ref<boolean>(false)
+const resendCooldown = ref<number>(0)
 const isSuccess = ref<boolean>(false)
 const errorMessage = ref<string>('')
 const showPassword = ref<boolean>(false)
@@ -259,19 +289,22 @@ const showConfirmPassword = ref<boolean>(false)
 // URL parameters
 const email = ref<string>('')
 const token = ref<string>('')
+const isCodeMode = computed(() => (options?.resetMethod || (!token.value ? 'code' : 'token')) === 'code')
 
 const formData = reactive({
+  verifyCode: '',
   password: '',
   confirmPassword: ''
 })
 
 const errors = reactive({
+  verifyCode: '',
   password: '',
   confirmPassword: ''
 })
 
-// Check if the reset link is valid (has email and token)
-const isInvalidLink = computed(() => !email.value || !token.value)
+// Token links require a token; code-based resets only require the email.
+const isInvalidLink = computed(() => !email.value || (!isCodeMode.value && !token.value))
 
 // ==================== Lifecycle ====================
 
@@ -285,10 +318,16 @@ onMounted(() => {
 // ==================== Validation ====================
 
 function validateForm(): boolean {
+  errors.verifyCode = ''
   errors.password = ''
   errors.confirmPassword = ''
 
   let isValid = true
+
+  if (isCodeMode.value && !/^\d{6}$/.test(formData.verifyCode.trim())) {
+    errors.verifyCode = t('auth.invalidCode')
+    isValid = false
+  }
 
   // Password validation
   if (!formData.password) {
@@ -325,7 +364,7 @@ async function handleSubmit(): Promise<void> {
   try {
     await resetPassword({
       email: email.value,
-      token: token.value,
+      ...(isCodeMode.value ? { verify_code: formData.verifyCode.trim() } : { token: token.value }),
       new_password: formData.password
     })
 
@@ -337,6 +376,9 @@ async function handleSubmit(): Promise<void> {
     // Check for invalid/expired token error
     if (err.response?.data?.code === 'INVALID_RESET_TOKEN') {
       errorMessage.value = t('auth.invalidOrExpiredToken')
+    } else if (err.response?.data?.code === 'INVALID_VERIFY_CODE' || err.response?.data?.code === 'VERIFY_CODE_MAX_ATTEMPTS') {
+      errors.verifyCode = t('auth.invalidCode')
+      errorMessage.value = t('auth.invalidCode')
     } else if (err.response?.data?.detail) {
       errorMessage.value = err.response.data.detail
     } else if (err.message) {
@@ -348,6 +390,11 @@ async function handleSubmit(): Promise<void> {
   } finally {
     isLoading.value = false
   }
+}
+
+async function resendCode(): Promise<void> {
+  if (!isCodeMode.value || resendCooldown.value > 0 || isResending.value) return
+  requestAuthModal('forgot-password', { email: email.value, resetMethod: 'code' })
 }
 </script>
 

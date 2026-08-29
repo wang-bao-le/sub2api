@@ -12,6 +12,7 @@ import (
 // Task type constants
 const (
 	TaskTypeVerifyCode    = "verify_code"
+	TaskTypePasswordResetCode = "password_reset_code"
 	TaskTypePasswordReset = "password_reset"
 )
 
@@ -21,6 +22,7 @@ type EmailTask struct {
 	SiteName string
 	TaskType string // "verify_code" or "password_reset"
 	ResetURL string // Only used for password_reset task type
+	VerificationCode string // Used for password_reset_code task type
 	Locale   string // Optional Accept-Language locale hint
 }
 
@@ -82,6 +84,10 @@ func (s *EmailQueueService) processTask(workerID int, task EmailTask) {
 	defer cancel()
 
 	switch task.TaskType {
+	case TaskTypePasswordResetCode:
+		if err := s.emailService.SendPasswordResetCode(ctx, task.Email, task.SiteName, task.VerificationCode, task.Locale); err != nil {
+			logger.LegacyPrintf("service.email_queue", "[EmailQueue] Worker %d failed to send password reset code to %s: %v", workerID, task.Email, err)
+		}
 	case TaskTypeVerifyCode:
 		if err := s.emailService.SendVerifyCode(ctx, task.Email, task.SiteName, task.Locale); err != nil {
 			logger.LegacyPrintf("service.email_queue", "[EmailQueue] Worker %d failed to send verify code to %s: %v", workerID, task.Email, err)
@@ -96,6 +102,16 @@ func (s *EmailQueueService) processTask(workerID int, task EmailTask) {
 		}
 	default:
 		logger.LegacyPrintf("service.email_queue", "[EmailQueue] Worker %d unknown task type: %s", workerID, task.TaskType)
+	}
+}
+
+func (s *EmailQueueService) EnqueuePasswordResetCode(email, siteName, code string, locale ...string) error {
+	task := EmailTask{Email: email, SiteName: siteName, TaskType: TaskTypePasswordResetCode, VerificationCode: code, Locale: firstEmailLocale(locale)}
+	select {
+	case s.taskChan <- task:
+		return nil
+	default:
+		return fmt.Errorf("email queue is full")
 	}
 }
 

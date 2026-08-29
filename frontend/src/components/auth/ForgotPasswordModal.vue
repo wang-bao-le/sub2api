@@ -123,7 +123,7 @@
             ></path>
           </svg>
           <Icon v-else name="mail" size="md" class="mr-2" />
-          {{ isLoading ? t('auth.sendingResetLink') : t('auth.sendResetLink') }}
+          {{ isLoading ? t('auth.sendingResetCode') : t('auth.sendResetCode') }}
         </button>
       </form>
     </div>
@@ -151,11 +151,11 @@ import { AuthLayout } from '@/components/layout'
 import Icon from '@/components/icons/Icon.vue'
 import TurnstileWidget from '@/components/CaptchaChallenge.vue'
 import { useAppStore } from '@/stores'
-import { getPublicSettings, forgotPassword } from '@/api/auth'
+import { getPublicSettings, sendPasswordResetCode } from '@/api/auth'
 import { requestAuthModal, type AuthModalOptions, type AuthModalView } from '@/utils/loginModal'
 
 const { t } = useI18n()
-const { modal = false } = defineProps<{ modal?: boolean; options?: AuthModalOptions }>()
+const { modal = false, options } = defineProps<{ modal?: boolean; options?: AuthModalOptions }>()
 
 function handleAuthLink(event: MouseEvent, view: AuthModalView): void {
   if (!modal) return
@@ -217,6 +217,7 @@ const errors = reactive({
 // ==================== Lifecycle ====================
 
 onMounted(async () => {
+  if (options?.email) formData.email = options.email
   try {
     const settings = await getPublicSettings()
     turnstileEnabled.value = settings.turnstile_enabled
@@ -313,7 +314,7 @@ async function handleSubmit(): Promise<void> {
   isLoading.value = true
 
   try {
-    await forgotPassword({
+    await sendPasswordResetCode({
       email: formData.email,
       turnstile_token:
         turnstileEnabled.value || aliyunCaptchaEnabled.value ? turnstileToken.value : undefined,
@@ -321,8 +322,8 @@ async function handleSubmit(): Promise<void> {
       tencent_captcha_randstr: tencentCaptchaEnabled.value ? tencentCaptchaRandstr.value : undefined
     })
 
-    isSubmitted.value = true
-    appStore.showSuccess(t('auth.resetEmailSent'))
+    appStore.showSuccess(t('auth.resetCodeSent'))
+    requestAuthModal('reset-password', { email: formData.email.trim(), resetMethod: 'code' })
   } catch (error: unknown) {
     const err = error as { message?: string; response?: { data?: { detail?: string } } }
 
@@ -331,7 +332,7 @@ async function handleSubmit(): Promise<void> {
     } else if (err.message) {
       errorMessage.value = err.message
     } else {
-      errorMessage.value = t('auth.sendResetLinkFailed')
+      errorMessage.value = t('auth.sendResetCodeFailed')
     }
 
   } finally {

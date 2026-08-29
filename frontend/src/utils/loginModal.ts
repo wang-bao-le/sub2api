@@ -4,6 +4,7 @@ export interface AuthModalOptions {
   redirect?: string
   token?: string
   email?: string
+  resetMethod?: 'code' | 'token'
   query?: Record<string, string>
 }
 

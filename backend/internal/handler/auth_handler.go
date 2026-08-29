@@ -73,6 +73,14 @@ type SendVerifyCodeResponse struct {
 	Countdown int    `json:"countdown"` // 倒计时秒数
 }
 
+// PasswordResetCodeRequest sends a password reset verification code.
+type PasswordResetCodeRequest struct {
+	Email                 string `json:"email" binding:"required,email"`
+	TurnstileToken        string `json:"turnstile_token"`
+	TencentCaptchaTicket  string `json:"tencent_captcha_ticket"`
+	TencentCaptchaRandstr string `json:"tencent_captcha_randstr"`
+}
+
 // LoginRequest represents the login request payload
 type LoginRequest struct {
 	Email                 string `json:"email" binding:"required,email"`
@@ -232,6 +240,18 @@ func (h *AuthHandler) SendVerifyCode(c *gin.Context) {
 		Message:   "Verification code sent successfully",
 		Countdown: result.Countdown,
 	})
+}
+
+// SendPasswordResetCode sends a password reset verification code.
+// POST /api/v1/auth/password-reset/send-code
+func (h *AuthHandler) SendPasswordResetCode(c *gin.Context) {
+	var req PasswordResetCodeRequest
+	if err := c.ShouldBindJSON(&req); err != nil { response.BadRequest(c, "Invalid request: "+err.Error()); return }
+	proof := captchaProof(req.TurnstileToken, req.TencentCaptchaTicket, req.TencentCaptchaRandstr)
+	if err := h.authService.VerifyCaptcha(c.Request.Context(), proof, ip.GetClientIP(c)); err != nil { response.ErrorFrom(c, err); return }
+	result, err := h.authService.RequestPasswordResetCodeAsync(c.Request.Context(), req.Email, c.GetHeader("Accept-Language"))
+	if err != nil { response.ErrorFrom(c, err); return }
+	response.Success(c, SendVerifyCodeResponse{Message: "Verification code sent successfully", Countdown: result.Countdown})
 }
 
 // Login handles user login
@@ -636,7 +656,8 @@ func (h *AuthHandler) ForgotPassword(c *gin.Context) {
 // ResetPasswordRequest 重置密码请求
 type ResetPasswordRequest struct {
 	Email       string `json:"email" binding:"required,email"`
-	Token       string `json:"token" binding:"required"`
+	Token       string `json:"token"`
+	VerifyCode  string `json:"verify_code"`
 	NewPassword string `json:"new_password" binding:"required,min=8"`
 }
 
@@ -655,7 +676,11 @@ func (h *AuthHandler) ResetPassword(c *gin.Context) {
 	}
 
 	// Reset password
-	if err := h.authService.ResetPassword(c.Request.Context(), req.Email, req.Token, req.NewPassword); err != nil {
+	if strings.TrimSpace(req.Token) == "" && strings.TrimSpace(req.VerifyCode) == "" {
+		response.BadRequest(c, "reset token or verification code is required")
+		return
+	}
+	if err := h.authService.ResetPassword(c.Request.Context(), req.Email, req.Token, req.VerifyCode, req.NewPassword); err != nil {
 		response.ErrorFrom(c, err)
 		return
 	}

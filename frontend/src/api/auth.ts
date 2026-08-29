@@ -551,6 +551,13 @@ export interface ForgotPasswordRequest {
   tencent_captcha_randstr?: string
 }
 
+export interface PasswordResetCodeRequest {
+	 email: string
+	 turnstile_token?: string
+	 tencent_captcha_ticket?: string
+	 tencent_captcha_randstr?: string
+}
+
 /**
  * Forgot password response
  */
@@ -568,12 +575,18 @@ export async function forgotPassword(request: ForgotPasswordRequest): Promise<Fo
   return data
 }
 
+export async function sendPasswordResetCode(request: PasswordResetCodeRequest): Promise<SendVerifyCodeResponse> {
+	const { data } = await apiClient.post<SendVerifyCodeResponse>('/auth/password-reset/send-code', request)
+	return data
+}
+
 /**
  * Reset password request
  */
 export interface ResetPasswordRequest {
   email: string
-  token: string
+  token?: string
+  verify_code?: string
   new_password: string
 }
 

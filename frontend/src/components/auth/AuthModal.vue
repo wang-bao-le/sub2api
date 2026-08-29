@@ -24,7 +24,7 @@
             :is="activeComponent"
             :key="activeView"
             modal
-            :options="options"
+            :options="activeOptions"
             @success="handleSuccess"
           />
         </div>
@@ -55,6 +55,7 @@ const props = withDefaults(defineProps<{
 const emit = defineEmits<{ close: [] }>()
 const { t } = useI18n()
 const activeView = ref<AuthModalView>(props.initialView)
+const activeOptions = ref<AuthModalOptions>({ ...props.options })
 const dialogRef = ref<HTMLElement | null>(null)
 let previousActiveElement: HTMLElement | null = null
 
@@ -76,8 +77,11 @@ function handleSuccess() {
 }
 
 function handleAuthRequest(event: Event) {
-  const detail = (event as CustomEvent<{ view?: AuthModalView }>).detail || {}
-  if (detail.view) activeView.value = detail.view
+  const detail = (event as CustomEvent<{ view?: AuthModalView } & AuthModalOptions>).detail || {}
+  if (detail.view) {
+    activeView.value = detail.view
+    activeOptions.value = { redirect: detail.redirect, token: detail.token, email: detail.email, resetMethod: detail.resetMethod, query: detail.query }
+  }
 }
 
 function handleEscape(event: KeyboardEvent) {
@@ -91,6 +95,7 @@ watch(() => props.initialView, (view) => {
 watch(() => props.show, async (isOpen) => {
   if (isOpen) {
     activeView.value = props.initialView
+    activeOptions.value = { ...props.options }
     previousActiveElement = document.activeElement as HTMLElement
     document.body.classList.add('modal-open')
     await nextTick()

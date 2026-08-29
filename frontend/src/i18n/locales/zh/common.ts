@@ -424,7 +424,12 @@ export default {
     // 忘记密码
     forgotPassword: '忘记密码？',
     forgotPasswordTitle: '重置密码',
-    forgotPasswordHint: '输入您的邮箱地址，我们将向您发送密码重置链接。',
+    forgotPasswordHint: '输入注册邮箱，我们将发送 6 位验证码。',
+    sendResetCode: '发送验证码',
+    sendingResetCode: '发送中...',
+    sendResetCodeFailed: '发送验证码失败，请重试。',
+    resetCodeSent: '验证码已发送',
+    verificationCodePlaceholder: '请输入 6 位验证码',
     sendResetLink: '发送重置链接',
     sendingResetLink: '发送中...',
     sendResetLinkFailed: '发送重置链接失败，请重试。',
@@ -449,7 +454,7 @@ export default {
     passwordResetSuccessHint: '您的密码已重置。现在可以使用新密码登录。',
     invalidResetLink: '无效的重置链接',
     invalidResetLinkHint: '此密码重置链接无效或已过期。请重新请求一个新链接。',
-    requestNewResetLink: '请求新的重置链接',
+    requestNewResetLink: '重新发送验证码',
     invalidOrExpiredToken: '密码重置链接无效或已过期。请重新请求一个新链接。'
   },
 
