@@ -53,7 +53,7 @@
               @input="errors.email = ''; errorMessage = ''"
             />
           </div>
-          <div v-if="errors.email" id="register-email-error" class="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300" role="alert">
+          <div v-if="errors.email" id="register-email-error" class="mt-2 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300" role="alert">
             <Icon name="exclamationCircle" size="md" class="mt-0.5 shrink-0" aria-hidden="true" />
             <p>{{ errors.email }}</p>
           </div>
@@ -96,7 +96,7 @@
           <p class="input-hint">
             {{ t('auth.passwordHint') }}
           </p>
-          <div v-if="errors.password" id="register-password-error" class="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300" role="alert">
+          <div v-if="errors.password" id="register-password-error" class="mt-2 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300" role="alert">
             <Icon name="exclamationCircle" size="md" class="mt-0.5 shrink-0" aria-hidden="true" />
             <p>{{ errors.password }}</p>
           </div>
@@ -136,7 +136,7 @@
               <Icon v-else name="eye" size="md" />
             </button>
           </div>
-          <div v-if="errors.confirmPassword" id="register-confirm-password-error" class="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300" role="alert">
+          <div v-if="errors.confirmPassword" id="register-confirm-password-error" class="mt-2 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300" role="alert">
             <Icon name="exclamationCircle" size="md" class="mt-0.5 shrink-0" aria-hidden="true" />
             <p>{{ errors.confirmPassword }}</p>
           </div>
