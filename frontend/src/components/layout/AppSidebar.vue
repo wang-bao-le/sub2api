@@ -255,6 +255,7 @@ import { sanitizeSvg } from '@/utils/sanitize'
 import { sanitizeUrl } from '@/utils/url'
 import { FeatureFlags, makeSidebarFlag } from '@/utils/featureFlags'
 import { useBatchImageAccess } from '@/composables/useBatchImageAccess'
+import { markExplicitLogout } from '@/utils/loginModal'
 
 interface NavItem {
   path: string
@@ -896,6 +897,7 @@ function closeUserDropdown() {
 
 async function handleLogout() {
   closeUserDropdown()
+  markExplicitLogout()
   try {
     await authStore.logout()
   } catch (error) {

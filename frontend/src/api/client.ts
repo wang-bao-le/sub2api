@@ -15,7 +15,7 @@ import {
 import { refreshAuthTokens } from './tokenRefresh'
 import { getAPIBaseURL } from './url'
 import { clearAuthStorage, getActiveAuthStorage } from '@/utils/authStorage'
-import { requestLoginModal } from '@/utils/loginModal'
+import { isExplicitLogout, requestLoginModal } from '@/utils/loginModal'
 export { buildApiUrl, buildGatewayUrl } from './url'
 
 // ==================== Axios Instance Configuration ====================
@@ -207,7 +207,7 @@ apiClient.interceptors.response.use(
             clearAuthStorage()
             sessionStorage.setItem('auth_expired', '1')
 
-            if (!window.location.pathname.includes('/login')) {
+            if (!window.location.pathname.includes('/login') && !isExplicitLogout()) {
               requestLoginModal({ redirect: `${window.location.pathname}${window.location.search}` })
             }
 
@@ -238,7 +238,7 @@ apiClient.interceptors.response.use(
           sessionStorage.setItem('auth_expired', '1')
         }
         // Only redirect if not already on login page
-        if (!window.location.pathname.includes('/login')) {
+        if (!window.location.pathname.includes('/login') && !isExplicitLogout()) {
           requestLoginModal({ redirect: `${window.location.pathname}${window.location.search}` })
         }
       }
