@@ -1,17 +1,17 @@
 <template>
   <AuthLayout compact>
-    <div class="space-y-6">
+    <div class="space-y-5">
       <!-- Title -->
       <div class="text-center">
         <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
           {{ t('auth.welcomeBack') }}
         </h2>
-        <p class="mt-2 inline-block rounded-full border border-gray-200 px-6 py-2 text-sm font-medium text-gray-500 shadow-sm dark:border-dark-700 dark:text-dark-300">
+        <p class="mt-1 text-sm text-gray-500 dark:text-dark-300">
           {{ t('auth.signInToAccount') }}
         </p>
       </div>
       <!-- Login Form -->
-      <form @submit.prevent="handleLogin" class="space-y-5">
+      <form @submit.prevent="handleLogin" class="space-y-4">
         <!-- Email Input -->
         <div>
           <label for="email" class="input-label">
@@ -95,7 +95,7 @@
             <router-link
               v-if="passwordResetEnabled && !backendModeEnabled"
               to="/forgot-password"
-              class="text-sm font-medium text-blue-600 transition-colors hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+              class="text-sm font-medium text-gray-900 transition-colors hover:text-gray-600 dark:text-gray-200 dark:hover:text-white"
             >
               {{ t('auth.forgotPassword') }}
             </router-link>
@@ -138,7 +138,7 @@
         <button
           type="submit"
           :disabled="authActionDisabled || (turnstileEnabled && !turnstileToken)"
-          class="btn w-full bg-black text-white shadow-md shadow-black/20 hover:bg-gray-800 hover:shadow-lg hover:shadow-black/30 dark:bg-white dark:text-black dark:hover:bg-gray-200"
+          class="btn btn-primary w-full"
         >
           <svg
             v-if="isLoading"
