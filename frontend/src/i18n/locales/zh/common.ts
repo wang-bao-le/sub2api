@@ -253,6 +253,10 @@ export default {
     errors: {
       INVALID_CREDENTIALS: '邮箱或密码不正确，请检查后重试。',
       USER_NOT_ACTIVE: '账号已被禁用',
+      VERIFY_CODE_TOO_FREQUENT: '验证码发送过于频繁，请稍后再试。',
+      VERIFY_CODE_MAX_ATTEMPTS: '验证码错误次数过多，请重新发送验证码。',
+      INVALID_VERIFY_CODE: '验证码错误或已过期，请检查后重试。',
+      PASSWORD_RESET_DISABLED: '密码重置功能暂未开启，请联系管理员。',
     },
     registrationFailed: '注册失败，请重试。',
     emailDomainRegistrationLimit:

@@ -153,6 +153,7 @@ import TurnstileWidget from '@/components/CaptchaChallenge.vue'
 import { useAppStore } from '@/stores'
 import { getPublicSettings, sendPasswordResetCode } from '@/api/auth'
 import { requestAuthModal, type AuthModalOptions, type AuthModalView } from '@/utils/loginModal'
+import { extractI18nErrorMessage } from '@/utils/apiError'
 
 const { t } = useI18n()
 const { modal = false, options } = defineProps<{ modal?: boolean; options?: AuthModalOptions }>()
@@ -325,15 +326,7 @@ async function handleSubmit(): Promise<void> {
     appStore.showSuccess(t('auth.resetCodeSent'))
     requestAuthModal('reset-password', { email: formData.email.trim(), resetMethod: 'code' })
   } catch (error: unknown) {
-    const err = error as { message?: string; response?: { data?: { detail?: string } } }
-
-    if (err.response?.data?.detail) {
-      errorMessage.value = err.response.data.detail
-    } else if (err.message) {
-      errorMessage.value = err.message
-    } else {
-      errorMessage.value = t('auth.sendResetCodeFailed')
-    }
+    errorMessage.value = extractI18nErrorMessage(error, t, 'auth.errors', t('auth.sendResetCodeFailed'))
 
   } finally {
     if (captchaEnabled.value) {

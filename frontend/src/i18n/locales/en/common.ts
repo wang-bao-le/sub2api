@@ -253,6 +253,10 @@ export default {
     errors: {
       INVALID_CREDENTIALS: 'The email or password is incorrect. Check your details and try again.',
       USER_NOT_ACTIVE: 'Account has been disabled.',
+      VERIFY_CODE_TOO_FREQUENT: 'Verification codes are sent too frequently. Please try again later.',
+      VERIFY_CODE_MAX_ATTEMPTS: 'Too many incorrect attempts. Please request a new code.',
+      INVALID_VERIFY_CODE: 'The verification code is invalid or expired. Please try again.',
+      PASSWORD_RESET_DISABLED: 'Password reset is not enabled. Please contact the administrator.',
     },
     registrationFailed: 'Registration failed. Please try again.',
     emailDomainRegistrationLimit:
