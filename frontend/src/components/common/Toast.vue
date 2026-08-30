@@ -24,31 +24,29 @@
         >
           <div class="p-4">
             <div class="grid grid-cols-[1fr_minmax(0,1fr)_1fr] items-center gap-3">
-              <!-- Icon -->
-              <div class="flex-shrink-0">
+              <!-- Content -->
+              <div class="flex min-w-0 items-center justify-center gap-3 text-center">
                 <Icon
                   :name="getToastIconName(toast.type)"
                   size="md"
                   :class="getIconColor(toast.type)"
                   aria-hidden="true"
                 />
-              </div>
-
-              <!-- Content -->
-              <div class="min-w-0 text-center">
-                <p v-if="toast.title" class="text-sm font-semibold text-white">
-                  {{ toast.title }}
-                </p>
-                <p
-                  :class="[
-                    'text-sm leading-relaxed',
-                    toast.title
-                      ? 'mt-1 text-gray-200'
-                      : 'text-white'
-                  ]"
-                >
-                  {{ toast.message }}
-                </p>
+                <div class="min-w-0">
+                  <p v-if="toast.title" class="text-sm font-semibold text-white">
+                    {{ toast.title }}
+                  </p>
+                  <p
+                    :class="[
+                      'text-sm leading-relaxed',
+                      toast.title
+                        ? 'mt-1 text-gray-200'
+                        : 'text-white'
+                    ]"
+                  >
+                    {{ toast.message }}
+                  </p>
+                </div>
               </div>
 
               <!-- Close button -->
