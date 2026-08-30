@@ -18,14 +18,14 @@
           :key="toast.id"
           :class="[
             'pointer-events-auto w-full overflow-hidden rounded-none border-x-0 border-t-0 shadow-xl shadow-black/10 backdrop-blur-xl',
-            'bg-white/65 dark:bg-dark-800/65',
+            'bg-black/75 dark:bg-black/75',
             getBorderColor(toast.type)
           ]"
         >
           <div class="p-4">
-            <div class="flex items-start gap-3">
+            <div class="grid grid-cols-[1fr_minmax(0,1fr)_1fr] items-center gap-3">
               <!-- Icon -->
-              <div class="mt-0.5 flex-shrink-0">
+              <div class="flex-shrink-0">
                 <Icon
                   :name="getToastIconName(toast.type)"
                   size="md"
@@ -35,16 +35,16 @@
               </div>
 
               <!-- Content -->
-              <div class="min-w-0 flex-1">
-                <p v-if="toast.title" class="text-sm font-semibold text-gray-900 dark:text-white">
+              <div class="min-w-0 text-center">
+                <p v-if="toast.title" class="text-sm font-semibold text-white">
                   {{ toast.title }}
                 </p>
                 <p
                   :class="[
                     'text-sm leading-relaxed',
                     toast.title
-                      ? 'mt-1 text-gray-600 dark:text-gray-300'
-                      : 'text-gray-900 dark:text-white'
+                      ? 'mt-1 text-gray-200'
+                      : 'text-white'
                   ]"
                 >
                   {{ toast.message }}
@@ -54,7 +54,7 @@
               <!-- Close button -->
               <button
                 @click="removeToast(toast.id)"
-                class="-m-1 flex-shrink-0 rounded p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:text-gray-500 dark:hover:bg-dark-700 dark:hover:text-gray-300"
+                class="-m-1 flex-shrink-0 justify-self-end rounded p-1 text-gray-300 transition-colors hover:bg-white/10 hover:text-white"
                 aria-label="Close notification"
               >
                 <Icon name="x" size="sm" />
