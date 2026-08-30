@@ -290,7 +290,7 @@ import type {
 } from '@/types'
 import { extractI18nErrorMessage } from '@/utils/apiError'
 import { clearAllAffiliateReferralCodes } from '@/utils/oauthAffiliate'
-import { navigateAfterAuth, requestAuthModal, type AuthModalView } from '@/utils/loginModal'
+import { navigateAfterAuth, requestAuthModal, resolveAuthRedirect, type AuthModalView } from '@/utils/loginModal'
 
 const { t } = useI18n()
 const { modal = false, options } = defineProps<{ modal?: boolean; options?: { redirect?: string } }>()
@@ -647,7 +647,7 @@ async function handleLogin(): Promise<void> {
     }
 
     // Redirect to dashboard or intended route
-    const redirectTo = options?.redirect || (router.currentRoute.value.query.redirect as string) || '/dashboard'
+    const redirectTo = resolveAuthRedirect(options?.redirect, router.currentRoute.value.query.redirect)
     if (!await navigateAfterAuth(router, redirectTo)) {
       errorMessage.value = t('auth.navigationFailed')
       return
@@ -709,7 +709,7 @@ async function handlePasskeyLogin(): Promise<void> {
     }
 
     await authStore.loginWithPasskey(proof)
-    const redirectTo = options?.redirect || (router.currentRoute.value.query.redirect as string) || '/dashboard'
+    const redirectTo = resolveAuthRedirect(options?.redirect, router.currentRoute.value.query.redirect)
     if (!await navigateAfterAuth(router, redirectTo)) {
       errorMessage.value = t('auth.navigationFailed')
       return
@@ -781,7 +781,7 @@ async function handle2FAVerify(code: string): Promise<void> {
     )
 
     // Redirect to dashboard or intended route
-    const redirectTo = options?.redirect || (router.currentRoute.value.query.redirect as string) || '/dashboard'
+    const redirectTo = resolveAuthRedirect(options?.redirect, router.currentRoute.value.query.redirect)
     if (!await navigateAfterAuth(router, redirectTo)) {
       if (totpModalRef.value) {
         totpModalRef.value.setError(t('auth.navigationFailed'))

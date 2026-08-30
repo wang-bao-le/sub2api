@@ -56,6 +56,21 @@ export function requestLoginModal(options: AuthModalOptions = {}) {
   requestAuthModal('login', options)
 }
 
+export function resolveAuthRedirect(redirect?: string, routeRedirect?: unknown): string {
+  const candidate = typeof redirect === 'string' && redirect.trim()
+    ? redirect
+    : typeof routeRedirect === 'string' && routeRedirect.trim()
+      ? routeRedirect
+      : ''
+
+  // The marketing page is an entry point, not a post-login destination.
+  if (!candidate || candidate === '/' || candidate === '/home' || candidate.startsWith('/home?')) {
+    return '/dashboard'
+  }
+
+  return candidate
+}
+
 export async function navigateAfterAuth(router: Router, target: string): Promise<boolean> {
   try {
     const failure = await router.push(target)

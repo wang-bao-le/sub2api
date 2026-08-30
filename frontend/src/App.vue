@@ -21,13 +21,12 @@ function openAuthModal(event: Event) {
   const detail = (event as CustomEvent<{ view?: AuthModalView } & AuthModalOptions>).detail || {}
   if (authStore.isAuthenticated && (detail.view || 'login') === 'login') return
   authModalView.value = detail.view || 'login'
-  if (detail.redirect !== undefined || detail.token !== undefined || detail.email !== undefined || detail.query !== undefined || !showAuthModal.value) {
-    authModalOptions.value = {
-      redirect: detail.redirect,
-      token: detail.token,
-      email: detail.email,
-      query: detail.query,
-    }
+  authModalOptions.value = {
+    redirect: detail.redirect,
+    token: detail.token,
+    email: detail.email,
+    resetMethod: detail.resetMethod,
+    query: detail.query,
   }
   showAuthModal.value = true
 }
