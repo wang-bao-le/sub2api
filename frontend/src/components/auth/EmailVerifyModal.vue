@@ -176,13 +176,25 @@
 
     <!-- Footer -->
     <template #footer>
-      <button
-        @click="handleBack"
-        class="flex items-center gap-2 text-gray-500 transition-colors hover:text-gray-700 dark:text-dark-400 dark:hover:text-gray-300"
-      >
-        <Icon name="arrowLeft" size="sm" />
-        {{ t('auth.backToRegistration') }}
-      </button>
+      <div class="flex flex-col items-center gap-4">
+        <button
+          @click="handleBack"
+          class="flex items-center gap-2 text-gray-500 transition-colors hover:text-gray-700 dark:text-dark-400 dark:hover:text-gray-300"
+        >
+          <Icon name="arrowLeft" size="sm" />
+          {{ t('auth.backToRegistration') }}
+        </button>
+        <p class="text-gray-500 dark:text-dark-400">
+          {{ t('auth.alreadyHaveAccount') }}
+          <a
+            href="/login"
+            @click="handleLoginLink"
+            class="font-medium text-black transition-colors hover:text-gray-700 dark:text-gray-300 dark:hover:text-white"
+          >
+            {{ t('auth.signIn') }}
+          </a>
+        </p>
+      </div>
     </template>
   </AuthLayout>
 </template>
@@ -766,6 +778,12 @@ function handleBack(): void {
   // Go back to registration
   if (modal) requestAuthModal('register')
   else router.push('/register')
+}
+
+function handleLoginLink(event: MouseEvent): void {
+  if (!modal) return
+  event.preventDefault()
+  requestAuthModal('login')
 }
 
 function buildEmailSuffixNotAllowedMessage(): string {
