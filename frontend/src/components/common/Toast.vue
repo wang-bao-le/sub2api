@@ -62,13 +62,6 @@
             </div>
           </div>
 
-          <!-- Progress bar -->
-          <div v-if="toast.duration" class="h-1 bg-gray-100 dark:bg-dark-700">
-            <div
-              :class="['h-full toast-progress', getProgressBarColor(toast.type)]"
-              :style="{ animationDuration: `${toast.duration}ms` }"
-            ></div>
-          </div>
         </div>
       </TransitionGroup>
     </div>
@@ -118,35 +111,7 @@ const getBorderColor = (type: string): string => {
   return colors[type] || colors.info
 }
 
-const getProgressBarColor = (type: string): string => {
-  const colors: Record<string, string> = {
-    success: 'bg-green-500',
-    error: 'bg-red-500',
-    warning: 'bg-yellow-500',
-    info: 'bg-blue-500'
-  }
-  return colors[type] || colors.info
-}
-
 const removeToast = (id: string) => {
   appStore.hideToast(id)
 }
 </script>
-
-<style scoped>
-.toast-progress {
-  width: 100%;
-  animation-name: toast-progress-shrink;
-  animation-timing-function: linear;
-  animation-fill-mode: forwards;
-}
-
-@keyframes toast-progress-shrink {
-  from {
-    width: 100%;
-  }
-  to {
-    width: 0%;
-  }
-}
-</style>
