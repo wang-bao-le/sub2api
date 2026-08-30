@@ -23,9 +23,9 @@
           ]"
         >
           <div class="p-4">
-            <div class="grid grid-cols-[1fr_minmax(0,1fr)_1fr] items-center gap-3">
+            <div class="relative flex items-center justify-center">
               <!-- Content -->
-              <div class="flex min-w-0 items-center justify-center gap-3 text-center">
+              <div class="flex min-w-0 max-w-[calc(100%-4rem)] items-center justify-center gap-3 text-center">
                 <Icon
                   :name="getToastIconName(toast.type)"
                   size="md"
@@ -52,7 +52,7 @@
               <!-- Close button -->
               <button
                 @click="removeToast(toast.id)"
-                class="-m-1 flex-shrink-0 justify-self-end rounded p-1 text-gray-300 transition-colors hover:bg-white/10 hover:text-white"
+                class="absolute right-0 top-1/2 -m-1 -translate-y-1/2 rounded p-1 text-gray-300 transition-colors hover:bg-white/10 hover:text-white"
                 aria-label="Close notification"
               >
                 <Icon name="x" size="sm" />
