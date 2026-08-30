@@ -14,6 +14,8 @@ import { AUTH_MODAL_EVENT, consumeAuthModalRequest, type AuthModalOptions, type 
 const showAuthModal = ref(false)
 const authModalView = ref<AuthModalView>('login')
 const authModalOptions = ref<AuthModalOptions>({})
+const router = useRouter()
+const route = useRoute()
 
 function openAuthModal(event: Event) {
   const detail = (event as CustomEvent<{ view?: AuthModalView } & AuthModalOptions>).detail || {}
@@ -39,8 +41,6 @@ watch(() => route.fullPath, () => {
   if (showAuthModal.value) closeAuthModal()
 })
 
-const router = useRouter()
-const route = useRoute()
 const appStore = useAppStore()
 const authStore = useAuthStore()
 const subscriptionStore = useSubscriptionStore()

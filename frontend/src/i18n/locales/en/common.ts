@@ -250,6 +250,7 @@ export default {
     loginRateLimited: 'Too many login attempts. Please try again later.',
     loginNetworkError: 'The login service is temporarily unreachable. Check your connection and try again.',
     loginRequestFailed: 'The login request failed. Please try again later.',
+    navigationFailed: 'Page navigation failed. Please try again.',
     errors: {
       INVALID_CREDENTIALS: 'The email or password is incorrect. Check your details and try again.',
       USER_NOT_ACTIVE: 'Account has been disabled.',

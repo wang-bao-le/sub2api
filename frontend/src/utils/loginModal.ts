@@ -1,3 +1,5 @@
+import { isNavigationFailure, NavigationFailureType, type Router } from 'vue-router'
+
 export type AuthModalView = 'login' | 'register' | 'forgot-password' | 'reset-password' | 'email-verify'
 
 export interface AuthModalOptions {
@@ -52,4 +54,13 @@ export function consumeAuthModalRequest() {
 
 export function requestLoginModal(options: AuthModalOptions = {}) {
   requestAuthModal('login', options)
+}
+
+export async function navigateAfterAuth(router: Router, target: string): Promise<boolean> {
+  try {
+    const failure = await router.push(target)
+    return !failure || isNavigationFailure(failure, NavigationFailureType.duplicated)
+  } catch {
+    return false
+  }
 }

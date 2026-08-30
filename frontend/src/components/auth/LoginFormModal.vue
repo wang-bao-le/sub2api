@@ -290,7 +290,7 @@ import type {
 } from '@/types'
 import { extractI18nErrorMessage } from '@/utils/apiError'
 import { clearAllAffiliateReferralCodes } from '@/utils/oauthAffiliate'
-import { requestAuthModal, type AuthModalView } from '@/utils/loginModal'
+import { navigateAfterAuth, requestAuthModal, type AuthModalView } from '@/utils/loginModal'
 
 const { t } = useI18n()
 const { modal = false, options } = defineProps<{ modal?: boolean; options?: { redirect?: string } }>()
@@ -646,14 +646,15 @@ async function handleLogin(): Promise<void> {
       return
     }
 
-    // Show success toast
+    // Redirect to dashboard or intended route
+    const redirectTo = options?.redirect || (router.currentRoute.value.query.redirect as string) || '/dashboard'
+    if (!await navigateAfterAuth(router, redirectTo)) {
+      errorMessage.value = t('auth.navigationFailed')
+      return
+    }
     clearAllAffiliateReferralCodes()
     appStore.showSuccess(t('auth.loginSuccess'))
     emit('success')
-
-    // Redirect to dashboard or intended route
-    const redirectTo = options?.redirect || (router.currentRoute.value.query.redirect as string) || '/dashboard'
-    await router.push(redirectTo)
   } catch (error: unknown) {
     const errorCode = typeof error === 'object' && error !== null
       ? String((error as { reason?: string; code?: string | number }).reason ?? (error as { code?: string | number }).code ?? '')
@@ -708,11 +709,14 @@ async function handlePasskeyLogin(): Promise<void> {
     }
 
     await authStore.loginWithPasskey(proof)
+    const redirectTo = options?.redirect || (router.currentRoute.value.query.redirect as string) || '/dashboard'
+    if (!await navigateAfterAuth(router, redirectTo)) {
+      errorMessage.value = t('auth.navigationFailed')
+      return
+    }
     clearAllAffiliateReferralCodes()
     appStore.showSuccess(t('auth.loginSuccess'))
     emit('success')
-    const redirectTo = options?.redirect || (router.currentRoute.value.query.redirect as string) || '/dashboard'
-    await router.push(redirectTo)
   } catch (error: unknown) {
     const fallback = error instanceof DOMException && error.name === 'NotAllowedError'
       ? t('auth.passkeyCancelled')
@@ -776,15 +780,19 @@ async function handle2FAVerify(code: string): Promise<void> {
       rememberMe.value ? 'persistent' : 'session'
     )
 
-    // Close modal and show success
+    // Redirect to dashboard or intended route
+    const redirectTo = options?.redirect || (router.currentRoute.value.query.redirect as string) || '/dashboard'
+    if (!await navigateAfterAuth(router, redirectTo)) {
+      if (totpModalRef.value) {
+        totpModalRef.value.setError(t('auth.navigationFailed'))
+        totpModalRef.value.setVerifying(false)
+      }
+      return
+    }
     show2FAModal.value = false
     clearAllAffiliateReferralCodes()
     appStore.showSuccess(t('auth.loginSuccess'))
     emit('success')
-
-    // Redirect to dashboard or intended route
-    const redirectTo = options?.redirect || (router.currentRoute.value.query.redirect as string) || '/dashboard'
-    await router.push(redirectTo)
   } catch (error: unknown) {
     const message = extractI18nErrorMessage(error, t, 'auth.errors', t('profile.totp.loginFailed'))
 

@@ -228,7 +228,7 @@ import {
   loadAffiliateReferralCode,
   oauthAffiliatePayload
 } from '@/utils/oauthAffiliate'
-import { requestAuthModal, type AuthModalOptions } from '@/utils/loginModal'
+import { navigateAfterAuth, requestAuthModal, type AuthModalOptions } from '@/utils/loginModal'
 
 const { t, locale } = useI18n()
 const { modal = false } = defineProps<{ modal?: boolean; options?: AuthModalOptions }>()
@@ -752,12 +752,13 @@ async function handleVerify(): Promise<void> {
     sessionStorage.removeItem('register_data')
     clearAllAffiliateReferralCodes()
 
-    // Show success toast
+    // Redirect to dashboard
+    if (!await navigateAfterAuth(router, pendingRedirect.value || '/dashboard')) {
+      errorMessage.value = t('auth.navigationFailed')
+      return
+    }
     appStore.showSuccess(t('auth.accountCreatedSuccess', { siteName: siteName.value }))
     emit('success')
-
-    // Redirect to dashboard
-    await router.push(pendingRedirect.value || '/dashboard')
   } catch (error: unknown) {
     errorMessage.value = buildRegistrationErrorMessage(error, t('auth.verifyFailed'))
 

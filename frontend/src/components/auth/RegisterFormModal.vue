@@ -440,7 +440,7 @@ import {
   resolveAffiliateReferralCode
 } from '@/utils/oauthAffiliate'
 import type { LoginAgreementDocument } from '@/types'
-import { requestAuthModal, type AuthModalOptions, type AuthModalView } from '@/utils/loginModal'
+import { navigateAfterAuth, requestAuthModal, type AuthModalOptions, type AuthModalView } from '@/utils/loginModal'
 
 const { t, locale } = useI18n()
 const { modal = false, options } = defineProps<{ modal?: boolean; options?: AuthModalOptions }>()
@@ -1115,12 +1115,13 @@ async function handleRegister(): Promise<void> {
     })
     clearAffiliateReferralCode()
 
-    // Show success toast
+    // Redirect to dashboard
+    if (!await navigateAfterAuth(router, '/dashboard')) {
+      errorMessage.value = t('auth.navigationFailed')
+      return
+    }
     appStore.showSuccess(t('auth.accountCreatedSuccess', { siteName: siteName.value }))
     emit('success')
-
-    // Redirect to dashboard
-    await router.push('/dashboard')
   } catch (error: unknown) {
     // Handle registration error
     errorMessage.value = buildRegistrationErrorMessage(error, t('auth.registrationFailed'))

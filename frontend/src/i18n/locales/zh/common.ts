@@ -250,6 +250,7 @@ export default {
     loginRateLimited: '登录尝试过于频繁，请稍后再试。',
     loginNetworkError: '暂时无法连接登录服务，请检查网络后重试。',
     loginRequestFailed: '登录请求失败，请稍后重试。',
+    navigationFailed: '页面跳转失败，请重试。',
     errors: {
       INVALID_CREDENTIALS: '邮箱或密码不正确，请检查后重试。',
       USER_NOT_ACTIVE: '账号已被禁用',
