@@ -444,6 +444,7 @@ import { requestAuthModal, type AuthModalOptions, type AuthModalView } from '@/u
 
 const { t, locale } = useI18n()
 const { modal = false, options } = defineProps<{ modal?: boolean; options?: AuthModalOptions }>()
+const emit = defineEmits<{ success: [] }>()
 
 function handleAuthLink(event: MouseEvent, view: AuthModalView): void {
   if (!modal) return
@@ -1116,6 +1117,7 @@ async function handleRegister(): Promise<void> {
 
     // Show success toast
     appStore.showSuccess(t('auth.accountCreatedSuccess', { siteName: siteName.value }))
+    emit('success')
 
     // Redirect to dashboard
     await router.push('/dashboard')

@@ -220,6 +220,7 @@ import { requestAuthModal, type AuthModalOptions } from '@/utils/loginModal'
 
 const { t, locale } = useI18n()
 const { modal = false } = defineProps<{ modal?: boolean; options?: AuthModalOptions }>()
+const emit = defineEmits<{ success: [] }>()
 
 // ==================== Router & Stores ====================
 
@@ -741,6 +742,7 @@ async function handleVerify(): Promise<void> {
 
     // Show success toast
     appStore.showSuccess(t('auth.accountCreatedSuccess', { siteName: siteName.value }))
+    emit('success')
 
     // Redirect to dashboard
     await router.push(pendingRedirect.value || '/dashboard')
