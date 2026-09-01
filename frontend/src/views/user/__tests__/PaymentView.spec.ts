@@ -277,18 +277,13 @@ async function mountSubscriptionPlanList(planCount: number) {
   return wrapper
 }
 
-describe('PaymentView subscription plan grid', () => {
-  it.each([3, 4, 6])('keeps %i plans on the existing mobile/tablet/desktop grid', async (planCount) => {
+describe('PaymentView subscription plan list', () => {
+  it.each([3, 4, 6])('stacks %i plans vertically', async (planCount) => {
     const wrapper = await mountSubscriptionPlanList(planCount)
     const cards = wrapper.findAllComponents(SubscriptionPlanCard)
 
     expect(cards).toHaveLength(planCount)
-    expect([...(cards[0].element.parentElement?.classList ?? [])]).toEqual(expect.arrayContaining([
-      'grid',
-      'grid-cols-1',
-      'sm:grid-cols-2',
-      'lg:grid-cols-3',
-    ]))
+    expect([...(cards[0].element.parentElement?.classList ?? [])]).toEqual(expect.arrayContaining(['space-y-5']))
   })
 })
 

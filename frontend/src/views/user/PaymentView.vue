@@ -55,27 +55,25 @@
               <p class="text-gray-500 dark:text-gray-400">{{ t('payment.notAvailable') }}</p>
             </div>
             <template v-else>
-            <div class="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_19rem]">
-              <div class="space-y-5">
-                <section class="card p-5 sm:p-6">
-                  <AmountInput
-                    v-model="amount"
-                    :amounts="[10, 20, 50, 100, 200, 500, 1000, 2000, 5000]"
-                    :min="globalMinAmount"
-                    :max="globalMaxAmount"
-                    :currency-symbol="currencySymbol(selectedCurrency)"
-                  />
-                  <p v-if="amountError" class="mt-3 text-sm text-amber-700 dark:text-amber-300">{{ amountError }}</p>
-                </section>
-                <section v-if="enabledMethods.length >= 1" class="card p-5 sm:p-6">
-                  <PaymentMethodSelector
-                    :methods="methodOptions"
-                    :selected="selectedMethod"
-                    @select="selectedMethod = $event"
-                  />
-                </section>
-              </div>
-              <aside class="rounded-2xl border border-gray-200 bg-white p-5 shadow-[0_18px_45px_-36px_rgba(15,23,42,0.7)] lg:sticky lg:top-6 dark:border-dark-700 dark:bg-dark-800">
+            <div class="space-y-5">
+              <section class="card p-5 sm:p-6">
+                <AmountInput
+                  v-model="amount"
+                  :amounts="[10, 20, 50, 100, 200, 500, 1000, 2000, 5000]"
+                  :min="globalMinAmount"
+                  :max="globalMaxAmount"
+                  :currency-symbol="currencySymbol(selectedCurrency)"
+                />
+                <p v-if="amountError" class="mt-3 text-sm text-amber-700 dark:text-amber-300">{{ amountError }}</p>
+              </section>
+              <section v-if="enabledMethods.length >= 1" class="card p-5 sm:p-6">
+                <PaymentMethodSelector
+                  :methods="methodOptions"
+                  :selected="selectedMethod"
+                  @select="selectedMethod = $event"
+                />
+              </section>
+              <aside class="rounded-2xl border border-gray-200 bg-white p-5 shadow-[0_18px_45px_-36px_rgba(15,23,42,0.7)] dark:border-dark-700 dark:bg-dark-800">
                 <h2 class="text-base font-semibold text-gray-900 dark:text-white">{{ t('payment.orderSummary') }}</h2>
                 <div class="mt-5 space-y-3 text-sm">
                   <div class="flex justify-between gap-4">
@@ -543,12 +541,7 @@ const subscriptionUsdToCnyRate = computed(() => {
 })
 const creditedAmount = computed(() => Math.round((validAmount.value * balanceRechargeMultiplier.value) * 100) / 100)
 
-// Adaptive grid: center single card, 2-col for 2 plans, 3-col for 3+
-const planGridClass = computed(() => {
-  const n = checkout.value.plans.length
-  if (n <= 2) return 'grid grid-cols-1 gap-5 sm:grid-cols-2'
-  return 'grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3'
-})
+const planGridClass = 'space-y-5'
 
 // Check if an amount fits a method's [min, max]. 0 = no limit.
 function amountFitsMethod(amt: number, methodType: string): boolean {
