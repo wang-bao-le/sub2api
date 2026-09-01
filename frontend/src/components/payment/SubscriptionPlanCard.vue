@@ -113,16 +113,7 @@ import { useAppStore } from '@/stores/app'
 import { hasPeakRate as groupHasPeakRate, formatPeakRateWindow, serverTimezoneLabel } from '@/utils/peak-rate'
 import { planValiditySuffix } from './validity'
 import { currencySymbol } from '@/components/payment/currency'
-import {
-  platformAccentBarClass,
-  platformBadgeLightClass,
-  platformBorderClass,
-  platformTextClass,
-  platformIconClass,
-  platformButtonClass,
-  platformDiscountClass,
-  platformLabel,
-} from '@/utils/platformColors'
+import { platformLabel } from '@/utils/platformColors'
 
 const props = defineProps<{ plan: SubscriptionPlan; activeSubscriptions?: UserSubscription[] }>()
 const emit = defineEmits<{ select: [plan: SubscriptionPlan] }>()
@@ -133,14 +124,13 @@ const isRenewal = computed(() =>
   props.activeSubscriptions?.some(s => s.group_id === props.plan.group_id && s.status === 'active') ?? false
 )
 
-// Derived color classes from central config
-const accentClass = computed(() => platformAccentBarClass(platform.value))
-const borderClass = computed(() => platformBorderClass(platform.value))
-const badgeLightClass = computed(() => platformBadgeLightClass(platform.value))
-const textClass = computed(() => platformTextClass(platform.value))
-const iconClass = computed(() => platformIconClass(platform.value))
-const btnClass = computed(() => platformButtonClass(platform.value))
-const discountClass = computed(() => platformDiscountClass(platform.value))
+const accentClass = 'bg-primary-500 dark:bg-primary-400'
+const borderClass = 'border-gray-200 dark:border-dark-700'
+const badgeLightClass = 'bg-gray-100 text-gray-700 dark:bg-dark-700 dark:text-gray-200'
+const textClass = 'text-gray-900 dark:text-white'
+const iconClass = 'text-primary-500 dark:text-primary-300'
+const btnClass = 'bg-primary-500 text-white hover:bg-primary-600 active:bg-primary-700 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-200'
+const discountClass = 'bg-gray-100 text-gray-700 dark:bg-dark-700 dark:text-gray-200'
 const pLabel = computed(() => platformLabel(platform.value))
 
 const discountText = computed(() => {
