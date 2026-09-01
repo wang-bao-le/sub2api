@@ -55,8 +55,8 @@ const { t } = useI18n()
 
 const visibleProviders = computed<EmailOAuthProvider[]>(() => {
   const providers: EmailOAuthProvider[] = []
-  if (props.githubEnabled) providers.push('github')
   if (props.googleEnabled) providers.push('google')
+  if (props.githubEnabled) providers.push('github')
   return providers
 })
 
