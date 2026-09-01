@@ -9,7 +9,7 @@ vi.mock('vue-i18n', () => ({
 }))
 
 describe('PaymentMethodSelector', () => {
-  it('wraps large custom method collections without letting labels widen the selector', () => {
+  it('keeps payment methods in a two-column selector without letting labels widen it', () => {
     const methods = Array.from({ length: 12 }, (_, index) => ({
       type: `custom_${index}`,
       display_name: `CUSTOM_PAYMENT_METHOD_${index}`,
@@ -25,7 +25,9 @@ describe('PaymentMethodSelector', () => {
     })
 
     const grid = wrapper.get('[data-testid="payment-method-grid"]')
-    expect(grid.classes()).toEqual(expect.arrayContaining(['grid', 'sm:grid-cols-3', 'lg:grid-cols-4']))
+    expect(grid.classes()).toEqual(expect.arrayContaining(['grid', 'grid-cols-2']))
+    expect(grid.classes()).not.toContain('sm:grid-cols-3')
+    expect(grid.classes()).not.toContain('lg:grid-cols-4')
     expect(grid.classes()).not.toContain('sm:flex')
 
     const buttons = wrapper.findAll('button')
