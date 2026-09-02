@@ -127,7 +127,8 @@ watch(currentSlug, loadDocument, { immediate: true })
 .docs-article :deep(h2) { @apply mb-3 mt-10 text-2xl font-bold; }
 .docs-article :deep(h3) { @apply mb-2 mt-8 text-xl font-semibold; }
 .docs-article :deep(p) { @apply mb-4 text-gray-700 dark:text-dark-200; }
-.docs-article :deep(ul), .docs-article :deep(ol) { @apply mb-5 pl-6 text-gray-700 dark:text-dark-200; }
+.docs-article :deep(ul) { @apply mb-5 list-disc pl-6 text-gray-700 dark:text-dark-200; }
+.docs-article :deep(ol) { @apply mb-5 list-decimal pl-6 text-gray-700 dark:text-dark-200; }
 .docs-article :deep(li) { @apply mb-2; }
 .docs-article :deep(a) { @apply text-primary-600 underline underline-offset-4 dark:text-primary-300; }
 .docs-article :deep(pre) { @apply my-5 overflow-x-auto rounded-xl bg-gray-950 p-4 text-sm text-gray-100; }
