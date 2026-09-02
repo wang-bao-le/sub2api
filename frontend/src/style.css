@@ -738,8 +738,8 @@
   }
 
   .tour-info-box {
-    @apply rounded-md border-l-4 border-blue-500 bg-blue-50 px-3 py-2 text-xs text-blue-900;
-    @apply dark:border-blue-400 dark:bg-blue-950/40 dark:text-blue-200;
+    @apply rounded-md border-l-4 border-accent-500 bg-accent-50 px-3 py-2 text-xs text-accent-900;
+    @apply dark:border-accent-400 dark:bg-accent-950/40 dark:text-accent-200;
   }
 
   .tour-success-box {
