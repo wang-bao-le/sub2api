@@ -4,14 +4,6 @@ CC Switch 是用于统一管理 Claude Code、Codex、Gemini CLI、OpenCode、Op
 
 请仅通过 [CC Switch 官网](https://www.ccswitch.io/) 或 [官方 GitHub Releases](https://github.com/young-957/ccswitch/releases) 下载。不要安装要求充值、付款或提供账号密码的同名软件。
 
-## 系统要求
-
-| 系统 | 最低版本 | 支持的安装包 |
-| --- | --- | --- |
-| Windows | Windows 10 | `.msi`、便携版 `.zip` |
-| macOS | macOS 12 Monterey | Homebrew、`.dmg`、`.zip` |
-| Linux | Ubuntu 22.04、Debian 11、Fedora 34 或其他主流发行版 | `.deb`、`.rpm`、`.AppImage` |
-
 > CC Switch 管理的 Codex、Claude Code 等命令行工具通常还需要 Node.js。请先参考 [Node.js 环境安装指南](/docs/nodejs-environment) 完成安装。
 
 ## macOS

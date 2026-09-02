@@ -1,11 +1,53 @@
-# Codex 快速开始指南
+# Dragon Code × Codex 快速开始指南
 
-## 配置 Codex
+## 前置条件：安装 Node.js 环境
 
-使用 Dragon Code 的服务地址和认证信息完成客户端配置。
+Codex 依赖 Node.js 运行环境，请先参考 [Node.js 环境安装指南](/docs/nodejs-environment) 完成安装并验证。
+
+## 1. 安装 Codex
+
+```bash
+# Windows
+npm install -g @openai/codex@latest
+
+# macOS / Linux
+sudo npm install -g @openai/codex@latest
+```
+
+验证安装：
+
+```bash
+codex --version
+```
+
+输出版本号即表示安装成功。
+
+---
+
+## 2. 创建 API Key
+
+登录 [Dragon Code 控制台](https://dragoncode.codes/keys)，进入 **API 密钥** 页面，点击 **创建密钥**。
+
+填写密钥名称，选择 Codex 分组（模型和倍率），按需配置 IP 限制、额度限制、速率限制和有效期。新手建议直接使用默认配置。
+
+> **安全提示**：API Key 等同于账号凭证，请妥善保管，切勿提交到代码仓库或公开分享。
+
+---
+
+## 3. 导入密钥到 Codex
+
+推荐使用 **CC Switch** 工具进行一键配置。
+
+点击密钥右侧 **导入到 CCS** 按钮完成一键导入。
+
+导入后点击 **启用** 即可。
+
+## 4. 开始使用
+
+进入任意项目目录，运行：
 
 ```bash
 codex
 ```
 
-配置完成后，请先进行一次简单请求验证连接状态。
+Codex 会自动分析当前目录的代码并提供智能编程辅助。更多用法请参考 [OpenAI 官方文档](https://github.com/openai/codex)。
