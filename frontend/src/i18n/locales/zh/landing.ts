@@ -5,6 +5,8 @@ export default {
   },
   // Home Page
   home: {
+    navHome: '首页',
+    primaryNavigation: '主导航',
     viewOnGithub: '在 GitHub 上查看',
     viewDocs: '查看文档',
     docs: '文档',

@@ -99,33 +99,46 @@
   >
 
     <!-- Header -->
-    <header class="relative z-20 px-6 py-4">
-      <nav class="mx-auto flex max-w-6xl items-center justify-between">
+    <header class="relative z-20 border-b border-gray-200/70 px-4 py-4 dark:border-dark-800/70 sm:px-6">
+      <nav class="mx-auto grid max-w-6xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
         <!-- Logo -->
-        <div class="flex items-center gap-3">
+        <router-link to="/" class="flex min-w-0 items-center gap-3" :aria-label="t('home.navHome')">
           <div class="h-10 w-10 overflow-hidden rounded-xl">
             <img :src="siteLogo || '/logo.svg'" alt="Logo" class="h-full w-full object-contain" />
           </div>
-          <span class="text-2xl font-semibold text-black">{{ siteName }}</span>
+          <span class="truncate text-xl font-semibold tracking-tight text-gray-950 dark:text-white sm:text-2xl">{{ siteName }}</span>
+        </router-link>
+
+        <!-- Primary navigation -->
+        <div class="hidden items-center justify-center gap-9 md:flex" :aria-label="t('home.primaryNavigation')">
+          <router-link
+            to="/"
+            class="rounded-md px-1 py-2 text-base font-semibold text-gray-950 transition-colors hover:text-primary-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 dark:text-white dark:hover:text-primary-300"
+            aria-current="page"
+          >
+            {{ t('home.navHome') }}
+          </router-link>
+          <router-link
+            to="/docs"
+            class="rounded-md px-1 py-2 text-base font-medium text-gray-600 transition-colors hover:text-gray-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 dark:text-dark-300 dark:hover:text-white"
+          >
+            {{ t('home.docs') }}
+          </router-link>
         </div>
 
         <!-- Nav Actions -->
-        <div class="flex items-center gap-3">
+        <div class="flex items-center justify-end gap-2 sm:gap-3">
+          <router-link
+            to="/docs"
+            class="rounded-md px-2 py-2 text-sm font-medium text-gray-600 transition-colors hover:text-gray-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 dark:text-dark-300 dark:hover:text-white md:hidden"
+          >
+            {{ t('home.docs') }}
+          </router-link>
           <!-- Language Switcher -->
           <LocaleSwitcher />
 
           <!-- Announcement Bell -->
           <AnnouncementBell v-if="isAuthenticated" />
-
-          <!-- Documentation Link -->
-          <router-link
-            to="/docs"
-            class="inline-flex items-center gap-1.5 rounded-lg p-2 text-sm text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:text-dark-400 dark:hover:bg-dark-800 dark:hover:text-white"
-            :title="t('home.viewDocs')"
-          >
-            <Icon name="book" size="md" />
-            <span class="hidden sm:inline">{{ t('home.docs') }}</span>
-          </router-link>
 
           <!-- Model Plaza Link -->
           <router-link

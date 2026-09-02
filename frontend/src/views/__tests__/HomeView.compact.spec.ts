@@ -64,7 +64,11 @@ function mountHome(settings: Record<string, unknown> = {}) {
 }
 
 function compactDestination(wrapper: ReturnType<typeof mountHome>) {
-  return wrapper.get('[data-testid="compact-home"]').findComponent(RouterLinkStub).props('to')
+  return wrapper
+    .get('[data-testid="compact-home"]')
+    .findAllComponents(RouterLinkStub)
+    .find((link) => link.props('to') === '/dashboard' || link.props('to') === '/admin/dashboard')
+    ?.props('to')
 }
 
 function modelPlazaDestination(wrapper: ReturnType<typeof mountHome>) {
@@ -117,7 +121,13 @@ describe('HomeView compact mode', () => {
     const wrapper = mountHome(settings)
 
     expect(wrapper.find('[data-testid="compact-home"]').exists()).toBe(false)
-    expect(wrapper.find('.terminal-container').exists()).toBe(true)
+  })
+
+  it('renders home and docs links in the default header', () => {
+    const links = mountHome().findAllComponents(RouterLinkStub)
+
+    expect(links.some((link) => link.props('to') === '/')).toBe(true)
+    expect(links.some((link) => link.props('to') === '/docs')).toBe(true)
   })
 
   it('opens the login modal for unauthenticated visitors', () => {

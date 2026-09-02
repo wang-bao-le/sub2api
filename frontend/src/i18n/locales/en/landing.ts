@@ -5,6 +5,8 @@ export default {
   },
   // Home Page
   home: {
+    navHome: 'Home',
+    primaryNavigation: 'Primary navigation',
     viewOnGithub: 'View on GitHub',
     viewDocs: 'View Documentation',
     docs: 'Docs',
