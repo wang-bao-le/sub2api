@@ -6,9 +6,6 @@
           <img :src="siteLogo || '/logo.svg'" alt="Logo" class="h-9 w-9 rounded-lg object-contain" />
           <span>{{ siteName }}</span>
         </RouterLink>
-        <button type="button" class="btn btn-primary btn-sm" @click="requestLoginModal()">
-          {{ t('home.login') }}
-        </button>
       </div>
     </header>
 
@@ -63,13 +60,11 @@
 
 <script setup lang="ts">
 import { computed, nextTick, ref, watch } from 'vue'
-import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { marked } from 'marked'
 import DOMPurify from 'dompurify'
 import { useAppStore } from '@/stores'
 import { sanitizeUrl } from '@/utils/url'
-import { requestLoginModal } from '@/utils/loginModal'
 
 interface DocItem { slug: string; title: string }
 interface DocGroup { title: string; items: DocItem[] }
@@ -83,7 +78,6 @@ const allItems = groups.flatMap((group) => group.items)
 const modules = import.meta.glob('@/content/docs/*.md', { query: '?raw', import: 'default' }) as Record<string, () => Promise<string>>
 const route = useRoute()
 const router = useRouter()
-const { t } = useI18n()
 const appStore = useAppStore()
 const markdown = ref('')
 const renderedHtml = ref('')
