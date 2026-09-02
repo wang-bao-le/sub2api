@@ -35,7 +35,7 @@
         <template v-else>
           <!-- Top-up Tab -->
           <template v-if="activeTab === 'recharge'">
-            <section class="overflow-hidden rounded-2xl bg-primary-950 px-6 py-7 text-white shadow-[0_18px_45px_-32px_rgba(0,0,0,0.9)] dark:bg-primary-950 sm:px-8">
+            <section class="overflow-hidden rounded-2xl bg-primary-500 px-6 py-7 text-white shadow-[0_18px_45px_-32px_rgba(0,0,0,0.9)] dark:bg-primary-500 sm:px-8">
               <div class="max-w-2xl">
                 <h1 class="text-2xl font-semibold tracking-tight sm:text-3xl">{{ t('payment.rechargeHeroTitle') }}</h1>
                 <p class="mt-2 text-sm leading-6 text-gray-300">{{ t('payment.rechargeHeroDescription') }}</p>
