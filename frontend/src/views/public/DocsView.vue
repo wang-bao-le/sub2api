@@ -40,7 +40,7 @@
         <div v-if="loading" class="card flex min-h-[420px] items-center justify-center">
           <div class="h-8 w-8 animate-spin rounded-full border-2 border-primary-500 border-t-transparent" />
         </div>
-        <article v-else-if="markdown" style="width: calc(100% + 3cm); max-width: none" class="docs-article card px-6 py-8 sm:px-10 lg:px-12">
+        <article v-else-if="markdown" style="width: calc(100% + 4.5cm); max-width: none" class="docs-article card px-6 py-8 sm:px-10 lg:px-12">
           <div v-html="renderedHtml" />
         </article>
         <div v-else class="card p-10 text-center text-gray-500 dark:text-dark-300">文档不存在</div>
