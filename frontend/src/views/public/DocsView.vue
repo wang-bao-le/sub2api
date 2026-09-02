@@ -3,6 +3,16 @@
     <header class="border-b border-gray-200 bg-white/95 dark:border-dark-800 dark:bg-dark-900/95 lg:shrink-0">
       <div class="mx-auto flex max-w-[1440px] items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
         <div class="flex min-w-0 items-center gap-3 text-lg">
+          <RouterLink
+            to="/home"
+            class="btn btn-secondary btn-sm shrink-0"
+            aria-label="返回首页"
+          >
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+            </svg>
+            <span>返回首页</span>
+          </RouterLink>
           <RouterLink to="/home" class="flex min-w-0 items-center gap-3 font-semibold text-gray-950 dark:text-white">
             <img :src="siteLogo || '/logo.svg'" alt="Logo" class="h-9 w-9 shrink-0 rounded-lg object-contain" />
             <span class="truncate">{{ siteName }}</span>
