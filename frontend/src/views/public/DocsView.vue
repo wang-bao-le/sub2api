@@ -71,7 +71,7 @@ interface DocGroup { title: string; items: DocItem[] }
 interface TocItem { id: string; text: string; level: number }
 
 const groups: DocGroup[] = [
-  { title: '入门', items: [{ slug: 'introduction', title: '简介' }, { slug: 'faq', title: '常见问题' }, { slug: 'dragon-code-guide', title: 'Dragon Code 使用指南' }] },
+  { title: '入门', items: [{ slug: 'introduction', title: '快速开始' }, { slug: 'faq', title: '常见问题' }, { slug: 'dragon-code-guide', title: 'Dragon Code 使用指南' }] },
   { title: '快速开始', items: [{ slug: 'claude-code-quickstart', title: 'Claude Code 快速开始指南' }, { slug: 'codex-quickstart', title: 'Codex 快速开始指南' }, { slug: 'openclaw-quickstart', title: 'OpenClaw 快速开始指南' }] },
 ]
 const allItems = groups.flatMap((group) => group.items)
