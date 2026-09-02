@@ -21,8 +21,8 @@
                 v-for="item in group.items"
                 :key="item.slug"
                 :to="{ name: 'DocsPage', params: { slug: item.slug } }"
-                class="block rounded-lg px-3 py-2 text-sm transition-colors"
-                :class="item.slug === currentSlug ? 'bg-primary-50 font-semibold text-primary-700 dark:bg-primary-500/15 dark:text-primary-300' : 'text-gray-600 hover:bg-gray-100 dark:text-dark-300 dark:hover:bg-dark-800'"
+                class="block rounded-xl px-4 py-3 text-sm transition-colors"
+                :class="item.slug === currentSlug ? 'bg-gray-900 font-semibold text-white shadow-sm dark:bg-white dark:text-gray-900' : 'text-gray-600 hover:bg-gray-100 dark:text-dark-300 dark:hover:bg-dark-800'"
               >{{ item.title }}</RouterLink>
             </div>
           </section>
