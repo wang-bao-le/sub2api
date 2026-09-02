@@ -99,7 +99,7 @@
   >
 
     <!-- Header -->
-    <header class="relative z-20 border-b border-gray-200/70 px-4 py-4 dark:border-dark-800/70 sm:px-6">
+    <header class="relative z-20 px-4 py-4 sm:px-6">
       <nav class="mx-auto grid max-w-6xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
         <!-- Logo -->
         <router-link to="/" class="flex min-w-0 items-center gap-3" :aria-label="t('home.navHome')">
