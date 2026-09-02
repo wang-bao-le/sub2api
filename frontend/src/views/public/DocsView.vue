@@ -75,6 +75,7 @@ import { computed, nextTick, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { marked } from 'marked'
 import DOMPurify from 'dompurify'
+import { useClipboard } from '@/composables/useClipboard'
 import { useAppStore } from '@/stores'
 import { sanitizeUrl } from '@/utils/url'
 
@@ -91,6 +92,7 @@ const modules = import.meta.glob('@/content/docs/*.md', { query: '?raw', import:
 const route = useRoute()
 const router = useRouter()
 const appStore = useAppStore()
+const { copyToClipboard } = useClipboard()
 const markdown = ref('')
 const renderedHtml = ref('')
 const tocItems = ref<TocItem[]>([])
@@ -123,11 +125,36 @@ async function loadDocument() {
   tocItems.value = headings.filter((item) => item.level >= 2 && item.level <= 3)
   loading.value = false
   await nextTick()
+  attachCopyButtons()
 }
 
 function navigateFromSelect(event: Event) {
   const slug = (event.target as HTMLSelectElement).value
   router.push({ name: 'DocsPage', params: { slug } })
+}
+
+function attachCopyButtons() {
+  const article = document.querySelector('.docs-article')
+  article?.querySelectorAll('pre').forEach((pre) => {
+    if (pre.querySelector('.docs-copy-button')) return
+
+    const button = document.createElement('button')
+    button.type = 'button'
+    button.className = 'docs-copy-button'
+    button.setAttribute('aria-label', '复制代码')
+    button.textContent = '复制'
+    button.addEventListener('click', async () => {
+      const code = pre.querySelector('code')?.textContent || ''
+      const success = await copyToClipboard(code, '已复制')
+      if (!success) return
+
+      button.textContent = '已复制'
+      window.setTimeout(() => {
+        button.textContent = '复制'
+      }, 2000)
+    })
+    pre.appendChild(button)
+  })
 }
 
 watch(currentSlug, loadDocument, { immediate: true })
@@ -143,7 +170,8 @@ watch(currentSlug, loadDocument, { immediate: true })
 .docs-article :deep(ol) { @apply mb-5 list-decimal pl-6 text-gray-700 dark:text-dark-200; }
 .docs-article :deep(li) { @apply mb-2; }
 .docs-article :deep(a) { @apply text-primary-600 underline underline-offset-4 dark:text-primary-300; }
-.docs-article :deep(pre) { @apply my-5 overflow-x-auto rounded-xl bg-gray-950 p-4 text-sm text-gray-100; }
+.docs-article :deep(pre) { @apply relative my-5 overflow-x-auto rounded-xl bg-gray-950 p-4 pr-24 text-sm text-gray-100; }
+.docs-article :deep(.docs-copy-button) { @apply absolute right-3 top-3 rounded-md border border-white/30 px-2.5 py-1 text-xs font-medium text-white transition-colors hover:border-white/60 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/70; }
 .docs-article :deep(code) { @apply rounded bg-gray-100 px-1.5 py-0.5 text-[0.9em] dark:bg-dark-800; }
 .docs-article :deep(pre code) { @apply bg-transparent p-0; }
 </style>
