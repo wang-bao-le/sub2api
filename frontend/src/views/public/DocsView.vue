@@ -2,10 +2,14 @@
   <div class="min-h-screen bg-gray-50 text-gray-950 dark:bg-dark-950 dark:text-white">
     <header class="border-b border-gray-200 bg-white/95 dark:border-dark-800 dark:bg-dark-900/95">
       <div class="mx-auto flex max-w-[1440px] items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
-        <RouterLink to="/home" class="flex items-center gap-3 text-lg font-semibold">
-          <img :src="siteLogo || '/logo.svg'" alt="Logo" class="h-9 w-9 rounded-lg object-contain" />
-          <span>{{ siteName }}</span>
-        </RouterLink>
+        <div class="flex min-w-0 items-center gap-3 text-lg">
+          <RouterLink to="/home" class="flex min-w-0 items-center gap-3 font-semibold text-gray-950 dark:text-white">
+            <img :src="siteLogo || '/logo.svg'" alt="Logo" class="h-9 w-9 shrink-0 rounded-lg object-contain" />
+            <span class="truncate">{{ siteName }}</span>
+          </RouterLink>
+          <span aria-hidden="true" class="text-gray-300 dark:text-dark-600">/</span>
+          <span aria-current="page" class="shrink-0 font-medium text-gray-500 dark:text-dark-300">文档</span>
+        </div>
       </div>
     </header>
 
