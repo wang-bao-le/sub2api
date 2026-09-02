@@ -230,6 +230,23 @@ const routes: RouteRecordRaw[] = [
     }
   },
   {
+    path: '/docs',
+    redirect: { name: 'DocsPage', params: { slug: 'introduction' } },
+    meta: {
+      requiresAuth: false,
+      title: 'Documentation'
+    }
+  },
+  {
+    path: '/docs/:slug',
+    name: 'DocsPage',
+    component: () => import('@/views/public/DocsView.vue'),
+    meta: {
+      requiresAuth: false,
+      title: 'Documentation'
+    }
+  },
+  {
     path: '/usage',
     name: 'Usage',
     component: () => import('@/views/user/UsageView.vue'),
