@@ -9,7 +9,7 @@
         <div v-if="tabs.length > 1 && paymentPhase === 'select' && !selectedPlan" class="inline-flex rounded-xl border border-gray-200 bg-white p-1 shadow-sm dark:border-dark-700 dark:bg-dark-800">
           <button v-for="tab in tabs" :key="tab.key"
             class="rounded-lg px-4 py-2 text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-dark-900"
-            :class="activeTab === tab.key ? 'bg-gray-900 text-white shadow-sm dark:bg-white dark:text-gray-900' : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'"
+            :class="activeTab === tab.key ? 'bg-primary-500 text-white shadow-sm dark:bg-white dark:text-primary-950' : 'text-gray-500 hover:text-primary-900 dark:text-gray-400 dark:hover:text-white'"
             @click="activeTab = tab.key">{{ tab.label }}</button>
         </div>
         <!-- Payment in progress (shared by recharge and subscription) -->
@@ -35,7 +35,7 @@
         <template v-else>
           <!-- Top-up Tab -->
           <template v-if="activeTab === 'recharge'">
-            <section class="overflow-hidden rounded-2xl bg-gray-950 px-6 py-7 text-white shadow-[0_18px_45px_-32px_rgba(0,0,0,0.9)] dark:bg-dark-950 sm:px-8">
+            <section class="overflow-hidden rounded-2xl bg-primary-950 px-6 py-7 text-white shadow-[0_18px_45px_-32px_rgba(0,0,0,0.9)] dark:bg-primary-950 sm:px-8">
               <div class="max-w-2xl">
                 <h1 class="text-2xl font-semibold tracking-tight sm:text-3xl">{{ t('payment.rechargeHeroTitle') }}</h1>
                 <p class="mt-2 text-sm leading-6 text-gray-300">{{ t('payment.rechargeHeroDescription') }}</p>
