@@ -1,6 +1,6 @@
 <template>
-  <div class="min-h-screen bg-gray-50 text-gray-950 dark:bg-dark-950 dark:text-white">
-    <header class="border-b border-gray-200 bg-white/95 dark:border-dark-800 dark:bg-dark-900/95">
+  <div class="min-h-screen bg-gray-50 text-gray-950 dark:bg-dark-950 dark:text-white lg:flex lg:h-screen lg:flex-col lg:overflow-hidden">
+    <header class="border-b border-gray-200 bg-white/95 dark:border-dark-800 dark:bg-dark-900/95 lg:shrink-0">
       <div class="mx-auto flex max-w-[1440px] items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
         <div class="flex min-w-0 items-center gap-3 text-lg">
           <RouterLink to="/home" class="flex min-w-0 items-center gap-3 font-semibold text-gray-950 dark:text-white">
@@ -13,9 +13,9 @@
       </div>
     </header>
 
-    <main style="max-width: calc(1440px + 3cm)" class="mx-auto grid gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[calc(220px+1.5cm)_minmax(0,1fr)_220px] lg:px-8">
-      <aside class="hidden border-r border-gray-200 pr-6 dark:border-dark-700 lg:block">
-        <nav class="sticky top-6 space-y-7" aria-label="文档导航">
+    <main style="max-width: calc(1440px + 3cm)" class="mx-auto grid w-full gap-8 px-4 py-8 sm:px-6 lg:min-h-0 lg:flex-1 lg:grid-cols-[calc(220px+1.5cm)_minmax(0,1fr)_220px] lg:grid-rows-[minmax(0,1fr)] lg:px-8">
+      <aside class="hidden border-r border-gray-200 pr-6 dark:border-dark-700 lg:block lg:min-h-0 lg:overflow-y-auto">
+        <nav class="space-y-7" aria-label="文档导航">
           <section v-for="group in groups" :key="group.title">
             <h2 class="mb-3 px-3 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-dark-400">
               {{ group.title }}
@@ -45,7 +45,7 @@
         </nav>
       </aside>
 
-      <section class="min-w-0">
+      <section class="min-w-0 lg:min-h-0 lg:overflow-y-auto lg:pr-4">
         <div class="mb-6 lg:hidden">
           <label for="docs-mobile-nav" class="sr-only">文档导航</label>
           <select id="docs-mobile-nav" class="form-input w-full" :value="currentSlug" @change="navigateFromSelect">
@@ -62,8 +62,8 @@
         <div v-else class="card p-10 text-center text-gray-500 dark:text-dark-300">文档不存在</div>
       </section>
 
-      <aside v-if="tocItems.length" class="hidden xl:block">
-        <nav class="sticky top-6 border-l border-gray-200 pl-5 dark:border-dark-700" aria-label="页面目录">
+      <aside v-if="tocItems.length" class="hidden xl:block xl:min-h-0 xl:overflow-y-auto">
+        <nav class="border-l border-gray-200 pl-5 dark:border-dark-700" aria-label="页面目录">
           <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-dark-400">本页目录</p>
           <a v-for="item in tocItems" :key="item.id" :href="`#${item.id}`" class="mb-2 block text-sm text-gray-500 transition-colors hover:text-primary-600 dark:text-dark-400 dark:hover:text-primary-300" :class="item.level > 2 ? 'pl-3' : ''">
             {{ item.text }}
