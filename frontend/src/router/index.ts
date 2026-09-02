@@ -231,7 +231,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/docs',
-    redirect: { name: 'DocsPage', params: { slug: 'introduction' } },
+    redirect: { name: 'DocsPage', params: { slug: 'quickstart' } },
     meta: {
       requiresAuth: false,
       title: 'Documentation'
