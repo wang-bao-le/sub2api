@@ -9,7 +9,7 @@
       </div>
     </header>
 
-    <main class="mx-auto grid max-w-[1440px] gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[calc(220px+3cm)_minmax(0,1fr)_220px] lg:px-8">
+    <main class="mx-auto grid max-w-[1440px] gap-8 px-4 py-8 sm:px-6 lg:grid-cols-[calc(220px+1.5cm)_minmax(0,1fr)_220px] lg:px-8">
       <aside class="hidden border-r border-gray-200 pr-6 dark:border-dark-700 lg:block">
         <nav class="sticky top-6 space-y-7" aria-label="文档导航">
           <section v-for="group in groups" :key="group.title">
@@ -21,7 +21,7 @@
                 v-for="item in group.items"
                 :key="item.slug"
                 :to="{ name: 'DocsPage', params: { slug: item.slug } }"
-                class="block rounded-xl px-4 py-3 text-sm transition-colors"
+                class="block rounded-xl px-4 py-2 text-sm transition-colors"
                 :class="item.slug === currentSlug ? 'bg-gray-900 font-semibold text-white shadow-sm dark:bg-white dark:text-gray-900' : 'text-gray-600 hover:bg-gray-100 dark:text-dark-300 dark:hover:bg-dark-800'"
               >{{ item.title }}</RouterLink>
             </div>
