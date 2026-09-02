@@ -647,7 +647,11 @@ async function handleLogin(): Promise<void> {
     }
 
     // Redirect to dashboard or intended route
-    const redirectTo = resolveAuthRedirect(options?.redirect, router.currentRoute.value.query.redirect)
+    const redirectTo = resolveAuthRedirect(
+      options?.redirect,
+      router.currentRoute.value.query.redirect,
+      authStore.isAdmin ? '/admin/dashboard' : '/dashboard'
+    )
     if (!await navigateAfterAuth(router, redirectTo)) {
       errorMessage.value = t('auth.navigationFailed')
       return
@@ -709,7 +713,11 @@ async function handlePasskeyLogin(): Promise<void> {
     }
 
     await authStore.loginWithPasskey(proof)
-    const redirectTo = resolveAuthRedirect(options?.redirect, router.currentRoute.value.query.redirect)
+    const redirectTo = resolveAuthRedirect(
+      options?.redirect,
+      router.currentRoute.value.query.redirect,
+      authStore.isAdmin ? '/admin/dashboard' : '/dashboard'
+    )
     if (!await navigateAfterAuth(router, redirectTo)) {
       errorMessage.value = t('auth.navigationFailed')
       return
@@ -781,7 +789,11 @@ async function handle2FAVerify(code: string): Promise<void> {
     )
 
     // Redirect to dashboard or intended route
-    const redirectTo = resolveAuthRedirect(options?.redirect, router.currentRoute.value.query.redirect)
+    const redirectTo = resolveAuthRedirect(
+      options?.redirect,
+      router.currentRoute.value.query.redirect,
+      authStore.isAdmin ? '/admin/dashboard' : '/dashboard'
+    )
     if (!await navigateAfterAuth(router, redirectTo)) {
       if (totpModalRef.value) {
         totpModalRef.value.setError(t('auth.navigationFailed'))

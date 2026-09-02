@@ -56,7 +56,11 @@ export function requestLoginModal(options: AuthModalOptions = {}) {
   requestAuthModal('login', options)
 }
 
-export function resolveAuthRedirect(redirect?: string, routeRedirect?: unknown): string {
+export function resolveAuthRedirect(
+  redirect?: string,
+  routeRedirect?: unknown,
+  defaultRedirect = '/dashboard'
+): string {
   const candidate = typeof redirect === 'string' && redirect.trim()
     ? redirect
     : typeof routeRedirect === 'string' && routeRedirect.trim()
@@ -65,7 +69,7 @@ export function resolveAuthRedirect(redirect?: string, routeRedirect?: unknown):
 
   // The marketing page is an entry point, not a post-login destination.
   if (!candidate || candidate === '/' || candidate === '/home' || candidate.startsWith('/home?')) {
-    return '/dashboard'
+    return defaultRedirect
   }
 
   return candidate
