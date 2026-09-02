@@ -16,7 +16,7 @@
         <div class="rounded-xl border border-gray-200 bg-gray-50 p-6 dark:border-dark-700 dark:bg-dark-800">
           <div class="flex flex-col items-center gap-4 text-center">
             <div class="flex h-12 w-12 items-center justify-center rounded-full bg-gray-200 dark:bg-dark-700">
-              <Icon name="checkCircle" size="lg" class="text-black dark:text-white" />
+              <Icon name="checkCircle" size="lg" class="text-primary-900 dark:text-white" />
             </div>
             <div>
               <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
@@ -33,7 +33,7 @@
           <a
             href="/login"
             @click="handleAuthLink($event, 'login')"
-            class="inline-flex items-center gap-2 font-medium text-black transition-colors hover:text-gray-700 dark:text-gray-300 dark:hover:text-white"
+            class="inline-flex items-center gap-2 font-medium text-primary-900 transition-colors hover:text-primary-700 dark:text-gray-300 dark:hover:text-white"
           >
             <Icon name="arrowLeft" size="sm" />
             {{ t('auth.backToLogin') }}
@@ -60,7 +60,7 @@
               autofocus
               autocomplete="email"
               :disabled="isLoading"
-              class="input border-gray-300 pl-11 transition-none focus:border-black focus:ring-4 focus:ring-gray-300/30 dark:border-dark-600 dark:focus:border-white dark:focus:ring-gray-300/20"
+            class="input border-gray-300 pl-11 transition-none focus:border-primary-500 focus:ring-4 focus:ring-primary-500/20 dark:border-dark-600 dark:focus:border-white dark:focus:ring-gray-300/20"
               :class="{ 'input-error': errors.email }"
               :placeholder="t('auth.emailPlaceholder')"
               :aria-invalid="Boolean(errors.email)"
@@ -100,7 +100,7 @@
         <button
           type="submit"
           :disabled="isLoading || (turnstileEnabled && !turnstileToken)"
-          class="btn w-full bg-black text-white shadow-md shadow-black/20 hover:bg-gray-800 hover:shadow-lg hover:shadow-black/30 dark:bg-white dark:text-black dark:hover:bg-gray-200"
+          class="btn w-full bg-primary-500 text-white shadow-md shadow-primary-500/20 hover:bg-primary-800 hover:shadow-lg hover:shadow-primary-500/30 dark:bg-white dark:text-primary-950 dark:hover:bg-primary-100"
         >
           <svg
             v-if="isLoading"
@@ -135,7 +135,7 @@
         <a
           href="/login"
           @click="handleAuthLink($event, 'login')"
-          class="font-medium text-black transition-colors hover:text-gray-700 dark:text-gray-300 dark:hover:text-white"
+          class="font-medium text-primary-900 transition-colors hover:text-primary-700 dark:text-gray-300 dark:hover:text-white"
         >
           {{ t('auth.signIn') }}
         </a>

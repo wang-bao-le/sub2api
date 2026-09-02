@@ -33,7 +33,7 @@
               :aria-invalid="Boolean(errors.email)"
               :aria-describedby="errors.email ? 'login-email-error' : undefined"
               @input="errors.email = ''; errorMessage = ''"
-              class="input border-gray-300 pl-11 transition-none focus:border-black focus:ring-4 focus:ring-gray-300/30 dark:border-dark-600 dark:focus:border-white dark:focus:ring-gray-300/20"
+              class="input border-gray-300 pl-11 transition-none focus:border-primary-500 focus:ring-4 focus:ring-primary-500/20 dark:border-dark-600 dark:focus:border-white dark:focus:ring-gray-300/20"
               :class="{ 'input-error': errors.email }"
               :placeholder="t('auth.emailPlaceholder')"
             />
@@ -63,7 +63,7 @@
               :aria-invalid="Boolean(errors.password)"
               :aria-describedby="errors.password ? 'login-password-error' : undefined"
               @input="errors.password = ''; errorMessage = ''"
-              class="input border-gray-300 pl-11 pr-11 transition-none focus:border-black focus:ring-4 focus:ring-gray-300/30 dark:border-dark-600 dark:focus:border-white dark:focus:ring-gray-300/20"
+              class="input border-gray-300 pl-11 pr-11 transition-none focus:border-primary-500 focus:ring-4 focus:ring-primary-500/20 dark:border-dark-600 dark:focus:border-white dark:focus:ring-gray-300/20"
               :class="{ 'input-error': errors.password }"
               :placeholder="t('auth.passwordPlaceholder')"
             />
@@ -74,7 +74,7 @@
               :aria-label="showPassword ? t('auth.hidePassword') : t('auth.showPassword')"
               :aria-pressed="showPassword"
               aria-controls="password"
-              class="absolute inset-y-0 right-0 flex min-w-11 items-center justify-center text-gray-400 transition-colors hover:text-gray-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-black/40 dark:hover:text-dark-300 dark:focus-visible:ring-white/50"
+              class="absolute inset-y-0 right-0 flex min-w-11 items-center justify-center text-gray-400 transition-colors hover:text-gray-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40 dark:hover:text-dark-300 dark:focus-visible:ring-white/50"
             >
               <Icon v-if="showPassword" name="eyeOff" size="md" aria-hidden="true" />
               <Icon v-else name="eye" size="md" aria-hidden="true" />
@@ -88,7 +88,7 @@
               <input
                 v-model="rememberMe"
                 type="checkbox"
-                class="h-4 w-4 rounded border-gray-300 accent-black text-black focus:ring-black dark:border-dark-600 dark:bg-dark-800"
+                class="h-4 w-4 rounded border-gray-300 accent-primary-500 text-primary-500 focus:ring-primary-500 dark:border-dark-600 dark:bg-dark-800"
               />
               {{ t('auth.rememberMe') }}
             </label>
@@ -241,7 +241,7 @@
         <a
           href="/register"
           @click="handleAuthLink($event, 'register')"
-          class="font-medium text-black transition-colors hover:text-gray-700 dark:text-gray-300 dark:hover:text-white"
+          class="font-medium text-primary-900 transition-colors hover:text-primary-700 dark:text-gray-300 dark:hover:text-white"
         >
           {{ t('auth.freeSignUp') }}
         </a>

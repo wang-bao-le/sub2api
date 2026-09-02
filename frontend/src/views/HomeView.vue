@@ -183,8 +183,8 @@
         <div class="mb-12 flex flex-col items-center justify-between gap-12 lg:flex-row lg:gap-16">
           <!-- Left: Text Content -->
           <div class="flex-1 pt-12 text-center">
-            <div class="mb-8 flex flex-wrap items-center justify-center gap-4 text-black">
-              <span class="rounded-full border-2 border-black px-6 py-2 text-2xl font-medium md:text-3xl">
+            <div class="mb-8 flex flex-wrap items-center justify-center gap-4 text-primary-900">
+              <span class="rounded-full border-2 border-primary-900 px-6 py-2 text-2xl font-medium md:text-3xl">
                 {{ t('home.heroLabel') }}
               </span>
               <span class="hero-title-animated text-5xl font-bold tracking-tight md:text-7xl">
@@ -206,7 +206,7 @@
                 data-auth-entry
                 :aria-haspopup="isAuthenticated ? undefined : 'dialog'"
                 aria-controls="auth-modal"
-                class="home-auth-entry btn bg-black px-8 py-3 text-base text-white shadow-lg shadow-black/20 hover:bg-gray-800 hover:shadow-black/30"
+                class="home-auth-entry btn bg-primary-500 px-8 py-3 text-base text-white shadow-lg shadow-primary-500/20 hover:bg-primary-800 hover:shadow-primary-500/30"
               >
                 {{ isAuthenticated ? t('home.goToDashboard') : t('home.getStarted') }}
                 <Icon name="arrowRight" size="md" class="ml-2" :stroke-width="2" />
@@ -221,7 +221,7 @@
           <div
             class="inline-flex items-center gap-2.5 rounded-full border border-gray-200/50 bg-white/80 px-5 py-2.5 shadow-sm backdrop-blur-sm dark:border-dark-700/50 dark:bg-dark-800/80"
           >
-            <Icon name="swap" size="sm" class="text-black" />
+            <Icon name="swap" size="sm" class="text-primary-900" />
             <span class="text-sm font-medium text-gray-700 dark:text-dark-200">{{
               t('home.tags.subscriptionToApi')
             }}</span>
@@ -229,7 +229,7 @@
           <div
             class="inline-flex items-center gap-2.5 rounded-full border border-gray-200/50 bg-white/80 px-5 py-2.5 shadow-sm backdrop-blur-sm dark:border-dark-700/50 dark:bg-dark-800/80"
           >
-            <Icon name="shield" size="sm" class="text-black" />
+            <Icon name="shield" size="sm" class="text-primary-900" />
             <span class="text-sm font-medium text-gray-700 dark:text-dark-200">{{
               t('home.tags.stickySession')
             }}</span>
@@ -237,7 +237,7 @@
           <div
             class="inline-flex items-center gap-2.5 rounded-full border border-gray-200/50 bg-white/80 px-5 py-2.5 shadow-sm backdrop-blur-sm dark:border-dark-700/50 dark:bg-dark-800/80"
           >
-            <Icon name="chart" size="sm" class="text-black" />
+            <Icon name="chart" size="sm" class="text-primary-900" />
             <span class="text-sm font-medium text-gray-700 dark:text-dark-200">{{
               t('home.tags.realtimeBilling')
             }}</span>
@@ -382,18 +382,18 @@ onMounted(() => {
 
 <style scoped>
 .home-auth-entry {
-  @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-black/60 focus-visible:ring-offset-2 dark:focus-visible:ring-white/70 dark:focus-visible:ring-offset-dark-950;
+  @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/60 focus-visible:ring-offset-2 dark:focus-visible:ring-white/70 dark:focus-visible:ring-offset-dark-950;
 }
 
 .hero-title-animated {
   color: transparent;
   background: linear-gradient(
     100deg,
-    #111827 0%,
-    #111827 38%,
+    theme('colors.primary.900') 0%,
+    theme('colors.primary.900') 38%,
     #4f8cff 50%,
-    #111827 62%,
-    #111827 100%
+    theme('colors.primary.900') 62%,
+    theme('colors.primary.900') 100%
   );
   background-size: 240% 100%;
   background-position: 120% 0;
@@ -462,7 +462,7 @@ onMounted(() => {
 
 @media (prefers-reduced-motion: reduce) {
   .hero-title-animated {
-    color: #111827;
+    color: theme('colors.primary.900');
     background: none;
     animation: none;
   }

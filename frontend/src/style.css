@@ -57,9 +57,9 @@
   }
 
   .btn-primary {
-    @apply bg-black text-white shadow-md shadow-black/20;
-    @apply hover:bg-gray-800 hover:shadow-lg hover:shadow-black/30;
-    @apply dark:bg-white dark:text-black dark:hover:bg-gray-200 dark:shadow-white/10;
+    @apply bg-primary-500 text-white shadow-md shadow-primary-500/20;
+    @apply hover:bg-primary-800 hover:shadow-lg hover:shadow-primary-500/30;
+    @apply dark:bg-white dark:text-primary-950 dark:hover:bg-primary-100 dark:shadow-white/10;
   }
 
   .btn-secondary {
@@ -595,8 +595,7 @@
 
   .sidebar-link-active {
     @apply bg-gray-100;
-    color: #111827;
-    @apply hover:bg-gray-100;
+    @apply text-primary-900 hover:bg-gray-100;
   }
 
   .sidebar-section {

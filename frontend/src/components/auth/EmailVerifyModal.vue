@@ -44,7 +44,7 @@
             inputmode="numeric"
             maxlength="6"
             :disabled="isLoading"
-            class="input border-gray-300 py-3 text-center font-mono text-xl tracking-[0.5em] transition-none focus:border-black focus:ring-4 focus:ring-gray-300/30 dark:border-dark-600 dark:focus:border-white dark:focus:ring-gray-300/20"
+            class="input border-gray-300 py-3 text-center font-mono text-xl tracking-[0.5em] transition-none focus:border-primary-500 focus:ring-4 focus:ring-primary-500/20 dark:border-dark-600 dark:focus:border-white dark:focus:ring-gray-300/20"
             :class="{ 'input-error': errors.code }"
             placeholder="000000"
             :aria-invalid="Boolean(errors.code)"
@@ -62,7 +62,7 @@
         >
           <div class="flex items-start gap-3">
             <div class="flex-shrink-0">
-              <Icon name="checkCircle" size="md" class="text-black dark:text-white" />
+              <Icon name="checkCircle" size="md" class="text-primary-900 dark:text-white" />
             </div>
             <p class="text-sm text-gray-700 dark:text-gray-300">
               {{ t('auth.codeSentSuccess') }}
@@ -119,7 +119,7 @@
         <button
           type="submit"
           :disabled="isLoading || !verifyCode || (pendingOAuthCreateTurnstileRequired && !createAccountTurnstileToken)"
-          class="btn w-full bg-black text-white shadow-md shadow-black/20 hover:bg-gray-800 hover:shadow-lg hover:shadow-black/30 dark:bg-white dark:text-black dark:hover:bg-gray-200"
+          class="btn w-full bg-primary-500 text-white shadow-md shadow-primary-500/20 hover:bg-primary-800 hover:shadow-lg hover:shadow-primary-500/30 dark:bg-white dark:text-primary-950 dark:hover:bg-primary-100"
         >
           <svg
             v-if="isLoading"
@@ -189,7 +189,7 @@
           <a
             href="/login"
             @click="handleLoginLink"
-            class="font-medium text-black transition-colors hover:text-gray-700 dark:text-gray-300 dark:hover:text-white"
+            class="font-medium text-primary-900 transition-colors hover:text-primary-700 dark:text-gray-300 dark:hover:text-white"
           >
             {{ t('auth.signIn') }}
           </a>

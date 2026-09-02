@@ -8,7 +8,7 @@
     <aside
       :class="embedded
         ? 'relative flex min-h-[7.5rem] items-end overflow-hidden bg-gradient-to-br from-primary-600 to-primary-500 px-6 py-5 text-white sm:px-8'
-        : 'relative flex min-h-[9.5rem] items-end overflow-hidden bg-gray-950 px-6 py-7 text-white dark:bg-black sm:px-10 lg:min-h-[100dvh] lg:items-center lg:px-14 lg:py-12'"
+        : 'relative flex min-h-[9.5rem] items-end overflow-hidden bg-primary-950 px-6 py-7 text-white dark:bg-primary-950 sm:px-10 lg:min-h-[100dvh] lg:items-center lg:px-14 lg:py-12'"
     >
       <div class="relative z-10 w-full max-w-lg">
         <template v-if="settingsLoaded">
@@ -35,7 +35,7 @@
     </aside>
 
     <!-- Authentication surface -->
-    <main :class="embedded ? 'relative flex min-w-0 flex-col items-center bg-black dark:bg-black' : 'relative flex min-w-0 flex-col items-center justify-center px-4 py-8 sm:px-8 lg:px-12 lg:py-10'">
+    <main :class="embedded ? 'relative flex min-w-0 flex-col items-center bg-primary-950 dark:bg-primary-950' : 'relative flex min-w-0 flex-col items-center justify-center px-4 py-8 sm:px-8 lg:px-12 lg:py-10'">
       <div class="relative z-10 w-full max-w-md">
         <div
           class="w-full rounded-2xl border border-gray-200 bg-white shadow-lg dark:border-dark-700 dark:bg-dark-800"

@@ -45,7 +45,7 @@
               autofocus
               autocomplete="email"
               :disabled="registrationActionDisabled"
-              class="input border-gray-300 pl-11 transition-none focus:border-black focus:ring-4 focus:ring-gray-300/30 dark:border-dark-600 dark:focus:border-white dark:focus:ring-gray-300/20"
+              class="input border-gray-300 pl-11 transition-none focus:border-primary-500 focus:ring-4 focus:ring-primary-500/20 dark:border-dark-600 dark:focus:border-white dark:focus:ring-gray-300/20"
               :class="{ 'input-error': errors.email }"
               :placeholder="t('auth.emailPlaceholder')"
               :aria-invalid="Boolean(errors.email)"
@@ -75,7 +75,7 @@
               required
               autocomplete="new-password"
               :disabled="registrationActionDisabled"
-              class="input border-gray-300 pl-11 pr-11 transition-none focus:border-black focus:ring-4 focus:ring-gray-300/30 dark:border-dark-600 dark:focus:border-white dark:focus:ring-gray-300/20"
+              class="input border-gray-300 pl-11 pr-11 transition-none focus:border-primary-500 focus:ring-4 focus:ring-primary-500/20 dark:border-dark-600 dark:focus:border-white dark:focus:ring-gray-300/20"
               :class="{ 'input-error': errors.password }"
               :placeholder="t('auth.createPasswordPlaceholder')"
               :aria-invalid="Boolean(errors.password)"
@@ -88,7 +88,7 @@
               :aria-label="showPassword ? t('auth.hidePassword') : t('auth.showPassword')"
               :aria-pressed="showPassword"
               aria-controls="password"
-              class="absolute inset-y-0 right-0 flex min-w-11 items-center justify-center pr-3.5 text-gray-400 transition-colors hover:text-gray-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/40 dark:hover:text-dark-300 dark:focus-visible:ring-white/50"
+              class="absolute inset-y-0 right-0 flex min-w-11 items-center justify-center pr-3.5 text-gray-400 transition-colors hover:text-gray-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40 dark:hover:text-dark-300 dark:focus-visible:ring-white/50"
             >
               <Icon v-if="showPassword" name="eyeOff" size="md" aria-hidden="true" />
               <Icon v-else name="eye" size="md" aria-hidden="true" />
@@ -119,7 +119,7 @@
               required
               autocomplete="new-password"
               :disabled="registrationActionDisabled"
-              class="input border-gray-300 pl-11 pr-11 transition-none focus:border-black focus:ring-4 focus:ring-gray-300/30 dark:border-dark-600 dark:focus:border-white dark:focus:ring-gray-300/20"
+              class="input border-gray-300 pl-11 pr-11 transition-none focus:border-primary-500 focus:ring-4 focus:ring-primary-500/20 dark:border-dark-600 dark:focus:border-white dark:focus:ring-gray-300/20"
               :class="{ 'input-error': errors.confirmPassword }"
               :placeholder="t('auth.confirmPasswordPlaceholder')"
               :aria-invalid="Boolean(errors.confirmPassword)"
@@ -132,7 +132,7 @@
               :aria-label="showConfirmPassword ? t('auth.hidePassword') : t('auth.showPassword')"
               :aria-pressed="showConfirmPassword"
               aria-controls="confirm_password"
-              class="absolute inset-y-0 right-0 flex min-w-11 items-center justify-center pr-3.5 text-gray-400 transition-colors hover:text-gray-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/40 dark:hover:text-dark-300 dark:focus-visible:ring-white/50"
+              class="absolute inset-y-0 right-0 flex min-w-11 items-center justify-center pr-3.5 text-gray-400 transition-colors hover:text-gray-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40 dark:hover:text-dark-300 dark:focus-visible:ring-white/50"
             >
               <Icon v-if="showConfirmPassword" name="eyeOff" size="md" aria-hidden="true" />
               <Icon v-else name="eye" size="md" aria-hidden="true" />
@@ -310,7 +310,7 @@
         <button
           type="submit"
           :disabled="registrationActionDisabled || (turnstileEnabled && !turnstileToken)"
-          class="btn w-full bg-black text-white shadow-md shadow-black/20 hover:bg-gray-800 hover:shadow-lg hover:shadow-black/30 dark:bg-white dark:text-black dark:hover:bg-gray-200"
+          class="btn w-full bg-primary-500 text-white shadow-md shadow-primary-500/20 hover:bg-primary-800 hover:shadow-lg hover:shadow-primary-500/30 dark:bg-white dark:text-primary-950 dark:hover:bg-primary-100"
         >
           <svg
             v-if="isLoading"
@@ -395,7 +395,7 @@
         <a
           href="/login"
           @click="handleAuthLink($event, 'login')"
-          class="font-medium text-black transition-colors hover:text-gray-700 dark:text-gray-300 dark:hover:text-white"
+          class="font-medium text-primary-900 transition-colors hover:text-primary-700 dark:text-gray-300 dark:hover:text-white"
         >
           {{ t('auth.signIn') }}
         </a>
