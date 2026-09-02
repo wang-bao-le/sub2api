@@ -1,13 +1,13 @@
 <template>
   <div class="table-page-layout" :class="{ 'mobile-mode': isMobile }">
-    <!-- 固定区域：操作按钮 -->
-    <div v-if="$slots.actions" class="layout-section-fixed">
-      <slot name="actions" />
-    </div>
-
-    <!-- 固定区域：搜索和过滤器 -->
-    <div v-if="$slots.filters" class="layout-section-fixed">
-      <slot name="filters" />
+    <!-- 固定区域：筛选与操作按钮 -->
+    <div v-if="$slots.actions || $slots.filters" class="layout-toolbar">
+      <div v-if="$slots.filters" class="layout-section-fixed">
+        <slot name="filters" />
+      </div>
+      <div v-if="$slots.actions" class="layout-section-fixed layout-actions">
+        <slot name="actions" />
+      </div>
     </div>
 
     <!-- 滚动区域：表格 -->
@@ -54,6 +54,15 @@ onUnmounted(() => {
   @apply flex-shrink-0;
 }
 
+.layout-toolbar {
+  @apply grid flex-shrink-0 items-start gap-6;
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.layout-actions {
+  @apply justify-self-end;
+}
+
 .layout-section-scrollable {
   @apply flex-1 min-h-0 flex flex-col;
 }
@@ -94,6 +103,14 @@ onUnmounted(() => {
 /* 移动端：恢复正常滚动 */
 .table-page-layout.mobile-mode .table-scroll-container {
   @apply h-auto overflow-visible border-none shadow-none bg-transparent;
+}
+
+.table-page-layout.mobile-mode .layout-toolbar {
+  @apply flex flex-col gap-3;
+}
+
+.table-page-layout.mobile-mode .layout-actions {
+  @apply w-full;
 }
 
 .table-page-layout.mobile-mode .layout-section-scrollable {
