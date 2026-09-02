@@ -85,7 +85,7 @@ interface TocItem { id: string; text: string; level: number }
 
 const groups: DocGroup[] = [
   { title: '入门', footerTitle: '环境准备', footerItems: [{ slug: 'nodejs-environment', title: 'Node.js 环境安装指南' }, { slug: 'cc-switch-installation', title: 'CC Switch 安装指南' }], items: [{ slug: 'quickstart', title: '快速开始' }] },
-  { title: '快速开始', items: [{ slug: 'claude-code-quickstart', title: 'Claude Code 快速开始指南' }, { slug: 'codex-quickstart', title: 'Codex 快速开始指南' }, { slug: 'openclaw-quickstart', title: 'OpenClaw 快速开始指南' }] },
+  { title: '快速开始', items: [{ slug: 'claude-code-quickstart', title: 'Claude Code 快速开始指南' }, { slug: 'codex-quickstart', title: 'Codex 快速开始指南' }] },
 ]
 const allItems = groups.flatMap((group) => [...group.items, ...(group.footerItems || [])])
 const modules = import.meta.glob('@/content/docs/*.md', { query: '?raw', import: 'default' }) as Record<string, () => Promise<string>>
