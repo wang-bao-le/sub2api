@@ -13,7 +13,11 @@
       </div>
     </header>
 
-    <main style="max-width: calc(1440px + 3cm)" class="mx-auto grid w-full gap-8 px-4 py-8 sm:px-6 lg:min-h-0 lg:flex-1 lg:grid-cols-[calc(220px+1.5cm)_minmax(0,1fr)_220px] lg:grid-rows-[minmax(0,1fr)] lg:px-8">
+    <main
+      style="max-width: calc(1440px + 6cm)"
+      class="mx-auto grid w-full gap-8 px-4 py-8 sm:px-6 lg:min-h-0 lg:flex-1 lg:grid-rows-[minmax(0,1fr)] lg:px-8"
+      :class="tocItems.length ? 'lg:grid-cols-[calc(220px+1.5cm)_minmax(0,1fr)_220px]' : 'lg:grid-cols-[calc(220px+1.5cm)_minmax(0,1fr)]'"
+    >
       <aside class="hidden border-r border-gray-200 pr-6 dark:border-dark-700 lg:block lg:min-h-0 lg:overflow-y-auto">
         <nav class="space-y-7" aria-label="文档导航">
           <section v-for="group in groups" :key="group.title">
