@@ -25,6 +25,9 @@
                 :class="item.slug === currentSlug ? 'bg-gray-900 font-semibold text-white shadow-sm dark:bg-white dark:text-gray-900' : 'text-gray-600 hover:bg-gray-100 dark:text-dark-300 dark:hover:bg-dark-800'"
               >{{ item.title }}</RouterLink>
             </div>
+            <h2 v-if="group.footerTitle" class="mb-3 mt-5 px-3 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-dark-400">
+              {{ group.footerTitle }}
+            </h2>
           </section>
         </nav>
       </aside>
@@ -67,11 +70,11 @@ import { useAppStore } from '@/stores'
 import { sanitizeUrl } from '@/utils/url'
 
 interface DocItem { slug: string; title: string }
-interface DocGroup { title: string; items: DocItem[] }
+interface DocGroup { title: string; footerTitle?: string; items: DocItem[] }
 interface TocItem { id: string; text: string; level: number }
 
 const groups: DocGroup[] = [
-  { title: '入门', items: [{ slug: 'quickstart', title: '快速开始' }] },
+  { title: '入门', footerTitle: '环境准备', items: [{ slug: 'quickstart', title: '快速开始' }] },
   { title: '快速开始', items: [{ slug: 'claude-code-quickstart', title: 'Claude Code 快速开始指南' }, { slug: 'codex-quickstart', title: 'Codex 快速开始指南' }, { slug: 'openclaw-quickstart', title: 'OpenClaw 快速开始指南' }] },
 ]
 const allItems = groups.flatMap((group) => group.items)
