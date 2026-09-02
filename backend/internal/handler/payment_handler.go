@@ -341,18 +341,48 @@ func (h *PaymentHandler) GetMyOrders(c *gin.Context) {
 	}
 
 	page, pageSize := response.ParsePagination(c)
+	startDate, endDate, err := parseOrderDateRange(c)
+	if err != nil {
+		response.BadRequest(c, err.Error())
+		return
+	}
 	orders, total, err := h.paymentService.GetUserOrders(c.Request.Context(), subject.UserID, service.OrderListParams{
 		Page:        page,
 		PageSize:    pageSize,
 		Status:      c.Query("status"),
 		OrderType:   c.Query("order_type"),
 		PaymentType: c.Query("payment_type"),
+		StartDate:   startDate,
+		EndDate:     endDate,
 	})
 	if err != nil {
 		response.ErrorFrom(c, err)
 		return
 	}
 	response.Paginated(c, sanitizePaymentOrdersForResponse(orders), int64(total), page, pageSize)
+}
+
+func parseOrderDateRange(c *gin.Context) (time.Time, time.Time, error) {
+	const layout = "2006-01-02"
+	var startDate, endDate time.Time
+	var err error
+	if value := c.Query("start_date"); value != "" {
+		startDate, err = time.Parse(layout, value)
+		if err != nil {
+			return time.Time{}, time.Time{}, fmt.Errorf("invalid start_date")
+		}
+	}
+	if value := c.Query("end_date"); value != "" {
+		endDate, err = time.Parse(layout, value)
+		if err != nil {
+			return time.Time{}, time.Time{}, fmt.Errorf("invalid end_date")
+		}
+		endDate = endDate.AddDate(0, 0, 1)
+	}
+	if !startDate.IsZero() && !endDate.IsZero() && !startDate.Before(endDate) {
+		return time.Time{}, time.Time{}, fmt.Errorf("start_date must be before end_date")
+	}
+	return startDate, endDate, nil
 }
 
 // GetOrder returns a single order for the authenticated user.

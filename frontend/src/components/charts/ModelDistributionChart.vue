@@ -101,14 +101,14 @@
     </div>
     <div
       v-else-if="activeView === 'model_distribution' && displayModelStats.length > 0 && chartData"
-      class="flex flex-col items-center gap-4 sm:flex-row sm:gap-6"
     >
-      <div class="h-48 w-48 shrink-0">
-        <Doughnut :data="chartData" :options="doughnutOptions" />
-      </div>
-      <div class="max-h-48 w-full min-w-0 flex-1 overflow-auto">
-        <table class="w-full text-xs">
-          <thead>
+      <div v-if="hasModelDistributionData" class="flex flex-col items-center gap-4 sm:flex-row sm:gap-6">
+        <div class="h-48 w-48 shrink-0">
+          <Doughnut :data="chartData" :options="doughnutOptions" />
+        </div>
+        <div class="max-h-48 w-full min-w-0 flex-1 overflow-auto">
+          <table class="w-full text-xs">
+          <thead v-if="hasModelDistributionData">
             <tr class="text-gray-500 dark:text-gray-400">
               <th class="pb-2 text-left">{{ t('admin.dashboard.model') }}</th>
               <th class="pb-2 text-right">{{ t('admin.dashboard.requests') }}</th>
@@ -163,13 +163,30 @@
               </tr>
             </template>
           </tbody>
-        </table>
+          </table>
+        </div>
+      </div>
+      <div
+        v-else
+        class="flex h-48 w-full flex-col items-center justify-center gap-2 text-sm text-gray-500 dark:text-gray-400"
+        aria-live="polite"
+      >
+        <svg class="h-8 w-8 text-gray-300 dark:text-dark-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 3.75H6.75A2.25 2.25 0 004.5 6v12a2.25 2.25 0 002.25 2.25h10.5A2.25 2.25 0 0019.5 18V9.75L13.5 3.75H9z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13.5 3.75V9.75H19.5M8.25 13.5h7.5M8.25 16.5h5.25" />
+        </svg>
+        {{ t('admin.dashboard.noDataAvailable') }}
       </div>
     </div>
     <div
       v-else-if="activeView === 'model_distribution'"
-      class="flex h-48 items-center justify-center text-sm text-gray-500 dark:text-gray-400"
+      class="flex h-48 flex-col items-center justify-center gap-2 text-sm text-gray-500 dark:text-gray-400"
+      aria-live="polite"
     >
+      <svg class="h-8 w-8 text-gray-300 dark:text-dark-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 3.75H6.75A2.25 2.25 0 004.5 6v12a2.25 2.25 0 002.25 2.25h10.5A2.25 2.25 0 0019.5 18V9.75L13.5 3.75H9z" />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13.5 3.75V9.75H19.5M8.25 13.5h7.5M8.25 16.5h5.25" />
+      </svg>
       {{ t('admin.dashboard.noDataAvailable') }}
     </div>
 
@@ -380,6 +397,13 @@ const chartData = computed(() => {
     ]
   }
 })
+
+const hasModelDistributionData = computed(() =>
+  displayModelStats.value.some((model) => {
+    const value = props.metric === 'actual_cost' ? model.actual_cost : model.total_tokens
+    return toFiniteNumber(value) > 0
+  })
+)
 
 const rankingChartData = computed(() => {
   if (!props.rankingItems?.length) return null

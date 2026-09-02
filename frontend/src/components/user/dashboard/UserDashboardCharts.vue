@@ -27,10 +27,9 @@
           <LoadingSpinner size="md" />
         </div>
         <h3 class="mb-4 text-sm font-semibold text-gray-900 dark:text-white">{{ t('dashboard.modelDistribution') }}</h3>
-        <div class="flex flex-col items-center gap-4 sm:flex-row sm:gap-6">
+        <div v-if="hasModelDistributionData" class="flex flex-col items-center gap-4 sm:flex-row sm:gap-6">
           <div class="h-48 w-48 shrink-0">
-            <Doughnut v-if="modelData" :data="modelData" :options="doughnutOptions" />
-            <div v-else class="flex h-full items-center justify-center text-sm text-gray-500 dark:text-gray-400">{{ t('dashboard.noDataAvailable') }}</div>
+            <Doughnut :data="modelData" :options="doughnutOptions" />
           </div>
           <div class="max-h-48 w-full min-w-0 flex-1 overflow-auto">
             <table class="w-full text-xs">
@@ -54,6 +53,13 @@
               </tbody>
             </table>
           </div>
+        </div>
+        <div
+          v-else
+          class="flex h-48 items-center justify-center text-sm text-gray-500 dark:text-gray-400"
+          aria-live="polite"
+        >
+          {{ t('dashboard.noDataAvailable') }}
         </div>
       </div>
 
@@ -80,13 +86,17 @@ const props = defineProps<{ loading: boolean, startDate: string, endDate: string
 defineEmits(['update:startDate', 'update:endDate', 'update:granularity', 'dateRangeChange', 'granularityChange', 'refresh'])
 const { t } = useI18n()
 
-const modelData = computed(() => !props.models?.length ? null : {
+const hasModelDistributionData = computed(() =>
+  props.models?.some((model) => Number(model.total_tokens) > 0) ?? false
+)
+
+const modelData = computed(() => ({
   labels: props.models.map((m: ModelStat) => m.model),
   datasets: [{
     data: props.models.map((m: ModelStat) => m.total_tokens),
     backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4', '#84cc16']
   }]
-})
+}))
 
 const doughnutOptions = {
   responsive: true,

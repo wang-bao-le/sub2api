@@ -1,4 +1,18 @@
 <template>
+  <div v-if="!isSimple && balance <= 0" class="flex items-center gap-4 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-300 sm:p-5">
+    <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white text-amber-600 shadow-sm dark:bg-dark-800 dark:text-amber-400">
+      <Icon name="exclamationTriangle" size="lg" :stroke-width="2" />
+    </div>
+    <div class="min-w-0 flex-1">
+      <p class="font-semibold">{{ t('dashboard.balanceLowTitle') }}</p>
+      <p class="mt-1 text-sm text-amber-700 dark:text-amber-300">{{ t('dashboard.balanceLowMessage', { balance: `$${formatBalance(balance)}` }) }}</p>
+    </div>
+    <button type="button" class="btn btn-primary shrink-0" @click="router.push('/purchase')">
+      {{ t('dashboard.rechargeNow') }}
+      <span aria-hidden="true" class="ml-1">→</span>
+    </button>
+  </div>
+
   <!-- Row 1: Core Stats -->
   <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
     <!-- Balance -->
@@ -13,6 +27,9 @@
           <p class="text-xs font-medium text-gray-500 dark:text-gray-400">{{ t('dashboard.balance') }}</p>
           <p class="text-xl font-bold text-emerald-600 dark:text-emerald-400">${{ formatBalance(balance) }}</p>
           <p class="text-xs text-gray-500 dark:text-gray-400">{{ t('common.available') }}</p>
+          <button type="button" class="mt-1 text-xs font-medium text-blue-600 hover:text-blue-700 hover:underline dark:text-blue-400 dark:hover:text-blue-300" @click="router.push('/purchase')">
+            {{ t('dashboard.goRecharge') }}
+          </button>
         </div>
       </div>
     </div>
@@ -225,6 +242,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 import Icon from '@/components/icons/Icon.vue'
 import type { UserDashboardStats as UserStatsType } from '@/api/usage'
 import type { PlatformQuotaItem } from '@/types'
@@ -246,6 +264,7 @@ const props = defineProps<{
   platformQuotas?: PlatformQuotaItem[] | null
 }>()
 const { t } = useI18n()
+const router = useRouter()
 
 const PLATFORM_LABELS: Record<string, string> = {
   anthropic: 'Claude',

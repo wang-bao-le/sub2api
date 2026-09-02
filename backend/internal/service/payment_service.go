@@ -119,6 +119,8 @@ type OrderListParams struct {
 	OrderType   string
 	PaymentType string
 	Keyword     string
+	StartDate   time.Time
+	EndDate     time.Time
 }
 
 type RefundPlan struct {

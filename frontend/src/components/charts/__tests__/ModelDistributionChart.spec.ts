@@ -73,6 +73,22 @@ describe('ModelDistributionChart', () => {
     },
   ]
 
+  it('shows only the empty state when the selected metric has no values', () => {
+    const wrapper = mount(ModelDistributionChart, {
+      props: {
+        modelStats: [{ model: 'model-a', requests: 0, total_tokens: 0, actual_cost: 0 }],
+      },
+      global: {
+        stubs: {
+          LoadingSpinner: true,
+        },
+      },
+    })
+
+    expect(wrapper.findAll('thead th')).toHaveLength(0)
+    expect(wrapper.text()).toContain('No data available')
+  })
+
   it('uses total_tokens and token ordering by default', () => {
     const wrapper = mount(ModelDistributionChart, {
       props: {

@@ -851,6 +851,12 @@ func (s *PaymentService) GetUserOrders(ctx context.Context, userID int64, p Orde
 	if p.PaymentType != "" {
 		q = q.Where(paymentorder.PaymentTypeEQ(p.PaymentType))
 	}
+	if !p.StartDate.IsZero() {
+		q = q.Where(paymentorder.CreatedAtGTE(p.StartDate))
+	}
+	if !p.EndDate.IsZero() {
+		q = q.Where(paymentorder.CreatedAtLT(p.EndDate))
+	}
 	total, err := q.Clone().Count(ctx)
 	if err != nil {
 		return nil, 0, fmt.Errorf("count user orders: %w", err)
