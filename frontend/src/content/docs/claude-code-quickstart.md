@@ -118,14 +118,14 @@ Claude Code 会自动分析当前目录的代码并提供智能编程辅助。
 
 ## 常见问题（FAQ）
 
-**Q：运行 `npm install -g` 提示权限不足？**  
+**Q：运行 `npm install -g` 提示权限不足？**
 A：macOS / Linux 在命令前加 `sudo`；Windows 使用管理员权限运行 PowerShell。
 
-**Q：`claude --version` 提示命令不存在？**  
+**Q：`claude --version` 提示命令不存在？**
 A：确认 npm 全局目录已加入系统 `PATH`，可运行 `npm bin -g` 查看路径并手动添加。
 
-**Q：连接失败或返回 401 错误？**  
+**Q：连接失败或返回 401 错误？**
 A：检查 `ANTHROPIC_BASE_URL` 是否为 `https://dragoncode.codes`，以及 `ANTHROPIC_AUTH_TOKEN` 是否填写正确且未过期。
 
-**Q：如何切换不同模型或倍率？**  
+**Q：如何切换不同模型或倍率？**
 A：在 [Dragon Code 控制台](https://dragoncode.codes/dashboard) 创建不同分组的密钥，通过 CC Switch 在多个配置间快速切换。
