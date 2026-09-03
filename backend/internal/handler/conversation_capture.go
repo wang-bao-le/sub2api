@@ -9,6 +9,7 @@ import (
 	"regexp"
 	"strings"
 	"time"
+	"unicode/utf8"
 
 	"github.com/Wei-Shaw/sub2api/internal/pkg/ctxkey"
 	"github.com/Wei-Shaw/sub2api/internal/securityaudit"
@@ -85,7 +86,7 @@ func trimConversationText(value string, max int) (string, bool) {
 		return value, false
 	}
 	b := []byte(value[:max])
-	for len(b) > 0 && (b[len(b)-1]&0xc0) == 0x80 {
+	for len(b) > 0 && !utf8.Valid(b) {
 		b = b[:len(b)-1]
 	}
 	return string(b), true
