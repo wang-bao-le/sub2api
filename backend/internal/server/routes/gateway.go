@@ -359,8 +359,8 @@ func RegisterGatewayRoutes(
 		}
 		h.Gateway.Responses(c)
 	}
-	r.POST("/responses", bodyLimit, clientRequestID, opsErrorLogger, endpointNorm, gin.HandlerFunc(apiKeyAuth), compositeTarget, requireGroupAnthropic, responsesHandler)
-	r.POST("/responses/*subpath", bodyLimit, clientRequestID, opsErrorLogger, endpointNorm, gin.HandlerFunc(apiKeyAuth), compositeTarget, requireGroupAnthropic, guardResponsesSubpath(responsesHandler))
+	r.POST("/responses", bodyLimit, clientRequestID, opsErrorLogger, endpointNorm, gin.HandlerFunc(apiKeyAuth), h.ConversationCapture.Middleware(), compositeTarget, requireGroupAnthropic, responsesHandler)
+	r.POST("/responses/*subpath", bodyLimit, clientRequestID, opsErrorLogger, endpointNorm, gin.HandlerFunc(apiKeyAuth), h.ConversationCapture.Middleware(), compositeTarget, requireGroupAnthropic, guardResponsesSubpath(responsesHandler))
 	r.POST("/alpha/search", textBodyLimit, clientRequestID, opsErrorLogger, endpointNorm, gin.HandlerFunc(apiKeyAuth), compositeTarget, requireGroupAnthropic, h.OpenAIGateway.AlphaSearch)
 	r.GET("/responses", bodyLimit, clientRequestID, opsErrorLogger, endpointNorm, gin.HandlerFunc(apiKeyAuth), compositeTarget, requireGroupAnthropic, func(c *gin.Context) {
 		h.OpenAIGateway.ResponsesWebSocket(c)
@@ -368,7 +368,7 @@ func RegisterGatewayRoutes(
 	r.GET("/models", bodyLimit, clientRequestID, opsErrorLogger, endpointNorm, gin.HandlerFunc(apiKeyAuth), requireGroupAnthropic, modelsHandler)
 	r.POST("/messages/count_tokens", bodyLimit, clientRequestID, opsErrorLogger, endpointNorm, gin.HandlerFunc(apiKeyAuth), compositeTarget, requireGroupAnthropic, countTokensHandler)
 	codexDirect := r.Group("/backend-api/codex")
-	codexDirect.Use(bodyLimit, clientRequestID, opsErrorLogger, endpointNorm, gin.HandlerFunc(apiKeyAuth), compositeTarget, requireGroupAnthropic)
+	codexDirect.Use(bodyLimit, clientRequestID, opsErrorLogger, endpointNorm, gin.HandlerFunc(apiKeyAuth), h.ConversationCapture.Middleware(), compositeTarget, requireGroupAnthropic)
 	{
 		codexDirect.POST("/realtime/calls", h.OpenAIGateway.Live)
 		codexDirect.GET("/:call_id", h.OpenAIGateway.LiveSideband)
@@ -381,7 +381,7 @@ func RegisterGatewayRoutes(
 		codexDirect.GET("/models", h.OpenAIGateway.CodexModels)
 	}
 	// OpenAI Chat Completions API（不带v1前缀的别名）— auto-route based on group platform
-	r.POST("/chat/completions", bodyLimit, clientRequestID, opsErrorLogger, endpointNorm, gin.HandlerFunc(apiKeyAuth), compositeTarget, requireGroupAnthropic, func(c *gin.Context) {
+	r.POST("/chat/completions", bodyLimit, clientRequestID, opsErrorLogger, endpointNorm, gin.HandlerFunc(apiKeyAuth), h.ConversationCapture.Middleware(), compositeTarget, requireGroupAnthropic, func(c *gin.Context) {
 		if isOpenAIResponsesCompatibleGatewayPlatform(c) {
 			h.OpenAIGateway.ChatCompletions(c)
 			return
