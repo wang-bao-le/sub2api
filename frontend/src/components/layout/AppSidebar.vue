@@ -320,7 +320,7 @@ const sidebarCollapsed = computed(() => appStore.sidebarCollapsed)
 const mobileOpen = computed(() => appStore.mobileOpen)
 const isAdmin = computed(() => authStore.isAdmin)
 const sidebarNavRef = ref<HTMLElement | null>(null)
-const homePath = '/home'
+const homePath = '/'
 
 // Track which parent nav groups are expanded
 const expandedGroups = ref<Set<string>>(new Set())
@@ -942,7 +942,7 @@ async function confirmLogout() {
     console.error('Logout error:', error)
   }
   try {
-    await router.push('/home')
+    await router.push('/')
   } finally {
     showLogoutConfirm.value = false
     logoutLoading.value = false

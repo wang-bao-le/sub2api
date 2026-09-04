@@ -26,7 +26,7 @@ onMounted(async () => {
     query,
   }
   const view = views[route.path] || 'login'
-  await router.replace('/home')
+  await router.replace('/')
   requestAuthModal(view, options)
 })
 </script>

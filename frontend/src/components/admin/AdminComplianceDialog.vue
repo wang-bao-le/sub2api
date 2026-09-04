@@ -203,7 +203,7 @@ async function confirmLogout(): Promise<void> {
   markExplicitLogout()
   try {
     await authStore.logout()
-    window.location.href = '/home'
+    window.location.href = '/'
   } finally {
     showLogoutConfirm.value = false
     logoutLoading.value = false
