@@ -12,7 +12,7 @@
       <section class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-dark-700 dark:bg-dark-800 sm:p-5">
         <div class="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
           <div class="flex items-center gap-3"><span class="flex h-9 w-9 items-center justify-center rounded-lg bg-primary-50 text-primary-600 dark:bg-primary-500/10 dark:text-primary-400"><Icon name="shield" size="sm" /></span><div><h2 class="font-medium text-gray-900 dark:text-white">采集开关</h2><p class="text-xs text-gray-500 dark:text-gray-400">默认关闭，开启后覆盖全部用户和分组。</p></div></div>
-          <div class="flex flex-wrap items-center gap-3"><button type="button" role="switch" :aria-checked="config.enabled" :aria-label="config.enabled ? '已启用对话监控' : '已停用对话监控'" class="inline-flex items-center gap-3 text-sm text-gray-700 transition-colors hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/40 disabled:cursor-not-allowed disabled:opacity-60 dark:text-gray-200 dark:hover:text-white" :disabled="configSaving" @click="config.enabled = !config.enabled"><span>{{ config.enabled ? '已启用' : '已停用' }}</span><span class="relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors" :class="config.enabled ? 'bg-gray-900 dark:bg-white' : 'bg-gray-200 dark:bg-dark-600'"><span class="inline-block h-5 w-5 rounded-full bg-white shadow-sm transition-transform dark:bg-dark-900" :class="config.enabled ? 'translate-x-5 dark:bg-dark-900' : 'translate-x-0.5'" /></span></button><button class="btn btn-primary" :disabled="configSaving" @click="saveConfig">{{ configSaving ? '保存中…' : '保存配置' }}</button></div>
+          <div class="flex flex-wrap items-center gap-3"><span class="text-sm text-gray-600 dark:text-gray-300">{{ config.enabled ? '已启用' : '已停用' }}</span><Toggle v-if="configLoaded" v-model="config.enabled" /><button class="btn btn-primary" :disabled="configSaving" @click="saveConfig">{{ configSaving ? '保存中…' : '保存配置' }}</button></div>
         </div>
       </section>
 
@@ -35,10 +35,11 @@ import { useI18n } from 'vue-i18n'
 import AppLayout from '@/components/layout/AppLayout.vue'
 import BaseDialog from '@/components/common/BaseDialog.vue'
 import Icon from '@/components/icons/Icon.vue'
+import Toggle from '@/components/common/Toggle.vue'
 import { deleteConversation, getConversation, getConversationConfig, listConversations, updateConversationConfig, type ConversationConfig, type ConversationRecord } from '@/features/conversations/api'
-const { t } = useI18n(); const items=ref<ConversationRecord[]>([]); const detail=ref<ConversationRecord|null>(null); const detailOpen=ref(false); const loading=ref(false); const error=ref(false); const configSaving=ref(false); const keyword=ref(''); const status=ref(''); const page=ref(1); const pageSize=20; const total=ref(0); const config=ref<ConversationConfig>({enabled:false,capture_all_groups:true,max_prompt_bytes:65536,max_response_bytes:262144,manual_delete_enabled:true})
+const { t } = useI18n(); const items=ref<ConversationRecord[]>([]); const detail=ref<ConversationRecord|null>(null); const detailOpen=ref(false); const loading=ref(false); const error=ref(false); const configSaving=ref(false); const configLoaded=ref(false); const keyword=ref(''); const status=ref(''); const page=ref(1); const pageSize=20; const total=ref(0); const config=ref<ConversationConfig>({enabled:false,capture_all_groups:true,max_prompt_bytes:65536,max_response_bytes:262144,manual_delete_enabled:true})
 async function load(){ loading.value=true; error.value=false; try { const result=await listConversations({page:page.value,page_size:pageSize,keyword:keyword.value,status:status.value}); items.value=result.items; total.value=result.total } catch { error.value=true } finally { loading.value=false } }
-async function loadConfig(){ try { config.value=await getConversationConfig() } catch {} }
+async function loadConfig(){ try { config.value=await getConversationConfig() } catch {} finally { configLoaded.value=true } }
 async function saveConfig(){ configSaving.value=true; try { config.value=await updateConversationConfig(config.value) } finally { configSaving.value=false } }
 function applySearch(){ page.value=1; load() }; function resetSearch(){ keyword.value=''; status.value=''; applySearch() }; function changePage(value:number){ page.value=value; load() }
 async function openDetail(id:number){ detailOpen.value=true; detail.value=null; try { detail.value=await getConversation(id) } catch { detailOpen.value=false } }
