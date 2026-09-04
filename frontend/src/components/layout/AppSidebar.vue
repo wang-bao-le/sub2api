@@ -415,6 +415,70 @@ const ChartIcon = {
     )
 }
 
+const OpsMonitorIcon = {
+  render: () =>
+    h(
+      'svg',
+      { fill: 'none', viewBox: '0 0 24 24', stroke: 'currentColor', 'stroke-width': '1.5' },
+      [
+        h('path', {
+          'stroke-linecap': 'round',
+          'stroke-linejoin': 'round',
+          d: 'M3.75 12h3l2.25-6 3 12 2.25-6h4.5'
+        })
+      ]
+    )
+}
+
+const UsageRecordIcon = {
+  render: () =>
+    h(
+      'svg',
+      { fill: 'none', viewBox: '0 0 24 24', stroke: 'currentColor', 'stroke-width': '1.5' },
+      [
+        h('path', {
+          'stroke-linecap': 'round',
+          'stroke-linejoin': 'round',
+          d: 'M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5V6.75a3.75 3.75 0 00-7.5 0v1.5h-1.5a3.375 3.375 0 00-3.375 3.375v6.75a1.875 1.875 0 001.875 1.875h15.75a1.875 1.875 0 001.875-1.875v-4.125zM8.25 12.75h7.5M8.25 16.5h4.5'
+        })
+      ]
+    )
+}
+
+const ConversationMonitorIcon = {
+  render: () =>
+    h(
+      'svg',
+      { fill: 'none', viewBox: '0 0 24 24', stroke: 'currentColor', 'stroke-width': '1.5' },
+      [
+        h('path', {
+          'stroke-linecap': 'round',
+          'stroke-linejoin': 'round',
+          d: 'M2.25 12c0 4.142 4.365 7.5 9.75 7.5a11.03 11.03 0 004.248-.84L21.75 21l-1.66-4.15A7.194 7.194 0 0021.75 12c0-4.142-4.365-7.5-9.75-7.5S2.25 7.858 2.25 12z'
+        }),
+        h('path', {
+          'stroke-linecap': 'round',
+          d: 'M8.25 12h.008v.008H8.25V12zm3.75 0h.008v.008H12V12zm3.75 0h.008v.008H15.75V12z'
+        })
+      ]
+    )
+}
+
+const AuditLogIcon = {
+  render: () =>
+    h(
+      'svg',
+      { fill: 'none', viewBox: '0 0 24 24', stroke: 'currentColor', 'stroke-width': '1.5' },
+      [
+        h('path', {
+          'stroke-linecap': 'round',
+          'stroke-linejoin': 'round',
+          d: 'M9 5.25H7.5A2.25 2.25 0 005.25 7.5v12A2.25 2.25 0 007.5 21.75h9a2.25 2.25 0 002.25-2.25v-12a2.25 2.25 0 00-2.25-2.25H15M9 5.25a3 3 0 006 0M9 5.25a3 3 0 013-3h0a3 3 0 013 3m-6 9.75l1.5 1.5 3-3'
+        })
+      ]
+    )
+}
+
 const GiftIcon = {
   render: () =>
     h(
@@ -832,7 +896,7 @@ const customMenuItemsForAdmin = computed(() => {
 const adminNavItems = computed((): NavItem[] => {
   const baseItems: NavItem[] = [
     { path: '/admin/dashboard', label: t('nav.dashboard'), icon: DashboardIcon },
-    { path: '/admin/ops', label: t('nav.ops'), icon: ChartIcon, featureFlag: flagOpsMonitoring },
+    { path: '/admin/ops', label: t('nav.ops'), icon: OpsMonitorIcon, featureFlag: flagOpsMonitoring },
     { path: '/admin/users', label: t('nav.users'), icon: UsersIcon, hideInSimpleMode: true },
     { path: '/admin/groups', label: t('nav.groups'), icon: FolderIcon, hideInSimpleMode: true },
     {
@@ -890,9 +954,9 @@ const adminNavItems = computed((): NavItem[] => {
         { path: '/admin/orders/plans', label: t('nav.paymentPlans'), icon: CreditCardIcon },
       ],
     },
-    { path: '/admin/usage', label: t('nav.usage'), icon: ChartIcon },
-    { path: '/admin/conversations', label: t('nav.conversations'), icon: ChartIcon },
-    { path: '/admin/audit-logs', label: t('nav.auditLogs'), icon: ShieldIcon, hideInSimpleMode: true }
+    { path: '/admin/usage', label: t('nav.usage'), icon: UsageRecordIcon },
+    { path: '/admin/conversations', label: t('nav.conversations'), icon: ConversationMonitorIcon },
+    { path: '/admin/audit-logs', label: t('nav.auditLogs'), icon: AuditLogIcon, hideInSimpleMode: true }
   ]
 
   const visible = applyFeatureFlags(baseItems)

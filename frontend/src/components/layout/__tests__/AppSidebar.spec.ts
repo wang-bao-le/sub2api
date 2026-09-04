@@ -53,3 +53,17 @@ describe('AppSidebar header styles', () => {
     expect(sidebarBrandBlockMatch?.[0]).not.toContain('overflow: hidden;')
   })
 })
+
+describe('AppSidebar top-level admin icons', () => {
+  it('uses a distinct icon for each directly visible monitoring and audit entry', () => {
+    const adminNav = componentSource.slice(
+      componentSource.indexOf('const adminNavItems'),
+      componentSource.indexOf('const visible = applyFeatureFlags(baseItems)')
+    )
+
+    expect(adminNav).toContain("path: '/admin/ops', label: t('nav.ops'), icon: OpsMonitorIcon")
+    expect(adminNav).toContain("path: '/admin/usage', label: t('nav.usage'), icon: UsageRecordIcon")
+    expect(adminNav).toContain("path: '/admin/conversations', label: t('nav.conversations'), icon: ConversationMonitorIcon")
+    expect(adminNav).toContain("path: '/admin/audit-logs', label: t('nav.auditLogs'), icon: AuditLogIcon")
+  })
+})
