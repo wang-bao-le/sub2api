@@ -174,18 +174,6 @@ func (h *AuthHandler) emailOAuthCallbackWithProfile(
 		UpstreamMetadata: profile.Metadata,
 	}
 	affiliateCode := h.emailOAuthAffiliateCode(c)
-	if shouldCreate, err := h.emailOAuthShouldCreatePendingRegistration(c.Request.Context(), input); err != nil {
-		redirectOAuthError(c, frontendCallback, infraerrors.Reason(err), infraerrors.Message(err), "")
-		return
-	} else if shouldCreate {
-		if pendingErr := h.createEmailOAuthRegistrationPendingSession(c, provider, frontendCallback, redirectTo, profile); pendingErr != nil {
-			redirectOAuthError(c, frontendCallback, infraerrors.Reason(pendingErr), infraerrors.Message(pendingErr), "")
-			return
-		}
-		redirectToFrontendCallback(c, frontendCallback)
-		return
-	}
-
 	tokenPair, user, err := h.authService.LoginOrRegisterVerifiedEmailOAuthWithSignupCodes(
 		c.Request.Context(),
 		input,
@@ -217,35 +205,6 @@ func (h *AuthHandler) emailOAuthCallbackWithProfile(
 	fragment.Set("token_type", "Bearer")
 	fragment.Set("redirect", redirectTo)
 	redirectWithFragment(c, frontendCallback, fragment)
-}
-
-func (h *AuthHandler) emailOAuthShouldCreatePendingRegistration(ctx context.Context, input service.EmailOAuthIdentityInput) (bool, error) {
-	client := h.entClient()
-	if client == nil {
-		return false, infraerrors.ServiceUnavailable("PENDING_AUTH_NOT_READY", "pending auth service is not ready")
-	}
-	identityUser, err := h.findOAuthIdentityUser(ctx, service.PendingAuthIdentityKey{
-		ProviderType:    strings.TrimSpace(input.ProviderType),
-		ProviderKey:     strings.TrimSpace(input.ProviderKey),
-		ProviderSubject: strings.TrimSpace(input.ProviderSubject),
-	})
-	if err != nil {
-		return false, err
-	}
-	email := strings.TrimSpace(strings.ToLower(input.Email))
-	if identityUser != nil {
-		if !strings.EqualFold(strings.TrimSpace(identityUser.Email), email) {
-			return false, infraerrors.Conflict("AUTH_IDENTITY_EMAIL_MISMATCH", "oauth identity belongs to a different email")
-		}
-		return false, nil
-	}
-	if _, err := findUserByNormalizedEmail(ctx, client, email); err != nil {
-		if errors.Is(err, service.ErrUserNotFound) {
-			return true, nil
-		}
-		return false, err
-	}
-	return false, nil
 }
 
 func (h *AuthHandler) emailOAuthAffiliateCode(c *gin.Context) string {
