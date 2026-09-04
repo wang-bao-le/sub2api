@@ -25,6 +25,16 @@ describe('resolveDocumentTitle', () => {
 })
 
 describe('resolveRouteDocumentTitle', () => {
+  it('首页使用固定品牌标题，不影响站点名称或其他页面', () => {
+    const route = {
+      name: 'Home',
+      params: {},
+      meta: { title: 'Home' },
+    } as any
+
+    expect(resolveRouteDocumentTitle(route, 'Any Site')).toBe('AIFlow — API中转管理平台')
+  })
+
   it('自定义页面菜单加载后，使用菜单名称作为标题', () => {
     const route = {
       name: 'CustomPage',

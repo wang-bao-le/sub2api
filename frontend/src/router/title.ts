@@ -28,6 +28,10 @@ export function resolveRouteDocumentTitle(
   siteName: string | undefined,
   customMenuItems: CustomMenuItem[] = [],
 ): string {
+  if (route.name === 'Home') {
+    return 'AIFlow — API中转管理平台'
+  }
+
   const id = typeof route.params.id === 'string' ? route.params.id : ''
   const menuItem = route.name === 'CustomPage' && id
     ? customMenuItems.find((item) => item.id === id)
